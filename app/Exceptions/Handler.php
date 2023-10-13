@@ -3,7 +3,12 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 use Throwable;
+use Exception;
 
 class Handler extends ExceptionHandler
 {
@@ -26,5 +31,38 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Exception|Throwable $e): Response|JsonResponse|HTTPResponse
+    {
+        if ($e instanceof ValidationException) {
+            if (env('APP_ENV') === 'local') {
+                return response()->json([
+                    'success' => false,
+                    'status' => HTTPResponse::HTTP_BAD_REQUEST,
+                    'error' => [
+                        'type' => 'Api',
+                        'code' => HTTPResponse::HTTP_BAD_REQUEST,
+                        'details' => [
+                            'message' => $e->validator->errors()->first()
+                        ]
+                    ],
+                    'trace' => $e->getTrace()
+                ], 400);
+            }
+            return response()->json([
+                'success' => false,
+                'status' => HTTPResponse::HTTP_BAD_REQUEST,
+                'error' => [
+                    'type' => 'Api',
+                    'code' => HTTPResponse::HTTP_BAD_REQUEST,
+                    'details' => [
+                        'message' => $e->validator->errors()->first()
+                    ]
+                ]
+            ], 400);
+        }
+
+        return parent::render($request, $e);
     }
 }
