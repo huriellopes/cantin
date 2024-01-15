@@ -35,6 +35,21 @@ services:
     networks:
       - cantin
 
+  db:
+    container_name: database
+    image: postgres:15.1-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: cantin-db
+      POSTGRES_DB: cantin
+    restart: always
+    volumes:
+      - ./docker/database:/docker-entrypoint-initdb.d/
+#    ports:
+#      - "5432:5432"
+    networks:
+      - cantin
+
 networks:
   cantin:
     driver: bridge
