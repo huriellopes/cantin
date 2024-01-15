@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            StatusSeederTable::class,
             LevelSeederTable::class,
             UserSeederTable::class,
             TypePeopleSeederTable::class,
@@ -20,6 +21,9 @@ class DatabaseSeeder extends Seeder
             NationsTerreirosSeederTable::class,
             StateSeederTable::class,
             CitySeederTable::class,
+            StatusMenusSitesSeederTable::class,
+            MenusSitesSeederTable::class,
+            SuggestionSeederTable::class,
         ]);
     }
 }

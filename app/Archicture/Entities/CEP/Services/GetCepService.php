@@ -18,7 +18,9 @@ class GetCepService implements IGetCepService
     public function getCep(object $params): array
     {
         $this->getValidate()->validaParametros($params);
-        return $this->consultAPI(config('services.viacep.endpoint'),$params->zipcode.'/json/', null);
+        $zipcode = $this->clearMask($params->zipcode);
+
+        return $this->consultAPI(config('services.viacep.endpoint'),$zipcode.'/json/', null);
     }
 
     private function getValidate() : GetCepValidate

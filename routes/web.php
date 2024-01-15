@@ -3,20 +3,19 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+\App\Http\Routes\Web\SiteRoute::web();
 
-Route::get('/', function () {
-    return view('welcome');
-});
+\App\Http\Routes\Api\TerreirosRoute::web();
+
+\App\Http\Routes\Api\CitiesStatesRoute::web();
+
+\App\Http\Routes\Api\TypePeopleRoute::web();
+
+\App\Http\Routes\Api\SuggestionRoute::web();
+
+\App\Http\Routes\Api\PartnersEntitiesRoute::web();
+
+\App\Http\Routes\Api\TransPeopleRoute::web();
 
 Route::group([
     'middleware' => ['auth', 'verified']
@@ -37,16 +36,15 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::group([
-    'middleware' => 'auth',
     'prefix' => 'api'
 ], function () {
     \App\Http\Routes\Api\LevelRoute::api();
 
     \App\Http\Routes\Api\UsersRoute::api();
 
-    \App\Http\Routes\Api\CitiesStatesRoute::api();
-
     \App\Http\Routes\Api\TerreirosRoute::api();
+
+    \App\Http\Routes\Api\PartnersRoute::api();
 });
 
 require __DIR__.'/auth.php';

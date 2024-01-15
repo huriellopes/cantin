@@ -2,12 +2,14 @@
 
 namespace App\Traits;
 
+use App\Archicture\Entities\Logs\Actions\CreateLogAction;
 use App\Archicture\Entities\Users\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -16,6 +18,7 @@ use Exception;
 
 trait Utils
 {
+
     /**
      * Functions to clear scripts
      *
@@ -25,6 +28,15 @@ trait Utils
     public function clear_tags(string $variavel): array|string|null
     {
         return preg_replace('(<(/?[^\>]+)>)', '', $variavel);
+    }
+
+    /**
+     * @param string $variable
+     * @return array|string|null
+     */
+    public function clearMask(string $variable): array|string|null
+    {
+        return preg_replace('/[^0-9]/', '', $variable);
     }
 
     /**
@@ -240,14 +252,40 @@ trait Utils
     }
 
     /**
-     * Logging in Database
-     *
-     * @param string $table
-     * @return Builder
+     * @param string $action
+     * @param string $type
+     * @param $exception
+     * @return bool
      */
-    public function loggingDatabase(string $table) : Builder
+    public function loggingDatabase(string $action, string $type, $exception = null): bool
     {
-        return DB::table($table);
+        $content = null;
+
+        if ($exception && $type === 'error') {
+            if (config('app.debug')) {
+                $content['line'] = $exception->getLine();
+                $content['file'] = $exception->getFile();
+                $content['trace'] = $exception->getTrace();
+                $content['msg'] = $exception->getMessage();
+                $content['code'] = $exception->getCode();
+                $content['dateTime'] = Carbon::now()->format('Y-m-d H:i:s');
+            }
+
+            $content['msg'] = $exception->getMessage();
+            $content['code'] = $exception->getCode();
+            $content['file'] = $exception->getFile();
+            $content['dateTime'] = Carbon::now()->format('Y-m-d H:i:s');
+        }
+
+        return DB::table('logs')->insert([
+            'action' => $action,
+            'ip' => request()->ip(),
+            'type' => $type,
+            'content' => json_encode($content),
+            'user_id' => auth()->check() ? auth()->user()->id : null,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
     }
 
     /**

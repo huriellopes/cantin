@@ -2,28 +2,22 @@
 
 namespace App\Archicture\Entities\Terreiros\Models;
 
+use App\Archicture\Entities\Addresses\Models\Address;
+use App\Archicture\Entities\NationsTerreiros\Models\NationsTerreiro;
+use App\Archicture\Entities\TerreirosQuestions\Models\TerreiroQuestion;
 use App\Archicture\Generics\Models\GenericModels;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property $name
- * @property $phone
- * @property $fundationed_at
- * @property $nation_terreiro_id
- * @property $leadership_orunko
- * @property $color_of_leadership
- * @property $type_people_id
- * @property $number_of_children_of_saint
- * @property $number_of_children_of_saint_trans
+ * Class Terreiro
+ * @package App\Archicture\Entities\Terreiros\Models
+ * @property string $name
+ * @property string $phone
+ * @property string $fundationed_at
+ * @property int $nation_terreiro_id
+ * @property string $leadership_orunko
+ * @property string $color_of_leadership
  * @property $address_id
- * @property $type_terreiro_id
- * @property $trans_men_and_women
- * @property $name_gender
- * @property $fully_welcomes
- * @property $respect_for_trans_people
- * @property $suffered_aggregation
- * @property $inclusion_of_the_name_of_the_land
- * @property $suggestion_id
- * @property $social_media
  */
 class Terreiro extends GenericModels
 {
@@ -36,18 +30,30 @@ class Terreiro extends GenericModels
         'nation_terreiro_id',
         'leadership_orunko',
         'color_of_leadership',
-        'type_people_id',
-        'number_of_children_of_saint',
-        'number_of_children_of_saint_trans',
         'address_id',
-        'type_terreiro_id',
-        'trans_men_and_women',
-        'name_gender',
-        'fully_welcomes',
-        'respect_for_trans_people',
-        'suffered_aggregation',
-        'inclusion_of_the_name_of_the_land',
-        'suggestion_id',
-        'social_media',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function nation() : BelongsTo
+    {
+        return $this->belongsTo(NationsTerreiro::class, 'nation_terreiro_id', 'id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function address() : BelongsTo
+    {
+        return $this->belongsTo(Address::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function question() : BelongsTo
+    {
+        return $this->belongsTo(TerreiroQuestion::class);
+    }
 }

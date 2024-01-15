@@ -17,11 +17,17 @@ class ListCitiesService implements IListCitiesService
      */
     public function list(object $params = null): Collection
     {
-        $listCities = City::with('state');
+        $listCities = City::query()->with('state');
 
         if (!empty($params)) {
             $this->getValidate()->validaParametros($params);
-            $listCities->where('state_id', $params->state_id);
+            $listCities->when(is_int($params->state_id), function ($query) use ($params) {
+                return $query->where('state_id', $params->state_id);
+            }, function ($query) use ($params) {
+                return $query->whereHas('state', function ($query) use ($params) {
+                    return $query->where('acronym', 'like', "%{$params->state}%");
+                });
+            });
         }
 
         return $listCities->get();

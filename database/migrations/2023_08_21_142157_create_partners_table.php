@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Archicture\Entities\Status\Enum\StatusEnum;
 
 return new class extends Migration
 {
@@ -17,7 +18,14 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('path_image')->nullable();
-            $table->foreignId('user_id')->constrained();
+            $table->integer('user_id');
+            $table->integer('status_id')->default(StatusEnum::PENDING->value);
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
+            $table->foreign('status_id')
+                ->references('id')
+                ->on('statuses');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -13,6 +13,8 @@ class ListTerreirosService implements IListTerreirosService
      */
     public function list(): Collection
     {
-        return Terreiro::all();
+        return Terreiro::query()
+            ->with(['address', 'nation', 'question'])
+            ->get();
     }
 }

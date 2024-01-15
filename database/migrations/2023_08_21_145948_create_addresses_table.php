@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('zipcode'); // Cep
             $table->string('address'); // Endereço
-            $table->string('complement'); // Complemento
+            $table->string('complement')->nullable(); // Complemento
             $table->string('number', 10); // Número
             $table->string('neighborhood'); // Bairro
             $table->foreignId('state_id')->constrained(); // Estado
