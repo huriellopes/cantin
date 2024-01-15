@@ -44,6 +44,8 @@ RUN set -eux; \
         \
         apk del --no-network .build-deps
 
+RUN apk add npm
+
 EXPOSE 9000
 
 CMD ["php-fpm"]
