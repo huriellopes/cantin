@@ -28,6 +28,7 @@ RUN set -eux; \
         docker-php-ext-configure zip && \
         \
         docker-php-ext-install -j$(nproc) \
+            sockets \
             gd \
             intl \
             bcmath \
