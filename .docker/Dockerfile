@@ -19,7 +19,6 @@ RUN set -eux; \
 RUN set -eux; \
     apk add --no-cache --virtual .build-deps \
             $PHPIZE_DEPS \
-            sockets \
             freetype-dev \
             libzip-dev \
             postgresql-dev && \
@@ -29,7 +28,6 @@ RUN set -eux; \
         docker-php-ext-configure zip && \
         \
         docker-php-ext-install -j$(nproc) \
-            sockets \
             gd \
             intl \
             bcmath \
