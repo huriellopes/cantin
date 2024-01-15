@@ -8,19 +8,21 @@
         </li>
     @endforeach
 
-    @if (Route::has('login'))
-        @auth
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{{ url('/dashboard') }}">
-                    Dashboard
-                </a>
-            </li>
-        @else
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{{ route('login') }}">
-                    Área Restrita
-                </a>
-            </li>
-        @endauth
+    @if (config('app.env') === 'local')
+        @if (Route::has('login'))
+            @auth
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{{ url('/dashboard') }}">
+                        Dashboard
+                    </a>
+                </li>
+            @else
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{{ route('login') }}">
+                        Área Restrita
+                    </a>
+                </li>
+            @endauth
+        @endif
     @endif
 </ul>
