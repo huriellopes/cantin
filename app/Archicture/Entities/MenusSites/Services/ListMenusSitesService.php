@@ -15,9 +15,8 @@ class ListMenusSitesService implements IListMenusSitesService
      */
     public function list(): Collection
     {
-        return MenuSite::with('statusMenuSite')
-            ->whereHas('statusMenuSite', function ($query) {
-                return $query->where('status_menus_sites_id', '=', StatusMenuSiteEnum::ACTIVE->value);
-            })->get();
+        return MenuSite::query()
+            ->active()
+            ->get();
     }
 }

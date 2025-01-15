@@ -21,10 +21,16 @@
         </div>
         <div class="col">
             <p>
-                <strong>Babalorixá Alan Ty Ogun</strong>
+                <strong>Babalorixá Alan T'Ogun</strong>
             </p>
-            <p>(61) 9 9999-9999</p>
-            <p>alanbaloni@gmail.com</p>
+            <p>
+                <i class="fa-solid fa-phone"></i>
+                (61) 9 9977-6608
+            </p>
+            <p>
+                <i class="fa-solid fa-envelope"></i>
+                alanbaloni@gmail.com
+            </p>
         </div>
     </div>
 @stop

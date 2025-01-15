@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Spatie\DiscordAlerts\Facades\DiscordAlert;
 use Throwable;
 use Exception;
 
@@ -327,5 +328,23 @@ trait Utils
         }
 
         return Http::post($endpoint.$restData, $data)->json();
+    }
+
+    public function webhook(string $type = 'error', Exception|Throwable $exception = null, string $message, array $data = null): void
+    {
+        if ($type === 'error') {
+            DiscordAlert::message("Error: .", [
+                [
+                    'title' => 'Error',
+                    'description' => $message,
+                    'color' => '#E77625',
+                    'user' => auth()->check() ? auth()->user()->name : 'System',
+                    'author' => [
+                        'name' => 'Cantin',
+                    ],
+                    'data' => json_encode($data),
+                ]
+            ]);
+        }
     }
 }

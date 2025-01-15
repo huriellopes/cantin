@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             StatusMenusSitesSeederTable::class,
             MenusSitesSeederTable::class,
             SuggestionSeederTable::class,
+            CommonQuestionsSeederTable::class,
         ]);
     }
 }

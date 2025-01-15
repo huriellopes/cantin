@@ -2,9 +2,10 @@
 
 namespace App\Archicture\Entities\MenusSites\Models;
 
-use App\Archicture\Entities\StatusMenusSites\Enum\StatusMenuSiteEnum;
-use App\Archicture\Entities\StatusMenusSites\Models\StatusMenuSite;
+use App\Archicture\Entities\Users\Models\User;
 use App\Archicture\Generics\Models\GenericModels;
+use App\Enums\Status;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property string $name
  * @property string $description
- * @property string $url
+ * @property string $route
  * @property int $status_menus_sites_id
  * @property int $user_id
  */
@@ -30,8 +31,8 @@ class MenuSite extends GenericModels
     protected $fillable = [
         'name',
         'description',
-        'url',
-        'status_menus_sites_id',
+        'route',
+        'status',
         'user_id',
     ];
 
@@ -39,17 +40,27 @@ class MenuSite extends GenericModels
      * @var string[]
      */
     protected $casts = [
+        'status' => Status::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
-//        'status_menus_sites_id' => StatusMenuSiteEnum::class,
     ];
 
     /**
      * @return BelongsTo
      */
-    public function statusMenuSite() : BelongsTo
+    public function user() : BelongsTo
     {
-        return $this->belongsTo(StatusMenuSite::class, 'status_menus_sites_id', 'id');
+        return $this->belongsTo(User::class);
     }
+
+    /**
+     * @param Builder $query
+     * @return void
+     */
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('status', Status::ACTIVE);
+    }
+
 }

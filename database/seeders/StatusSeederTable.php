@@ -14,7 +14,7 @@ class StatusSeederTable extends Seeder
      */
     public function run(): void
     {
-        DB::table('statuses')->insert([
+        DB::table('status')->insert([
             [
                 'name' => 'Ativo',
                 'description' => 'Status Ativo',

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('answer'); // Respostas
             $table->foreignId('status_id')
                 ->default(1)
-                ->constrained('statuses');
+                ->constrained('status');
             $table->timestamps();
             $table->softDeletes();
         });

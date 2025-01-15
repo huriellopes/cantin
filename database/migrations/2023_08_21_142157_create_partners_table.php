@@ -25,7 +25,7 @@ return new class extends Migration
                 ->on('users');
             $table->foreign('status_id')
                 ->references('id')
-                ->on('statuses');
+                ->on('status');
             $table->timestamps();
             $table->softDeletes();
         });

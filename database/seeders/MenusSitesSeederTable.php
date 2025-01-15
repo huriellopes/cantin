@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Archicture\Entities\StatusMenusSites\Enum\StatusMenuSiteEnum;
+use App\Enums\Status;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,7 +21,7 @@ class MenusSitesSeederTable extends Seeder
                 'name' => 'home',
                 'description' => 'Home Page',
                 'route' => 'home',
-                'status_menus_sites_id' => StatusMenuSiteEnum::ACTIVE->value,
+                'status' => Status::ACTIVE->value,
                 'user_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -30,7 +31,7 @@ class MenusSitesSeederTable extends Seeder
                 'name' => 'sobre',
                 'description' => 'About Page',
                 'route' => 'about',
-                'status_menus_sites_id' => StatusMenuSiteEnum::ACTIVE->value,
+                'status' => Status::ACTIVE->value,
                 'user_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -40,7 +41,7 @@ class MenusSitesSeederTable extends Seeder
                 'name' => 'entidades parceiras',
                 'description' => 'Partners Entities Page',
                 'route' => 'partners.entities',
-                'status_menus_sites_id' => StatusMenuSiteEnum::ACTIVE->value,
+                'status' => Status::ACTIVE->value,
                 'user_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -50,7 +51,7 @@ class MenusSitesSeederTable extends Seeder
                 'name' => 'pessoas trans',
                 'description' => 'Peoples Trans Page',
                 'route' => 'people.trans',
-                'status_menus_sites_id' => StatusMenuSiteEnum::ACTIVE->value,
+                'status' => Status::ACTIVE->value,
                 'user_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -60,7 +61,7 @@ class MenusSitesSeederTable extends Seeder
                 'name' => 'cadastro de terreiros',
                 'description' => 'Create Terreiros Page',
                 'route' => 'create.terreiros',
-                'status_menus_sites_id' => StatusMenuSiteEnum::INACTIVE->value,
+                'status' => Status::INACTIVE->value,
                 'user_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -70,7 +71,7 @@ class MenusSitesSeederTable extends Seeder
                 'name' => 'terreiros',
                 'description' => 'Search Terreiros Page',
                 'route' => 'search.terreiros',
-                'status_menus_sites_id' => StatusMenuSiteEnum::INACTIVE->value,
+                'status' => Status::INACTIVE->value,
                 'user_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -80,7 +81,7 @@ class MenusSitesSeederTable extends Seeder
                 'name' => 'blog',
                 'description' => 'Blog Page',
                 'route' => 'blog',
-                'status_menus_sites_id' => StatusMenuSiteEnum::ACTIVE->value,
+                'status' => Status::INACTIVE->value,
                 'user_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -90,7 +91,7 @@ class MenusSitesSeederTable extends Seeder
                 'name' => 'contato',
                 'description' => 'Contact Page',
                 'route' => 'contact',
-                'status_menus_sites_id' => StatusMenuSiteEnum::ACTIVE->value,
+                'status' => Status::ACTIVE->value,
                 'user_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

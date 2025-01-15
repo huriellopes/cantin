@@ -6,7 +6,7 @@ use App\Archicture\Generics\Models\GenericModels;
 
 class Status extends GenericModels
 {
-    protected $table = "statuses";
+    protected $table = "status";
 
     protected $fillable = [
         'name',
