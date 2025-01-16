@@ -44,45 +44,6 @@
                         </div>
                     @endforeach
                 @endif
-
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                            Do que se trata o projeto Cantin?
-                        </button>
-                    </h2>
-                    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores, aut distinctio enim eveniet ex facere fugit laborum magnam minima nam neque officia perspiciatis placeat possimus, quae ratione sequi suscipit. Inventore.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                            Somente pessoas da Comunidade LGBTQIA+ podem se cadastrar?
-                        </button>
-                    </h2>
-                    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores, aut distinctio enim eveniet ex facere fugit laborum magnam minima nam neque officia perspiciatis placeat possimus, quae ratione sequi suscipit. Inventore.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                            Como faço para me cadastrar?
-                        </button>
-                    </h2>
-                    <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam architecto deleniti dignissimos dolorem, doloremque, exercitationem facilis fugit ipsam laborum nam necessitatibus nobis, obcaecati officia possimus quasi quia ut vero voluptates!
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
