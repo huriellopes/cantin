@@ -1,16 +1,8 @@
 @extends('Site.layouts.app')
 
-@section('css')
-    <style>
-        .nav-link.active {
-            color: #fff !important;
-        }
-    </style>
-@stop
-
 @section('content')
     <div class="row d-flex justify-content-space-between mt-5">
-        <div class="col-8 col-sm-12 col-md-12 col-lg-8 mt-3">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-8 mt-3">
             <div class="row">
                 <div class="col">
                     <h3 class="font-weight-bold">O Cadastro Nacional de Terreiros Trans-Inclusivos (CanNTIn)</h3>
@@ -52,7 +44,7 @@
             </div>
 
         </div>
-        <div class="col-4 col-md-4 mt-2 d-sm-none d-md-block d-md-none d-lg-block">
+        <div class="col-4 col-md-4 mt-2 d-sm-none d-md-block d-md-none d-lg-block d-none d-sm-block">
             <img src="{{ asset('/assets/images/CANTIn.png') }}" alt="CaNTIn" width="100%" title="CaNTIn" />
         </div>
     </div>
