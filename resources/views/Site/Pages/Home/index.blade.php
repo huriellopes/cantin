@@ -4,7 +4,9 @@
     <style></style>
 @stop
 
-@include('Site.layouts.includes.banner')
+@section('content-banner')
+    @include('Site.layouts.includes.banner')
+@stop
 
 @section('content')
 {{--    <div class="row mt-5">--}}

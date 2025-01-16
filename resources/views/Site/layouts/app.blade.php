@@ -20,6 +20,9 @@
             background-position: top center;
             height: 100vh;
             width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .banner-topo .content-banner {
@@ -48,6 +51,10 @@
 </head>
 <body>
     @include('Site.layouts.includes.menu')
+
+    <div class="banner-topo">
+        @yield('content-banner')
+    </div>
 
     <div class="container mb-4">
         @yield('content')
