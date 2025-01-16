@@ -7,13 +7,13 @@
 @include('Site.layouts.includes.banner')
 
 @section('content')
-    <div class="row mt-5">
-        <div class="col mt-2">
-            <h2 class="text-center">Parceiros</h2>
-        </div>
-    </div>
-    <div class="row" id="partners">
-    </div>
+{{--    <div class="row mt-5">--}}
+{{--        <div class="col mt-2">--}}
+{{--            <h2 class="text-center">Parceiros</h2>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+{{--    <div class="row" id="partners">--}}
+{{--    </div>--}}
 
     <div class="row mt-3">
         <div class="col">
