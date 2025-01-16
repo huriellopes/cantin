@@ -9,43 +9,51 @@
 @stop
 
 @section('content')
-    <div class="row mt-5">
-        <div class="col mt-3">
-            <h3 class="font-weight-bold">O Cadastro Nacional de Terreiros Trans-Inclusivos (CanNTIn)</h3>
-        </div>
-    </div>
+    <div class="row d-flex justify-content-space-between mt-5">
+        <div class="col-8 col-sm-12 col-md-12 col-lg-8 mt-3">
+            <div class="row">
+                <div class="col">
+                    <h3 class="font-weight-bold">O Cadastro Nacional de Terreiros Trans-Inclusivos (CanNTIn)</h3>
+                </div>
+            </div>
 
-    <div class="row">
-        <div class="col mt-2">
-            <p class="text-justify">
-                É uma iniciativa pioneira e transformadora, criada para mapear e tornar acessíveis os terreiros que
-                acolhem, respeitam e valorizam a transgeneridade em sua totalidade. Com o objetivo de conectar pessoas
-                trans a espaços religiosos inclusivos em todo o Brasil, o CANTIn também realiza um mapeamento nacional,
-                promovendo visibilidade para sacerdotes trans e para as práticas inclusivas já existentes nesses locais.
-            </p>
-        </div>
-    </div>
+            <div class="row">
+                <div class="col">
+                    <p class="text-justify">
+                        É uma iniciativa pioneira e transformadora, criada para mapear e tornar acessíveis os terreiros que
+                        acolhem, respeitam e valorizam a transgeneridade em sua totalidade. Com o objetivo de conectar pessoas
+                        trans a espaços religiosos inclusivos em todo o Brasil, o CANTIn também realiza um mapeamento nacional,
+                        promovendo visibilidade para sacerdotes trans e para as práticas inclusivas já existentes nesses locais.
+                    </p>
+                </div>
+            </div>
 
-    <div class="row">
-        <div class="col">
-            <h3 class="font-weight-bold">Origem e Propósito</h3>
-        </div>
-    </div>
+            <div class="row">
+                <div class="col">
+                    <h3 class="font-weight-bold">Origem e Propósito</h3>
+                </div>
+            </div>
 
-    <div class="row">
-        <div class="col">
-            <p class="text-justify">
-                O projeto nasceu a partir da pesquisa de mestrado <i>ÌGBÀMÍRÀN ÀIYÉ</i>: O Ethos Afro-
-                Brasileiro e a Transgeneridade na Religião dos Orixás, de autoria do Babalorixá Alan
-                de Ogun (Ogundeje). Inspirado pela necessidade de unir espiritualidade e diversidade, o
-                CANTIn busca consolidar o papel das religiões de matriz africana como espaços de
-                acolhimento, resistência e transformação social. Mais do que um simples cadastro, o
-                CANTIn é uma ferramenta que permite às pessoas trans identificarem terreiros
-                comprometidos com o respeito à sua identidade de gênero, enquanto destaca lideranças
-                religiosas e ações inclusivas em todo o país. Este projeto, que conta com apoio
-                governamental, reflete o compromisso dessas tradições religiosas com a justiça social e
-                a valorização da diversidade.
-            </p>
+            <div class="row">
+                <div class="col">
+                    <p class="text-justify">
+                        O projeto nasceu a partir da pesquisa de mestrado <i>ÌGBÀMÍRÀN ÀIYÉ</i>: O Ethos Afro-
+                        Brasileiro e a Transgeneridade na Religião dos Orixás, de autoria do Babalorixá Alan
+                        de Ogun (Ogundeje). Inspirado pela necessidade de unir espiritualidade e diversidade, o
+                        CANTIn busca consolidar o papel das religiões de matriz africana como espaços de
+                        acolhimento, resistência e transformação social. Mais do que um simples cadastro, o
+                        CANTIn é uma ferramenta que permite às pessoas trans identificarem terreiros
+                        comprometidos com o respeito à sua identidade de gênero, enquanto destaca lideranças
+                        religiosas e ações inclusivas em todo o país. Este projeto, que conta com apoio
+                        governamental, reflete o compromisso dessas tradições religiosas com a justiça social e
+                        a valorização da diversidade.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-4 col-md-4 mt-2 d-sm-none d-md-block d-md-none d-lg-block">
+            <img src="{{ asset('/assets/images/CANTIn.png') }}" alt="CaNTIn" width="100%" title="CaNTIn" />
         </div>
     </div>
 
