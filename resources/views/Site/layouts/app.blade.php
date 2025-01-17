@@ -52,9 +52,7 @@
 <body>
     @include('Site.layouts.includes.menu')
 
-    <div class="banner-topo">
-        @yield('content-banner')
-    </div>
+    @yield('content-banner')
 
     <div class="container mb-4">
         @yield('content')
