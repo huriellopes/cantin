@@ -15,7 +15,7 @@ class SearchTerreiroForUFService
     public function search(object $params = null) : LengthAwarePaginator
     {
         $terreiro = Terreiro::query()->with([
-            'address:id,address,neighborhood,complement,zipcode,state_id,city_id',
+            'address:id,address,neighborhood,complement,zipcode,state_id,city_id,number',
             'nation:id,nation',
             'address.state:id,acronym,description',
             'address.city:id,city_name'
@@ -29,6 +29,6 @@ class SearchTerreiroForUFService
             });
         }
 
-        return $terreiro->paginate(1);
+        return $terreiro->paginate(10);
     }
 }

@@ -49,6 +49,7 @@
                         <th>Cor de pele da liderança</th>
                         <th>Estado</th>
                         <th>Cidade</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,11 +65,30 @@
                                 <td>{{ $terreiro->color_of_leadership }}</td>
                                 <td>{{ $terreiro->address->state->description }}</td>
                                 <td>{{ $terreiro->address->city->city_name }}</td>
+                                <td>
+                                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample-{{$terreiro->id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        Detalhes
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="200">
+                                    <div class="collapse" id="collapseExample-{{$terreiro->id}}">
+                                        <div class="card card-body">
+                                            <table class="table table-striped">
+                                                <tr>
+                                                    <td>Endereço</td>
+                                                    <td>{{ $terreiro->address->address }}, {{ $terreiro->address->number }}, {{ $terreiro->address->neighborhood }}{{ !empty($terreiro->address->complement) ? ','. $terreiro->address->complement : '' }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="9" class="text-center">Nenhum Terreiro Encontrado</td>
+                            <td colspan="200" class="text-center">Nenhum Terreiro Encontrado</td>
                         </tr>
                     @endif
                 </tbody>
