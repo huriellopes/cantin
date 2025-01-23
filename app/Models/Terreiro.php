@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $nation_terreiro_id
  * @property string $leadership_orunko
  * @property string $color_of_leadership
- * @property $address_id
+ * @property int $address_id
  */
 class Terreiro extends GenericModels
 {

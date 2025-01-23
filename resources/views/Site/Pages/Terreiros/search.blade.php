@@ -78,7 +78,7 @@
                                             <table class="table table-striped">
                                                 <tr>
                                                     <td>Endereço</td>
-                                                    <td>{{ $terreiro->address->address }}, {{ $terreiro->address->number }}, {{ $terreiro->address->neighborhood }}{{ !empty($terreiro->address->complement) ? ','. $terreiro->address->complement : '' }}</td>
+                                                    <td>{{ $terreiro->address->address }}, {{ $terreiro->address->number }}, {{ $terreiro->address->neighborhood }}{{ !empty($terreiro->address->complement) ? ','. $terreiro->address->complement : '' }}, {{ $terreiro->address->zipcode }}</td>
                                                 </tr>
                                             </table>
                                         </div>

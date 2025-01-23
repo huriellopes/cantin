@@ -1,9 +1,9 @@
 <ul class="navbar-nav mb-2 mb-lg-0 d-flex ms-auto">
     @foreach($params as $param)
         <li class="nav-item">
-            <a class="nav-link" aria-current="page"
+            <a class="nav-link {{ request()->routeIs($param->route) ? 'active' : '' }}" aria-current="page"
                href="{{ route($param->route) ?? '#' }}">
-                {{ str()->ucfirst($param->name) }}
+                {{ str($param->name)->ucfirst() }}
             </a>
         </li>
     @endforeach
