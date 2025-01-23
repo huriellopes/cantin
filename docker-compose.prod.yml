@@ -42,7 +42,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: cantin-db
-      POSTGRES_DB: cantin
+      POSTGRES_DB: $2y$05$9lfFJVpJj4BsDDcTSavNRe.66guA5G2jJW8bxnXwY1ASecsec/mc2
     restart: always
     volumes:
       - ./docker/database:/docker-entrypoint-initdb.d/
