@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Archicture\Entities\Status\Enum\StatusEnum;
+use App\Enum\StatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;

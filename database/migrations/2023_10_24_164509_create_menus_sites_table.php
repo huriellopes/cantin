@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->index();
             $table->string('description')->nullable();
             $table->string('route')->nullable();
-            $table->smallInteger('status')->default(\App\Enums\Status::ACTIVE);
+            $table->smallInteger('status')->default(\App\Enum\StatusEnum::ACTIVE);
             $table->foreignId('user_id')
                 ->constrained('users');
             $table->timestamps();

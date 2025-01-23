@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Archicture\Entities\StatusMenusSites\Enum\StatusMenuSiteEnum;
 use App\Enums\Status;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;

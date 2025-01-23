@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Enums\Status;
 
 /**
  * @property $name
@@ -17,6 +18,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property $email
  * @property $level_id
  * @property $password
+ * @property $status
  */
 class User extends Authenticatable
 {
@@ -31,7 +33,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'level_id'
+        'level_id',
+        'status',
     ];
 
     /**
@@ -47,6 +50,7 @@ class User extends Authenticatable
     public function casts(): array
     {
         return [
+            'status' => Status::class,
 //            'level_id' => LevelEnum::class,
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
