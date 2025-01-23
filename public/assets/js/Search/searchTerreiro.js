@@ -1,4 +1,8 @@
 const SearchTerreiro  = function () {
+    let initialPlugins = () => {
+        dataTables('#table-terreiro')
+    }
+
     let search = () => {
         getTerreiro(null)
 
@@ -11,6 +15,7 @@ const SearchTerreiro  = function () {
 
     let getTerreiro = (uf = null) => {
         getApi('/api/terreiros/search', 'POST', {state_id: uf}).then(res => {
+            console.log(res.data.data.length)
             if (res.data.status === 200 && res.data.data.length > 0) {
                 res.data.data.each((i, v) => {
                     console.log(i, v)
@@ -51,6 +56,7 @@ const SearchTerreiro  = function () {
 
     return {
         init: function () {
+            initialPlugins()
             search()
         }
     }

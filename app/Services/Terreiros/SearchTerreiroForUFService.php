@@ -23,18 +23,11 @@ class SearchTerreiroForUFService
                 'leadership_orunko',
                 'color_of_leadership',
                 'address_id',
-                'created_at')
-            ->with([
-                'address:id,address,neighborhood,complement,zipcode,state_id,city_id,number',
-                'nation:id,nation',
-                'address.state:id,acronym,description',
-                'address.city:id,city_name'
-            ]);
+                'created_at',
+                'updated_at');
 
         if (!empty($params->uf)) {
-            $terreiro->with(['address' => function ($query) use ($params) {
-                return $query->where('state_id', $params->uf);
-            }])->whereHas('address',function ($query) use ($params) {
+            $terreiro->whereHas('address',function ($query) use ($params) {
                 return $query->where('state_id', $params->uf);
             });
         }

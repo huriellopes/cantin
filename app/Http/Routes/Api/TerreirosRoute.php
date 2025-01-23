@@ -29,7 +29,7 @@ class TerreirosRoute
                     ->group(function () {
                         Route::post('/store', CreateTerreirosController::class)->name('store');
                         Route::post('/question/{id}/store', CreateTerreiroQuestionController::class)->name('question.store');
-                        Route::post('/search?uf={state_id}', SearchTerreiroForUfController::class)->name('search');
+                        Route::post('/search', SearchTerreiroForUfController::class)->name('search');
                     });
 
                 Route::prefix('nacoes')

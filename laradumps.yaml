@@ -14,10 +14,10 @@ observers:
   dump: true
   original_dump: true
   queries: true
-  slow_queries: false
+  slow_queries: true
   mail: false
   logs: true
-  http: true
+  http: false
   jobs: false
   commands: false
   scheduled_commands: false

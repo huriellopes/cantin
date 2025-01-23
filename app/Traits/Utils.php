@@ -313,21 +313,23 @@ trait Utils
 
     /**
      * @param string $endpoint
-     * @param string $restData
+     * @param string $params
      * @param array|null $data
      * @param string $method
      * @return array|mixed
      * @throws \Illuminate\Http\Client\ConnectionException
      */
-    public function consultAPI(string $endpoint, string $restData, array $data = null, string $method = 'GET')
+    public function consultAPI(string $endpoint, string $params, array $data = null, string $method = 'GET'): mixed
     {
         if ($method === 'GET') {
             return Http::acceptJson()->withHeaders([
                 'Content-Type' => 'application/json',
-            ])->get($endpoint.$restData)->json();
+            ])->get($endpoint.$params)->json();
         }
 
-        return Http::post($endpoint.$restData, $data)->json();
+        return Http::acceptJson()->withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post($endpoint.$params, $data)->json();
     }
 
     /**
