@@ -41,8 +41,8 @@ services:
     image: postgres:15.1-alpine
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: cantin-db
-      POSTGRES_DB: $2y$05$9lfFJVpJj4BsDDcTSavNRe.66guA5G2jJW8bxnXwY1ASecsec/mc2
+      POSTGRES_PASSWORD: cantin2025
+      POSTGRES_DB: cantin
     restart: always
     volumes:
       - ./docker/database:/docker-entrypoint-initdb.d/
