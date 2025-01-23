@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\PartnersEntities;
 
-use App\Archicture\Entities\Addresses\Actions\CreateAddressAction;
-use App\Archicture\Entities\PartnersEntities\Actions\CreatePartnersEntitiesAction;
 use App\Http\Controllers\Controller;
 use App\Http\DTO\PartnersEntities\PartnersEntitiesDTO;
 use App\Http\Requests\PartnersEntities\PartnersEntitiesRequest;
+use App\Services\Address\CreateAddressService;
+use App\Services\PartnersEntities\CreatePartnersEntitiesService;
 use App\Traits\Utils;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -19,12 +19,12 @@ class CreatePartnersEntitiesController extends Controller
     use Utils;
 
     /**
-     * @param CreatePartnersEntitiesAction $createPartnersEntitiesAction
-     * @param CreateAddressAction $createAddressAction
+     * @param CreatePartnersEntitiesService $createPartnersEntitiesService
+     * @param CreateAddressService $createAddressService
      */
     public function __construct(
-        protected CreatePartnersEntitiesAction $createPartnersEntitiesAction,
-        protected CreateAddressAction $createAddressAction,
+        protected CreatePartnersEntitiesService $createPartnersEntitiesService,
+        protected CreateAddressService $createAddressService,
     ){}
 
     /**
@@ -37,11 +37,11 @@ class CreatePartnersEntitiesController extends Controller
             DB::beginTransaction();
                 $params = PartnersEntitiesDTO::from($request);
 
-                $address = $this->createAddressAction->execute($params);
+                $address = $this->createAddressService->create($params);
 
                 $params->address_id = $address->id;
 
-                $this->createPartnersEntitiesAction->execute($params);
+                $this->createPartnersEntitiesService->create($params);
             DB::commit();
 
             return $this->returnResponse(
@@ -52,6 +52,12 @@ class CreatePartnersEntitiesController extends Controller
             );
         } catch (Exception|Throwable $e) {
             DB::rollBack();
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
 
             $this->loggingDatabase('create parterns entities', 'error', $e);
 

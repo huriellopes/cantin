@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Suggestions;
 
-use App\Archicture\Entities\Suggestions\Actions\ListSuggestionAction;
 use App\Http\Controllers\Controller;
+use App\Services\Suggestions\ListSuggestionService;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
 use Throwable;
@@ -15,10 +15,10 @@ class ListSuggestionController extends Controller
     use Utils;
 
     /**
-     * @param ListSuggestionAction $listSuggestionAction
+     * @param ListSuggestionService $listSuggestionService
      */
     public function __construct(
-        protected ListSuggestionAction $listSuggestionAction,
+        protected ListSuggestionService $listSuggestionService,
     ){}
 
     /**
@@ -27,7 +27,7 @@ class ListSuggestionController extends Controller
     public function __invoke() : JsonResponse
     {
         try {
-            $listSuggestion = $this->listSuggestionAction->execute();
+            $listSuggestion = $this->listSuggestionService->list();
 
             return $this->returnResponse(
                 true,
@@ -38,6 +38,12 @@ class ListSuggestionController extends Controller
                 $listSuggestion->count(),
             );
         } catch (Exception|Throwable $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
                 Response::$statusTexts[Response::HTTP_BAD_REQUEST],

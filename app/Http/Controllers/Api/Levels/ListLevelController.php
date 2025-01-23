@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\Levels;
 
-use App\Archicture\Entities\Levels\Actions\ListLevelAction;
-use App\Archicture\Generics\TraitsGenerals\MessagesDefaults;
 use App\Http\Controllers\Controller;
+use App\Services\Levels\ListLevelService;
 use App\Traits\Utils;
 use Exception;
+use Throwable;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,10 +15,10 @@ class ListLevelController extends Controller
     use Utils;
 
     /**
-     * @param ListLevelAction $listLevelAction
+     * @param ListLevelService $listLevelService
      */
     public function __construct(
-        protected ListLevelAction $listLevelAction,
+        protected ListLevelService $listLevelService,
     ){}
 
     /**
@@ -27,7 +27,7 @@ class ListLevelController extends Controller
     public function __invoke() : JsonResponse
     {
         try {
-            $levels = $this->listLevelAction->execute();
+            $levels = $this->listLevelService->listLevels();
 
             return $this->returnResponse(
                 true,
@@ -37,13 +37,19 @@ class ListLevelController extends Controller
                 null,
                 $levels->count()
             );
-        } catch(Exception $exception) {
+        } catch(Exception|Throwable $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
-                MessagesDefaults::ERROR400,
+                Response::$statusTexts[Response::HTTP_BAD_REQUEST],
                 null,
                 Response::HTTP_BAD_REQUEST,
-                $exception
+                $e
             );
         }
     }

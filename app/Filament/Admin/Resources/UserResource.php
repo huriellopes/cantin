@@ -2,11 +2,10 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Archicture\Entities\Levels\Enum\LevelEnum;
-use App\Archicture\Entities\Users\Models\User;
+use App\Enum\LevelEnum;
+use App\Models\User;
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource\RelationManagers;
-//use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;

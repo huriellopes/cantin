@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\TransPeople;
 
-use App\Archicture\Validates\Validate;
+use App\Validates\Validate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TransPeopleRequest extends FormRequest

@@ -13,6 +13,20 @@ const ListState = function () {
         })
     }
 
+    let listCities = () => {
+        getApi('/api/cities/list', 'POST', null).then((res) => {
+            if (res.status === 200 && res.data.data.length > 0) {
+                let options = '<option selected disabled>Selecione a cidade</option>'
+
+                res.data.data.map(city => {
+                    options += `<option value="${city.id}">${city.city}</option>`
+                })
+
+                document.querySelector('#city').innerHTML = options
+            }
+        })
+    }
+
     let selectState = () => {
         let state = document.getElementById('state')
 
@@ -34,6 +48,7 @@ const ListState = function () {
     return {
         init: function () {
             listStates()
+            listCities()
             selectState()
         }
     }

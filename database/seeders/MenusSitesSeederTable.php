@@ -71,7 +71,7 @@ class MenusSitesSeederTable extends Seeder
                 'name' => 'terreiros',
                 'description' => 'Search Terreiros Page',
                 'route' => 'search.terreiros',
-                'status' => Status::INACTIVE->value,
+                'status' => Status::ACTIVE->value,
                 'user_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

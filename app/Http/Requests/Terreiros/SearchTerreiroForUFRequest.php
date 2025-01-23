@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Terreiros;
 
-use App\Archicture\Validates\Validate;
+use App\Validates\Validate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SearchTerreiroForUFRequest extends FormRequest
@@ -21,7 +21,7 @@ class SearchTerreiroForUFRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'state_id' => 'nullable|int|exists:states,id',
+            'uf' => 'nullable|int|exists:states,id',
         ];
     }
 

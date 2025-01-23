@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\Terreiros;
 
-use App\Archicture\Entities\Addresses\Actions\CreateAddressAction;
-use App\Archicture\Entities\Terreiros\Actions\CreateTerreirosAction;
 use App\Http\Controllers\Controller;
 use App\Http\DTO\Terreiro\TerreiroDTO;
 use App\Http\Requests\Terreiros\TerreirosRequest;
+use App\Services\Address\CreateAddressService;
+use App\Services\Terreiros\CreateTerreirosService;
 use App\Traits\Utils;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,26 +19,26 @@ class CreateTerreirosController extends Controller
     use Utils;
 
     /**
-     * @param CreateTerreirosAction $createTerreirosAction
-     * @param CreateAddressAction $createAddressAction
+     * @param CreateTerreirosService $createTerreirosService
+     * @param CreateAddressService $createAddressService
      */
     public function __construct(
-        protected CreateTerreirosAction $createTerreirosAction,
-        protected CreateAddressAction $createAddressAction,
+        protected CreateTerreirosService $createTerreirosService,
+        protected CreateAddressService $createAddressService,
     ){}
 
     public function __invoke(TerreirosRequest $request) : JsonResponse
     {
         try {
             DB::beginTransaction();
-//            dd($request->all());
-            $params = TerreiroDTO::from($request);
 
-            $address = $this->createAddressAction->execute($params);
+                $params = TerreiroDTO::from($request);
 
-            $params->address_id = $address->id;
+                $address = $this->createAddressService->create($params);
 
-            $terreiro = $this->createTerreirosAction->execute($params);
+                $params->address_id = $address->id;
+
+                $terreiro = $this->createTerreirosService->create($params);
 
             DB::commit();
 
@@ -52,7 +52,12 @@ class CreateTerreirosController extends Controller
             );
         } catch (Exception|Throwable $e) {
             DB::rollBack();
-            dd($e->getMessage());
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
 
             return $this->returnResponse(
                 false,

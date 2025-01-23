@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Api\Users;
 
-use App\Archicture\Entities\Users\Actions\DelUsersAction;
-use App\Archicture\Entities\Users\Models\User;
-use App\Archicture\Generics\TraitsGenerals\MessagesDefaults;
+use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Services\Users\DelUsersService;
+use Symfony\Component\HttpFoundation\Response;
 use App\Traits\Utils;
 use Exception;
+use Throwable;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class DelUsersController extends Controller
 {
     use Utils;
 
     /**
-     * @param DelUsersAction $delUsersAction
+     * @param DelUsersService $delUsersService
      */
     public function __construct(
-        protected DelUsersAction $delUsersAction
+        protected DelUsersService $delUsersService
     ){}
 
     /**
@@ -31,7 +31,7 @@ class DelUsersController extends Controller
     {
         $this->authorize('view', User::class);
         try {
-            $this->delUsersAction->execute($user);
+            $this->delUsersService->delete($user);
 
             return $this->returnResponse(
                 true,
@@ -39,13 +39,19 @@ class DelUsersController extends Controller
                 null,
                 Response::HTTP_OK
             );
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
-                MessagesDefaults::ERROR400,
+                Response::$statusTexts[Response::HTTP_BAD_REQUEST],
                 null,
                 Response::HTTP_BAD_REQUEST,
-                $exception
+                $e
             );
         }
     }

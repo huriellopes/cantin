@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Users;
 
-use App\Archicture\Entities\Users\Validates\CreateUsersValidate;
+use App\Validates\CreateUsersValidate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateUsersRequest extends FormRequest

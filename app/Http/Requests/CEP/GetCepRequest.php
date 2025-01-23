@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\CEP;
 
-use App\Archicture\Entities\CEP\Validate\GetCepValidate;
+use App\Validates\GetCepValidate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GetCepRequest extends FormRequest

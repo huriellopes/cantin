@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\TransPeople;
 
-use App\Archicture\Entities\Addresses\Actions\CreateAddressAction;
 use App\Http\Controllers\Controller;
+use App\Services\Address\CreateAddressService;
+use App\Services\TransPeople\CreateTransPeopleService;
 use App\Traits\Utils;
 use App\Http\Requests\TransPeople\TransPeopleRequest;
 use App\Http\DTO\TransPeople\TransPeopleDTO;
-use App\Archicture\Entities\TransPeople\Actions\CreateTransPeopleAction;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -19,12 +19,12 @@ class CreateTransPeopleController extends Controller
     use Utils;
 
     /**
-     * @param CreateAddressAction $createAddressAction
-     * @param CreateTransPeopleAction $createTransPeopleAction
+     * @param CreateAddressService $createAddressService
+     * @param CreateTransPeopleService $createTransPeopleService
      */
     public function __construct(
-        protected CreateAddressAction $createAddressAction,
-        protected CreateTransPeopleAction $createTransPeopleAction,
+        protected CreateAddressService $createAddressService,
+        protected CreateTransPeopleService $createTransPeopleService,
     ){}
 
     /**
@@ -37,11 +37,11 @@ class CreateTransPeopleController extends Controller
             DB::beginTransaction();
                 $params = TransPeopleDTO::from($request);
 
-                $address = $this->createAddressAction->execute($params);
+                $address = $this->createAddressService->create($params);
 
                 $params->address_id = $address->id;
 
-                $this->createTransPeopleAction->execute($params);
+                $this->createTransPeopleService->create($params);
             DB::commit();
 
             return $this->returnResponse(
@@ -52,6 +52,12 @@ class CreateTransPeopleController extends Controller
             );
         } catch (Exception|Throwable $e) {
             DB::rollBack();
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
                 Response::$statusTexts[Response::HTTP_BAD_REQUEST],

@@ -45,7 +45,7 @@ class SiteRoute
                             ->name('create.terreiros');
                         Route::get('/{id}/questoes', CreateTerreiroQuestionController::class)
                             ->name('create.questoes');
-                        Route::get('/',SearchTerreirosController::class)
+                        Route::get('/{uf?}',SearchTerreirosController::class)
                             ->name('search.terreiros');
                     });
             });

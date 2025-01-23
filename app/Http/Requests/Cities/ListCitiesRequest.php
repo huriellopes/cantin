@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests\Cities;
 
-use App\Archicture\Entities\Cities\Validates\ListCitiesValidate;
+use App\Validates\ListCitiesValidate;
 use Illuminate\Foundation\Http\FormRequest;
-use Termwind\Components\Li;
 
 class ListCitiesRequest extends FormRequest
 {

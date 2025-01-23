@@ -34,6 +34,37 @@ class CreateMenuSite extends CreateRecord
 
         $menu->save();
 
+        $controllerFile = base_path('/app/Http/Controllers/Web/Site/Pages/'.str($menu->route)->ucfirst().'Controller.php');
+
+        if (!file_exists($controllerFile)) {
+            $file = fopen($controllerFile, "w+");
+            fwrite($file, '<?php
+
+namespace App\Http\Controllers\Web\Site\Pages;
+
+use App\Http\Controllers\Controller;
+use App\Archicture\Entities\MenusSites\Actions\ListMenusSitesAction;
+use App\Http\Controllers\Web\WebBaseController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class ' . str($menu->route)->ucfirst() . 'Controller extends WebBaseController
+{
+    public function __construct(ListMenusSitesAction $listMenusSitesAction)
+    {
+        parent::__construct($listMenusSitesAction);
+    }
+}');
+        }
+
+        $route = base_path('/routes/web.php');
+
+        if (file_exists($route)) {
+            $file = fopen($route, "a");
+            fwrite($file, "\n" . "Route::get('/{$menu->route}', [\\App\\Http\\Controllers\\Web\\Site\\Pages\\" . str($menu->route)->ucfirst() . "Controller::class, 'index'])->name('{$menu->route}');");
+            fclose($file);
+        }
+
         return $menu;
     }
 }

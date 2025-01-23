@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\TypePeople;
 
-use App\Archicture\Entities\TypePeoples\Actions\ListTypePeopleAction;
 use App\Http\Controllers\Controller;
+use App\Services\TypePeoples\ListTypePeopleService;
 use App\Traits\Utils;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,10 +15,10 @@ class ListTypePeopleController extends Controller
     use Utils;
 
     /**
-     * @param ListTypePeopleAction $listTypePeopleAction
+     * @param ListTypePeopleService $listTypePeopleService
      */
     public function __construct(
-        protected ListTypePeopleAction $listTypePeopleAction,
+        protected ListTypePeopleService $listTypePeopleService,
     ){}
 
     /**
@@ -27,7 +27,7 @@ class ListTypePeopleController extends Controller
     public function __invoke() : JsonResponse
     {
         try {
-            $listTypePeople = $this->listTypePeopleAction->execute();
+            $listTypePeople = $this->listTypePeopleService->list();
 
             return $this->returnResponse(
                 true,
@@ -38,6 +38,12 @@ class ListTypePeopleController extends Controller
                 $listTypePeople->count(),
             );
         } catch (Exception|Throwable $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
                 Response::$statusTexts[Response::HTTP_BAD_REQUEST],

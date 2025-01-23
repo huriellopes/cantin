@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Terreiros;
 
-use App\Archicture\Entities\TerreirosQuestions\Validates\QuestionValidate;
+use App\Validates\QuestionValidate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class QuestionRequest extends FormRequest

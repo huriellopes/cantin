@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\States;
 
-use App\Archicture\Entities\States\Actions\ListStatesAction;
-use App\Archicture\Generics\TraitsGenerals\MessagesDefaults;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\States\ListStatesResourceCollection;
+use App\Services\States\ListStatesService;
 use App\Traits\Utils;
 use Exception;
+use Throwable;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,10 +16,10 @@ class ListStatesController extends Controller
     use Utils;
 
     /**
-     * @param ListStatesAction $listStatesAction
+     * @param ListStatesService $listStatesService
      */
     public function __construct(
-        protected ListStatesAction $listStatesAction
+        protected ListStatesService $listStatesService
     ){}
 
     /**
@@ -28,7 +28,7 @@ class ListStatesController extends Controller
     public function __invoke() : JsonResponse
     {
         try {
-            $states = (new ListStatesResourceCollection($this->listStatesAction->execute()));
+            $states = (new ListStatesResourceCollection($this->listStatesService->list()));
 
             return $this->returnResponse(
                 true,
@@ -39,13 +39,19 @@ class ListStatesController extends Controller
                 $states->count(),
             );
 
-        } catch (Exception $exception) {
+        } catch (Exception|Throwable $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
-                MessagesDefaults::ERROR400,
+                Response::$statusTexts[Response::HTTP_BAD_REQUEST],
                 null,
                 Response::HTTP_BAD_REQUEST,
-                $exception
+                $e
             );
         }
     }

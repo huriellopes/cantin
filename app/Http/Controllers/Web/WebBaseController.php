@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Archicture\Entities\MenusSites\Actions\ListMenusSitesAction;
 use App\Http\Controllers\Controller;
+use App\Services\MenusSites\ListMenusSitesService;
 use App\Traits\Utils;
 
 class WebBaseController extends Controller
@@ -12,9 +12,9 @@ class WebBaseController extends Controller
     protected string $viewPath = 'Site.Pages.';
 
     /**
-     * @param ListMenusSitesAction $listMenusSitesAction
+     * @param ListMenusSitesService $listMenusSitesService
      */
     public function __construct(
-        protected ListMenusSitesAction $listMenusSitesAction,
+        protected ListMenusSitesService $listMenusSitesService,
     ){}
 }

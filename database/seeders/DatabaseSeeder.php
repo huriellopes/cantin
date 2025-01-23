@@ -21,7 +21,6 @@ class DatabaseSeeder extends Seeder
             NationsTerreirosSeederTable::class,
             StateSeederTable::class,
             CitySeederTable::class,
-            StatusMenusSitesSeederTable::class,
             MenusSitesSeederTable::class,
             SuggestionSeederTable::class,
             CommonQuestionsSeederTable::class,

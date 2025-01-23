@@ -2,8 +2,7 @@
 
 namespace App\Traits;
 
-use App\Archicture\Entities\Logs\Actions\CreateLogAction;
-use App\Archicture\Entities\Users\Models\User;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -318,6 +317,7 @@ trait Utils
      * @param array|null $data
      * @param string $method
      * @return array|mixed
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function consultAPI(string $endpoint, string $restData, array $data = null, string $method = 'GET')
     {

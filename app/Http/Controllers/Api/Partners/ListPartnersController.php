@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\Partners;
 
-use App\Archicture\Entities\Partners\Actions\ListSitePartnersAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Partners\PartnersResource;
+use App\Services\Partners\ListPartnersService;
 use App\Traits\Utils;
 use Illuminate\Http\JsonResponse;
 use Exception;
+use Throwable;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListPartnersController extends Controller
@@ -15,10 +16,10 @@ class ListPartnersController extends Controller
     use Utils;
 
     /**
-     * @param ListSitePartnersAction $listSitePartnersAction
+     * @param ListPartnersService $listPartnersService
      */
     public function __construct(
-        protected ListSitePartnersAction $listSitePartnersAction,
+        protected ListPartnersService $listPartnersService,
     ){}
 
     /**
@@ -27,7 +28,7 @@ class ListPartnersController extends Controller
     public function __invoke(): JsonResponse
     {
         try {
-            $list = PartnersResource::collection($this->listSitePartnersAction->execute());
+            $list = PartnersResource::collection($this->listPartnersService->list());
 
             if ($list->isEmpty()) {
                 return $this->returnResponse(
@@ -46,8 +47,13 @@ class ListPartnersController extends Controller
                 null,
                 $list->count(),
             );
-        } catch (Exception $e) {
-            dd($e->getMessage(), $e->getTrace());
+        } catch (Exception|Throwable $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
                 Response::$statusTexts[Response::HTTP_BAD_REQUEST],

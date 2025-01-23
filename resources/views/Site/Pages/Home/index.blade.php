@@ -52,5 +52,5 @@
 @stop
 
 @section('js')
-    <script src="{{ asset('assets/js/partners/listPartners.js') }}"></script>
+{{--    <script src="{{ asset('assets/js/partners/listPartners.js') }}"></script>--}}
 @stop

@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Web\Site\Pages;
 
-use App\Archicture\Entities\MenusSites\Actions\ListMenusSitesAction;
-use App\Archicture\Entities\Terreiros\Models\Terreiro;
+use App\Models\Terreiro;
 use App\Http\Controllers\Web\WebBaseController;
 
 class CreateTerreiroQuestionController extends WebBaseController
@@ -14,7 +13,7 @@ class CreateTerreiroQuestionController extends WebBaseController
             return redirect()->route('home');
         }
 
-        $menus = $this->listMenusSitesAction->execute();
+        $menus = $this->listMenusSitesService->list();
 
         return view($this->viewPath.'Terreiros.create-question', compact('menus', 'id'));
     }

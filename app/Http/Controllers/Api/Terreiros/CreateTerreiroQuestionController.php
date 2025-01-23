@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api\Terreiros;
 
-use App\Archicture\Entities\TerreirosQuestions\Actions\CreateTerreiroQuestionAction;
 use App\Http\Controllers\Controller;
 use App\Http\DTO\Terreiro\QuestionDTO;
 use App\Http\Requests\Terreiros\QuestionRequest;
+use App\Services\TerreirosQuestions\CreateTerreiroQuestionService;
 use App\Traits\Utils;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,10 +17,10 @@ class CreateTerreiroQuestionController extends Controller
     use Utils;
 
     /**
-     * @param CreateTerreiroQuestionAction $createTerreiroQuestionAction
+     * @param CreateTerreiroQuestionService $createTerreiroQuestionService
      */
     public function __construct(
-        protected CreateTerreiroQuestionAction $createTerreiroQuestionAction,
+        protected CreateTerreiroQuestionService $createTerreiroQuestionService,
     ){}
 
     /**
@@ -33,7 +33,9 @@ class CreateTerreiroQuestionController extends Controller
         try {
             $params = QuestionDTO::from($request);
 
-            $this->createTerreiroQuestionAction->execute($id, $params);
+            $params->terreiro_id = $id;
+
+            $this->createTerreiroQuestionService->create($params);
 
             return $this->returnResponse(
                 true,
@@ -42,6 +44,12 @@ class CreateTerreiroQuestionController extends Controller
                 Response::HTTP_CREATED,
             );
         } catch (Exception|Throwable $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
                 Response::$statusTexts[Response::HTTP_BAD_REQUEST],

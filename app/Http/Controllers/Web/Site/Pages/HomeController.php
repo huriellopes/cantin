@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers\Web\Site\Pages;
 
-use App\Archicture\Entities\CommonQuestion\Actions\ListCommonQuestionAction;
-use App\Archicture\Entities\MenusSites\Actions\ListMenusSitesAction;
 use App\Http\Controllers\Web\WebBaseController;
-use Faker\Core\Number;
+use App\Services\CommonQuestion\ListCommonQuestionService;
+use App\Services\MenusSites\ListMenusSitesService;
 
 class HomeController extends WebBaseController
 {
     public function __construct(
-        protected ListMenusSitesAction $listMenusSitesAction,
-        protected ListCommonQuestionAction $listCommonQuestionAction,
+        protected ListMenusSitesService $listMenusSitesService,
+        protected ListCommonQuestionService $listCommonQuestionService,
     )
     {
-        parent::__construct($listMenusSitesAction);
+        parent::__construct($listMenusSitesService);
     }
 
     public function __invoke()
     {
-        $menus = $this->listMenusSitesAction->execute();
-        $commons = $this->listCommonQuestionAction->execute();
+        $menus = $this->listMenusSitesService->list();
+        $commons = $this->listCommonQuestionService->list();
 
         return view($this->viewPath.'Home.index', compact('menus', 'commons'));
     }

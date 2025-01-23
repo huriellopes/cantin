@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\Users;
 
-use App\Archicture\Entities\Users\Actions\ListUsersAction;
-use App\Archicture\Entities\Users\Models\User;
-use App\Archicture\Generics\TraitsGenerals\MessagesDefaults;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Users\ListUsersResourceCollection;
+use App\Services\Users\ListUsersService;
 use App\Traits\Utils;
 use Exception;
+use Throwable;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,10 +17,10 @@ class ListUsersController extends Controller
     use Utils;
 
     /**
-     * @param ListUsersAction $listUsersAction
+     * @param ListUsersService $listUsersService
      */
     public function __construct(
-        protected ListUsersAction $listUsersAction,
+        protected ListUsersService $listUsersService,
     ){}
 
     /**
@@ -31,7 +31,7 @@ class ListUsersController extends Controller
     {
         $this->authorize('view', User::class);
         try {
-            $users = (new ListUsersResourceCollection($this->listUsersAction->execute()));
+            $users = (new ListUsersResourceCollection($this->listUsersService->list()));
 
             return $this->returnResponse(
                 true,
@@ -41,13 +41,19 @@ class ListUsersController extends Controller
                 null,
                 $users->count()
             );
-        } catch (Exception $exception) {
+        } catch (Exception|Throwable $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
-                MessagesDefaults::ERROR400,
+                Response::$statusTexts[Response::HTTP_BAD_REQUEST],
                 null,
                 Response::HTTP_BAD_REQUEST,
-                $exception
+                $e
             );
         }
     }

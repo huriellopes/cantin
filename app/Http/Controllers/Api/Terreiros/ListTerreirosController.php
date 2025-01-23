@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Terreiros;
 
 use App\Archicture\Entities\Terreiros\Actions\ListTerreirosAction;
-use App\Archicture\Generics\TraitsGenerals\MessagesDefaults;
 use App\Http\Controllers\Controller;
+use App\Traits\MessagesDefaults;
 use App\Traits\Utils;
 use Exception;
 use Illuminate\Http\JsonResponse;

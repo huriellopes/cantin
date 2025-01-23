@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api\Cities;
 
-use App\Archicture\Entities\Cities\Actions\ListCitiesAction;
-use App\Archicture\Generics\TraitsGenerals\MessagesDefaults;
 use App\Http\Controllers\Controller;
 use App\Http\DTO\Cities\ListCitiesDTO;
 use App\Http\Requests\Cities\ListCitiesRequest;
 use App\Http\Resources\Cities\ListCitiesResourceCollection;
+use App\Services\Cities\ListCitiesService;
 use App\Traits\Utils;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -18,22 +17,23 @@ class ListCitiesController extends Controller
     use Utils;
 
     /**
-     * @param ListCitiesAction $listCitiesAction
+     * @param ListCitiesService $listCitiesService
      */
     public function __construct(
-        protected ListCitiesAction $listCitiesAction
+        protected ListCitiesService $listCitiesService
     ){}
 
     /**
      * @param ListCitiesRequest $request
      * @return JsonResponse
+     * @throws \Throwable
      */
     public function __invoke(ListCitiesRequest $request) : JsonResponse
     {
         try {
             $params = ListCitiesDTO::from($request);
 
-            $cities = (new ListCitiesResourceCollection($this->listCitiesAction->execute($params)));
+            $cities = (new ListCitiesResourceCollection($this->listCitiesService->list($params)));
 
             return $this->returnResponse(
                 true,
@@ -43,13 +43,19 @@ class ListCitiesController extends Controller
                 null,
                 $cities->count()
             );
-        } catch (Exception $exception) {
+        } catch (Exception|\Throwable $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
-                MessagesDefaults::ERROR400,
+                Response::$statusTexts[Response::HTTP_BAD_REQUEST],
                 null,
                 Response::HTTP_BAD_REQUEST,
-                $exception
+                $e
             );
         }
     }

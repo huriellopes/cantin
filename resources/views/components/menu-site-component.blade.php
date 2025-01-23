@@ -12,8 +12,8 @@
         @if (Route::has('login'))
             @auth
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="{{ url('/dashboard') }}">
-                        Dashboard
+                    <a class="nav-link" aria-current="page" href="{{ url('/admin') }}">
+                        Admin
                     </a>
                 </li>
             @else

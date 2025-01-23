@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\Terreiros;
 
 use App\Http\Controllers\Controller;
-use App\Archicture\Entities\Terreiros\Actions\SearchTerreiroForUFAction;
 use App\Http\DTO\Terreiro\SearchTerreiroForUFDTO;
 use App\Http\Requests\Terreiros\SearchTerreiroForUFRequest;
 use App\Http\Resources\Terreiros\SearchResource;
+use App\Services\Terreiros\SearchTerreiroForUFService;
 use App\Traits\Utils;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -18,10 +18,10 @@ class SearchTerreiroForUfController extends Controller
     use Utils;
 
     /**
-     * @param SearchTerreiroForUFAction $searchTerreiroForUFAction
+     * @param SearchTerreiroForUFService $searchTerreiroForUFService
      */
     public function __construct(
-        protected SearchTerreiroForUFAction $searchTerreiroForUFAction,
+        protected SearchTerreiroForUFService $searchTerreiroForUFService,
     ){}
 
     /**
@@ -33,7 +33,7 @@ class SearchTerreiroForUfController extends Controller
         try {
             $params = SearchTerreiroForUFDTO::from($request);
 
-            $terreiros = $this->searchTerreiroForUFAction->execute($params);
+            $terreiros = $this->searchTerreiroForUFService->search($params);
 
             if ($terreiros->isEmpty()) {
                 return $this->returnResponse(
@@ -53,6 +53,13 @@ class SearchTerreiroForUfController extends Controller
                 $terreiros->count(),
             );
         } catch (Exception|Throwable $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
+
             $this->loggingDatabase('Search Terreiro For UF', 'error', $e);
 
             return $this->returnResponse(

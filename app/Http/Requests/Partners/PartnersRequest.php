@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Partners;
 
-use App\Archicture\Entities\Partners\Validates\PartnersValidate;
+use App\Validates\PartnersValidate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PartnersRequest extends FormRequest

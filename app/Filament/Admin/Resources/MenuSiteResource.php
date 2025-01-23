@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Archicture\Entities\MenusSites\Models\MenuSite;
+use App\Models\MenuSite;
 use App\Enums\Status;
 use App\Filament\Admin\Resources\MenuSiteResource\Pages;
 use App\Filament\Admin\Resources\MenuSiteResource\RelationManagers;

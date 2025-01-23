@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\NationsTerreiros;
 
-use App\Archicture\Entities\NationsTerreiros\Actions\ListNationsTerreirosAction;
 use App\Http\Controllers\Controller;
+use App\Services\NationsTerreiros\ListNationsTerreirosService;
 use App\Traits\Utils;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,10 +15,10 @@ class ListNationsTerreirosController extends Controller
     use Utils;
 
     /**
-     * @param ListNationsTerreirosAction $listNationsTerreirosAction
+     * @param ListNationsTerreirosService $listNationsTerreirosService
      */
     public function __construct(
-        protected ListNationsTerreirosAction $listNationsTerreirosAction,
+        protected ListNationsTerreirosService $listNationsTerreirosService,
     ){}
 
     /**
@@ -27,7 +27,7 @@ class ListNationsTerreirosController extends Controller
     public function __invoke() : JsonResponse
     {
         try {
-            $list = $this->listNationsTerreirosAction->execute();
+            $list = $this->listNationsTerreirosService->list();
 
             return $this->returnResponse(
                 true,
@@ -38,6 +38,12 @@ class ListNationsTerreirosController extends Controller
                 $list->count(),
             );
         } catch (Exception|Throwable $e) {
+            ds([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine(),
+            ])->danger();
             return $this->returnResponse(
                 false,
                 Response::$statusTexts[Response::HTTP_BAD_REQUEST],

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Archicture\Entities\Users\Models\User;
+use App\Models\User;
 use App\Traits\Utils;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
@@ -55,11 +55,12 @@ class LoginRequest extends FormRequest
 
             $this->validateEmail($login);
 
-            $user = User::when(filter_var($login, FILTER_VALIDATE_EMAIL), function ($query) use ($login) {
-                $query->where('email', '=', $login);
-            }, function ($query) use ($login) {
-                $query->where('username', '=', $login);
-            })->first();
+            $user = User::query()
+                ->when(filter_var($login, FILTER_VALIDATE_EMAIL), function ($query) use ($login) {
+                    $query->where('email', '=', $login);
+                    }, function ($query) use ($login) {
+                    $query->where('username', '=', $login);
+                })->first();
 
             $this->ensureIsNotRateLimited();
 

@@ -15,17 +15,23 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="row">
-            <div class="col-8">
-                <label for="uf" class="col-form-label">Filtro de Estados</label>
-                <select name="uf" id="uf" class="form-control">
-                    <option value selected disabled>Selecione o estado</option>
-                    @foreach ($states as $uf)
-                        <option value="{{ $uf->id }}">{{ $uf->description }}</option>
-                    @endforeach
-                </select>
-            </div>
+    <div class="row mt-4">
+        <div class="col-4">
+            <form action="{{ route('search.terreiros') }}" method="GET" id="form-search-terreiros">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="input-group mb-3">
+                            <select name="uf" id="uf" class="form-control" aria-label="Selecione o estado" aria-describedby="button-addon2">
+                                <option value selected disabled>Selecione o estado</option>
+                                @foreach ($states as $uf)
+                                    <option value="{{ $uf->id }}">{{ $uf->description }}</option>
+                                @endforeach
+                            </select>
+                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Buscar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -45,12 +51,44 @@
                         <th>Cidade</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    @if (!empty($terreiros) && count($terreiros) > 0)
+                        @foreach($terreiros as $terreiro)
+                            <tr>
+                                <td>{{ $terreiro->id }}</td>
+                                <td>{{ $terreiro->name }}</td>
+                                <td>{{ $terreiro->nation->nation }}</td>
+                                <td>{{ $terreiro->phone }}</td>
+                                <td>{{ $terreiro->leadership_orunko }}</td>
+                                <td>{{ \Carbon\Carbon::parse($terreiro->fundationed_at)->format('d/m/Y') }}</td>
+                                <td>{{ $terreiro->color_of_leadership }}</td>
+                                <td>{{ $terreiro->address->state->description }}</td>
+                                <td>{{ $terreiro->address->city->city_name }}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="9" class="text-center">Nenhum Terreiro Encontrado</td>
+                        </tr>
+                    @endif
+                </tbody>
             </table>
+            Total de {{ $terreiros->total() }} terreiros encontrados
+            {{ $terreiros->appends(request()->input())->links() }}
         </div>
     </div>
 @stop
 
 @section('js')
-    <script src="{{ asset('assets/js/Search/searchTerreiro.js') }}"></script>
+    <script>
+        document.getElementById('form-search-terreiros').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let uf = this.querySelector('#uf').value;
+            window.location.href = `/terreiros?uf=${uf}`
+
+            return false
+        })
+    </script>
+{{--    <script src="{{ asset('assets/js/Search/searchTerreiro.js') }}"></script>--}}
 @stop
