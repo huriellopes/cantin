@@ -45,7 +45,7 @@ services:
       POSTGRES_DB: cantin
     restart: always
     volumes:
-      - ./docker/database:/docker-entrypoint-initdb.d/
+      - ./.docker/database:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
     networks:
