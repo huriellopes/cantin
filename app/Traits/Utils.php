@@ -330,10 +330,17 @@ trait Utils
         return Http::post($endpoint.$restData, $data)->json();
     }
 
-    public function webhook(string $type = 'error', Exception|Throwable $exception = null, string $message, array $data = null): void
+    /**
+     * @param string $type
+     * @param Exception|Throwable|null $e
+     * @param string $message
+     * @param array|null $data
+     * @return void
+     */
+    public function webhook(string $type = "error", Exception|Throwable $e = null, string $message, array $data = null): void
     {
         if ($type === 'error') {
-            DiscordAlert::message("Error: .", [
+            DiscordAlert::message("Error: $message \nMensagem: {$e->getMessage()}\nArquivo: {$e->getFile()}\nLinha: {$e->getLine()}!", [
                 [
                     'title' => 'Error',
                     'description' => $message,

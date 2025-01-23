@@ -48,16 +48,16 @@ const GetCep = function () {
 
                 }).catch(error => {
                     if (error.response.status === 400) {
-                        document.querySelector('#cep').value = ''
+                        // document.querySelector('#cep').value = ''
                         document.querySelector('#address').value = ''
                         document.querySelector('#neighborhood').value = ''
                         document.querySelector('#complement').value = ''
                         document.querySelector('#number').value = ''
                         document.querySelector('#state').value = ''
                         document.querySelector('#city').value = ''
-                        alert('Cep não encontrado!')
+                        notify('error', 'Atenção', 'Cep não encontrado ou inválido!')
                     }
-                    console.log(error)
+                    console.error(error)
                 })
             }
         })

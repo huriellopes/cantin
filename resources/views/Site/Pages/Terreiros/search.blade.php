@@ -24,7 +24,7 @@
                             <select name="uf" id="uf" class="form-control" aria-label="Selecione o estado" aria-describedby="button-addon2">
                                 <option value selected disabled>Selecione o estado</option>
                                 @foreach ($states as $uf)
-                                    <option value="{{ $uf->id }}">{{ $uf->description }}</option>
+                                    <option value="{{ $uf->id }}" {{ (int) request()->get('uf') == $uf->id ? 'selected' : '' }}>{{ $uf->description }}</option>
                                 @endforeach
                             </select>
                             <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Buscar</button>

@@ -40,7 +40,7 @@
                             <div id="flush-collapse{{ $common->id }}" class="accordion-collapse collapse"
                                  data-bs-parent="#accordionFlushExample">
                                 <div class="accordion-body">
-                                    {{ $common->answer }}
+                                    {!! $common->answer !!}
                                 </div>
                             </div>
                         </div>

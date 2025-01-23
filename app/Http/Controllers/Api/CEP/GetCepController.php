@@ -7,7 +7,6 @@ use App\Http\DTO\CEP\GetCepDTO;
 use App\Http\Requests\CEP\GetCepRequest;
 use App\Http\Resources\CEP\GetCepResource;
 use App\Services\CEP\GetCepService;
-use App\Traits\MessagesDefaults;
 use App\Traits\Utils;
 use Exception;
 use Throwable;
@@ -49,9 +48,12 @@ class GetCepController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'line' => $e->getLine(),
             ])->danger();
+
+            $this->webhook('error', $e, 'Cep not found', null);
+
             return $this->returnResponse(
                 false,
-                MessagesDefaults::ERROR400,
+                Response::$statusTexts[Response::HTTP_BAD_REQUEST],
                 null,
                 Response::HTTP_BAD_REQUEST,
                 $e

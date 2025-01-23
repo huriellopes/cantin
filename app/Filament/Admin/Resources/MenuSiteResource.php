@@ -25,6 +25,11 @@ class MenuSiteResource extends Resource
 
     protected static ?string $breadcrumb = 'Menus';
 
+    protected static bool $shouldSkipAuthorization = true;
+
+    protected static ?string $modelLabel = 'Menu';
+
+
     public static function form(Form $form): Form
     {
         return $form

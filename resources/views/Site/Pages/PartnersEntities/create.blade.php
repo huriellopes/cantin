@@ -34,7 +34,7 @@
                         </div>
                         <div class="col">
                             <label for="cep" class="form-label">CEP</label>
-                            <input type="text" name="zipcode" id="cep" class="form-control" required autocomplete="off" />
+                            <input type="text" name="zipcode" id="cep" class="form-control" required autocomplete="off" maxlength="8" />
                         </div>
                     </div>
 

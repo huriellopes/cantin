@@ -50,6 +50,9 @@ class ListCitiesController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'line' => $e->getLine(),
             ])->danger();
+
+            $this->webhook('error', $e, Response::$statusTexts[Response::HTTP_BAD_REQUEST], null);
+
             return $this->returnResponse(
                 false,
                 Response::$statusTexts[Response::HTTP_BAD_REQUEST],
