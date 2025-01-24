@@ -3,7 +3,7 @@
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs($param->route) ? 'active' : '' }}" aria-current="page"
                href="{{ route($param->route) ?? '#' }}">
-                {{ str($param->name)->ucfirst() }}
+                {{ __(\Illuminate\Support\Str::ucfirst($param->name)) }}
             </a>
         </li>
     @endforeach
