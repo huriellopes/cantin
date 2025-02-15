@@ -3,7 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enum\LevelEnum;
+use App\Enum\Role as RoleEnum;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,15 +13,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Enums\Status;
-
-/**
- * @property $name
- * @property $username
- * @property $email
- * @property $level_id
- * @property $password
- * @property $status
- */
 class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
@@ -35,7 +26,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
-        'level_id',
+        'role_id',
         'status',
     ];
 
@@ -52,10 +43,13 @@ class User extends Authenticatable implements FilamentUser
     public function casts(): array
     {
         return [
+            'role_id' => RoleEnum::class,
             'status' => Status::class,
-//            'level_id' => LevelEnum::class,
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
     }
 
@@ -66,12 +60,12 @@ class User extends Authenticatable implements FilamentUser
 
     public function isSuperAdmin() : bool
     {
-        return $this->level_id === LevelEnum::SUPER->value;
+        return $this->role_id === Role::SUPER->value;
     }
 
     public function isAdmin() : bool
     {
-        return $this->level_id === LevelEnum::ADMIN->value;
+        return $this->role_id === Role::ADMIN->value;
     }
 
     public function getVerifyStatusAttribute()
@@ -79,8 +73,8 @@ class User extends Authenticatable implements FilamentUser
         return $this->deleted_at ?? null;
     }
 
-    public function level() : BelongsTo
+    public function role() : BelongsTo
     {
-        return $this->belongsTo(Level::class);
+        return $this->belongsTo(Role::class);
     }
 }

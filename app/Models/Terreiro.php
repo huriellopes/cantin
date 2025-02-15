@@ -2,21 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * Class Terreiro
- * @package App\Archicture\Entities\Terreiros\Models
- * @property string $name
- * @property string $phone
- * @property string $fundationed_at
- * @property int $nation_terreiro_id
- * @property string $leadership_orunko
- * @property string $color_of_leadership
- * @property int $address_id
- */
-class Terreiro extends GenericModels
+class Terreiro extends Model
 {
+    use SoftDeletes;
+
     protected $table = "terreiros";
 
     protected $fillable = [
@@ -28,6 +21,19 @@ class Terreiro extends GenericModels
         'color_of_leadership',
         'address_id',
     ];
+
+    /**
+     * @return string[]
+     */
+    public function casts() : array
+    {
+        return [
+            'fundationed_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime'
+        ];
+    }
 
     /**
      * @return BelongsTo

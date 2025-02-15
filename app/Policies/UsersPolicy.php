@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enum\LevelEnum;
+use App\Enum\Role as RoleEnum;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +20,7 @@ class UsersPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->level_id === LevelEnum::SUPER->value && Auth::user()->level_id === $user->level_id;
+        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
     }
 
     /**
@@ -28,7 +28,7 @@ class UsersPolicy
      */
     public function view(User $user): bool
     {
-        return $user->level_id === LevelEnum::SUPER->value && Auth::user()->level_id === $user->level_id;
+        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
     }
 
     /**
@@ -36,7 +36,7 @@ class UsersPolicy
      */
     public function create(User $user): bool
     {
-        return $user->level_id === LevelEnum::SUPER->value && Auth::user()->level_id === $user->level_id;
+        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
     }
 
     /**
@@ -44,7 +44,7 @@ class UsersPolicy
      */
     public function update(User $user): bool
     {
-        return $user->level_id === LevelEnum::SUPER->value && Auth::user()->level_id === $user->level_id;
+        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
     }
 
     /**
@@ -52,7 +52,7 @@ class UsersPolicy
      */
     public function delete(User $user): bool
     {
-        return $user->level_id === LevelEnum::SUPER->value && Auth::user()->level_id === $user->level_id;
+        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
     }
 
     /**
@@ -60,7 +60,7 @@ class UsersPolicy
      */
     public function restore(User $user): bool
     {
-        return $user->level_id === LevelEnum::SUPER->value && Auth::user()->level_id === $user->level_id;
+        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
     }
 
     /**
@@ -68,6 +68,6 @@ class UsersPolicy
      */
     public function forceDelete(User $user): bool
     {
-        return $user->level_id === LevelEnum::SUPER->value && Auth::user()->level_id === $user->level_id;
+        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
     }
 }

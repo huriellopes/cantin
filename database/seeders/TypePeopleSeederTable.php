@@ -16,70 +16,70 @@ class TypePeopleSeederTable extends Seeder
     {
         DB::table('type_peoples')->insert([
             [
-                'type' => 'Lésbica',
+                'name' => 'Lésbica',
                 'description' => 'Pessoa que fica com outras mulheres',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type' => 'Gay',
+                'name' => 'Gay',
                 'description' => 'Homem que fica com outro homem',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type' => 'Bissexual',
+                'name' => 'Bissexual',
                 'description' => 'Pessoa que se relaciona com os dois gêneros',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type' => 'Transgênero',
+                'name' => 'Transgênero',
                 'description' => 'Pessoa que é de um gênero e se identifica com outro',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type' => 'Querer',
+                'name' => 'Querer',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type' => 'Interseção',
+                'name' => 'Interseção',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type' => 'Assexual',
+                'name' => 'Assexual',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type' => 'Pansexual',
+                'name' => 'Pansexual',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type' => 'Não binário',
+                'name' => 'Não binário',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type' => 'Não se aplica',
+                'name' => 'Não se aplica',
                 'description' => 'Não se aplica o sexo da pessoa',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

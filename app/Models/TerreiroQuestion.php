@@ -2,30 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * Class TerreiroQuestion
- * @package App\Archicture\Entities\TerreirosQuestions\Models
- * @property int $id
- * @property int $terreiro_id
- * @property int $type_people_id
- * @property int $number_of_children_of_saint
- * @property int $number_of_children_of_saint_trans
- * @property string $trans_men_and_women
- * @property string $name_gender
- * @property string $fully_welcomes
- * @property string $respect_for_trans_people
- * @property string $suffered_aggregation
- * @property string $inclusion_of_the_name_of_the_land
- * @property int $suggestion_id
- * @property string $suggestion_text
- */
-class TerreiroQuestion extends GenericModels
+class TerreiroQuestion extends Model
 {
-protected $table = 'terreiros_questions';
+    use SoftDeletes;
 
+    protected $table = 'terreiros_questions';
+
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'id',
         'terreiro_id',
@@ -41,6 +31,18 @@ protected $table = 'terreiros_questions';
         'suggestion_id',
         'suggestion_text',
     ];
+
+    /**
+     * @return string[]
+     */
+    protected function casts() : array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime'
+        ];
+    }
 
     /**
      * @return HasOne

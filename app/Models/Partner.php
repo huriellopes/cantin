@@ -2,21 +2,15 @@
 
 namespace App\Models;
 
-use App\Enum\StatusEnum;
+use App\Enums\Status as StatusEnum;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * Class Partner
- * App\Models\Partner
- * @property string $name
- * @property string $email
- * @property string $phone
- * @property string $path_image
- * @property int $user_id
- * @property int $status_id
- */
-class Partner extends GenericModels
+class Partner extends Model
 {
+    use SoftDeletes;
+
     protected $table = "partners";
 
     protected $fillable = [
@@ -25,20 +19,20 @@ class Partner extends GenericModels
         'phone',
         'path_image',
         'user_id',
-        'status_id'
-    ];
-
-    protected $casts = [
-//        'status_id' => StatusEnum::class,
+        'status'
     ];
 
     /**
-     * @return BelongsTo
+     * @return string[]
      */
-    public function status() : BelongsTo
+    public function casts() : array
     {
-        return $this->belongsTo(Status::class, 'status_id')
-            ->select('id','name','description');
+        return [
+            'status' => Status::class,
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime'
+        ];
     }
 
     /**

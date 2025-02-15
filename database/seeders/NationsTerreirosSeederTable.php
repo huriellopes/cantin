@@ -15,63 +15,63 @@ class NationsTerreirosSeederTable extends Seeder
     {
         DB::table('nations_terreiros')->insert([
             [
-                'nation' => 'Candomblé Ketu',
+                'name' => 'Candomblé Ketu',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'nation' => 'Candomblé Jejé',
+                'name' => 'Candomblé Jejé',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'nation' => 'Candomblé Nagô',
+                'name' => 'Candomblé Nagô',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'nation' => 'Candomblé Angola',
+                'name' => 'Candomblé Angola',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'nation' => 'Umbanda',
+                'name' => 'Umbanda',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'nation' => 'Tambor de Mina',
+                'name' => 'Tambor de Mina',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'nation' => 'Xangô',
+                'name' => 'Xangô',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'nation' => 'Batuque',
+                'name' => 'Batuque',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'nation' => 'Outros',
+                'name' => 'Outros',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

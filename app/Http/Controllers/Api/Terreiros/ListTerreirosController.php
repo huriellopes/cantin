@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Terreiros;
 
-use App\Archicture\Entities\Terreiros\Actions\ListTerreirosAction;
 use App\Http\Controllers\Controller;
+use App\Services\Terreiros\ListTerreirosService;
 use App\Traits\MessagesDefaults;
 use App\Traits\Utils;
 use Exception;
@@ -15,10 +15,10 @@ class ListTerreirosController extends Controller
     use Utils;
 
     /**
-     * @param ListTerreirosAction $listTerreirosAction
+     * @param ListTerreirosService $listTerreirosService
      */
     public function __construct(
-        protected ListTerreirosAction $listTerreirosAction,
+        protected ListTerreirosService $listTerreirosService,
     ){}
 
     /**
@@ -27,7 +27,7 @@ class ListTerreirosController extends Controller
     public function __invoke() : JsonResponse
     {
         try {
-            $terreiros = $this->listTerreirosAction->execute();
+            $terreiros = $this->listTerreirosService->list();
 
             return $this->returnResponse(
                 true,

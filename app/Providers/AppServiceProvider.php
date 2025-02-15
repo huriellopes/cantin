@@ -23,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
         Model::unguard();
-        Model::shouldBeStrict(!$this->app->isProduction());
+        Model::preventLazyLoading();
     }
 }

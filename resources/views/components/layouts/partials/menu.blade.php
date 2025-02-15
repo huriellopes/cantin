@@ -1,0 +1,57 @@
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mb-2 mb-lg-0 d-flex ms-auto">
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('site.home') ? 'active' : '' }}" aria-current="page" href="{{ route('site.home') }}" wire:navigate>
+                {{ __('Home') }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('site.about') ? 'active' : '' }}" aria-current="page" href="{{ route('site.about') }}" wire:navigate>
+                {{ __('About') }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('site.partners-entities') ? 'active' : '' }}" aria-current="page" href="{{ route('site.partners-entities') }}" wire:navigate>
+                {{ __('Partners Entities') }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('site.trans-people') ? 'active' : '' }}" aria-current="page" href="{{ route('site.trans-people') }}" wire:navigate>
+                {{ __('Trans People') }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('site.terreiros.search') ? 'active' : '' }}" aria-current="page" href="{{ route('site.terreiros.search') }}" wire:navigate>
+                {{ __('Terreiros') }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('site.contact') ? 'active' : '' }}" aria-current="page" href="{{ route('site.contact') }}" wire:navigate>
+                {{ __('Contact') }}
+            </a>
+        </li>
+
+        @if (config('app.env') === 'local')
+            @if (Route::has('login'))
+                @auth
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ route('filament.admin.pages.dashboard') }}" wire:navigate>
+                            Admin
+                        </a>
+                    </li>F
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ route('filament.admin.auth.login') }}" wire:navigate>
+                            {{ __('Access Restricted') }}
+                        </a>
+                    </li>
+                @endauth
+            @endif
+        @endif
+    </ul>
+</div>

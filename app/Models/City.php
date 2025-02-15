@@ -2,20 +2,33 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * @property $description
- * @property $state_id
- */
-class City extends GenericModels
+class City extends Model
 {
-    protected $table = "cities";
+    use SoftDeletes;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
-        'city_name',
+        'name',
         'state_id'
     ];
+
+    /**
+     * @return string[]
+     */
+    public function casts() : array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime'
+        ];
+    }
 
     public function state() : BelongsTo
     {

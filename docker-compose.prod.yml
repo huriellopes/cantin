@@ -40,9 +40,9 @@ services:
     container_name: database
     image: postgres:15.1-alpine
     environment:
+      POSTGRES_DB: cantin
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: cantin2025
-      POSTGRES_DB: cantin
     restart: always
     volumes:
       - ./.docker/database:/docker-entrypoint-initdb.d/

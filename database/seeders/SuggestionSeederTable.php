@@ -16,21 +16,21 @@ class SuggestionSeederTable extends Seeder
     {
         DB::table('suggestions')->insert([
             [
-                'type_suggestion' => 'Criticas',
+                'name' => 'Criticas',
                 'description' => 'Criticas construtivas e sugestões de melhorias',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type_suggestion' => 'Dúvidas',
+                'name' => 'Dúvidas',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null
             ],
             [
-                'type_suggestion' => 'Indicações',
+                'name' => 'Indicações',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

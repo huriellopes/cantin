@@ -2,30 +2,37 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Model;
+use App\Enums\Status as StatusEnum;
 
 /**
  * Class CommonQuestion
  * App\Models\CommonQuestion
  * @property $question
  * @property $answer
- * @property $status_id
+ * @property $status
  */
-class CommonQuestion extends GenericModels
+class CommonQuestion extends Model
 {
-    protected $table = 'common_questions';
-
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'question',
         'answer',
-        'status_id'
+        'status'
     ];
 
     /**
-     * @return BelongsTo
+     * @return string[]
      */
-    public function status() : BelongsTo
+    protected function casts() : array
     {
-        return $this->belongsTo(Status::class, 'status_id');
+        return [
+            'status' => StatusEnum::class,
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime'
+        ];
     }
 }

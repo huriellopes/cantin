@@ -2,26 +2,37 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * Class TransPeople
- * @package App\Archicture\Entities\TransPeople\Models
- * @property string $name
- * @property string $email
- * @property string $phone
- * @property int $address_id
- */
-class TransPeople extends GenericModels
+class TransPeople extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'trans_peoples';
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'email',
         'phone',
         'address_id',
     ];
+
+    /**
+     * @return string[]
+     */
+    protected function casts() : array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime'
+        ];
+    }
 
     /**
      * @return BelongsTo

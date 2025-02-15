@@ -2,7 +2,7 @@
 
 namespace App\Services\Levels;
 
-use App\Models\Level;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Collection;
 
 class ListLevelService
@@ -12,7 +12,7 @@ class ListLevelService
      */
     public function listLevels(): Collection
     {
-        return Level::query()
+        return Role::query()
             ->select('id', 'level', 'description')
             ->get();
     }

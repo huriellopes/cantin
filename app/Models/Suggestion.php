@@ -2,16 +2,33 @@
 
 namespace App\Models;
 
-/**
- * @property $type_suggestion
- * @property $description
- */
-class Suggestion extends GenericModels
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+
+class Suggestion extends Model
 {
+    use SoftDeletes;
+
     protected $table = "suggestions";
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
-        'type_suggestion',
+        'name',
         'description'
     ];
+
+    /**
+     * @return string[]
+     */
+    public function casts() : array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime'
+        ];
+    }
 }

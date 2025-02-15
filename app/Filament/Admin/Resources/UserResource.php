@@ -2,14 +2,15 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enum\LevelEnum;
-use App\Models\Level;
+use App\Enum\Role as RoleEnum;
+use App\Models\Role;
 use App\Models\User;
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource\RelationManagers;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -23,7 +24,7 @@ class UserResource extends Resource
 
     protected static ?string $modelLabel = 'Usuário';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static ?string $breadcrumb = 'Usários';
 
@@ -33,21 +34,31 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(200)
-                    ->string()
-                    ->label('Nome'),
-                Forms\Components\TextInput::make('email')
-                    ->required()
-                    ->maxLength(200)
-                    ->email()
-                    ->label('Email'),
-                Forms\Components\Select::make('level_id')
-                    ->required()
-                    ->label('Perfil')
-                    ->options(Level::all()->pluck('level', 'id'))
-                    ->native('Selecione...'),
+                Forms\Components\Fieldset::make('Acesso do usuário')->schema([
+                    Forms\Components\ToggleButtons::make('level_id')
+                        ->label('Perfil de Acesso')
+                        ->required()
+                        ->markAsRequired(false)
+                        ->options(Role::all()->sortBy('level')->pluck('level', 'id'))
+                        ->grouped()
+                        ->reactive()
+                        ->default(3)
+                        ->columnSpan(2)
+                        ->afterStateUpdated(function ($record, $state, $livewire) {
+                            if ($record) {
+                                $record->level_id = $state;
+                                $livewire->dispatch(['level_id' => $state]);
+                            }
+                        }),
+                    Forms\Components\TextInput::make('name')
+                        ->label('Nome')
+                        ->required()
+                        ->string(),
+                    Forms\Components\TextInput::make('email')
+                        ->label('E-mail')
+                        ->required()
+                        ->email(),
+                ]),
             ]);
     }
 
@@ -75,20 +86,35 @@ class UserResource extends Resource
                         0 => 'danger',
                     })->boolean(),
                 TextColumn::make('level_id')
-                    ->formatStateUsing(fn ($state) => $state === LevelEnum::SUPER ? 'Super Usuário' : 'Administrador')
+                    ->formatStateUsing(fn ($state) => $state === Role::SUPER ? 'Super Usuário' : 'Administrador')
                     ->label('Perfil'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('level_id')
+                    ->label('Perfil')
+                    ->relationship('level', 'level'),
+                Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        1 => 'Ativo',
+                        0 => 'Inativo',
+                    ]),
             ])
+            ->filtersFormWidth(MaxWidth::ExtraLarge)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ]);
     }
 
+    /**
+     * @return Builder
+     */
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ])
             ->where('id', '<>', auth()->user()->id);
     }
 

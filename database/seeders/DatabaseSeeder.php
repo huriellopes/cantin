@@ -13,15 +13,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            StatusSeederTable::class,
-            LevelSeederTable::class,
+            RoleSeederTable::class,
             UserSeederTable::class,
             TypePeopleSeederTable::class,
             TypeTerreiroSeederTable::class,
             NationsTerreirosSeederTable::class,
             StateSeederTable::class,
             CitySeederTable::class,
-            MenusSitesSeederTable::class,
             SuggestionSeederTable::class,
             CommonQuestionsSeederTable::class,
         ]);

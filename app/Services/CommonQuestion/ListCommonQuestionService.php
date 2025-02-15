@@ -5,18 +5,20 @@ namespace App\Services\CommonQuestion;
 use App\Models\CommonQuestion;
 use App\Enum\StatusEnum;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class ListCommonQuestionService
 {
     /**
      * @return Collection
      */
-    public function list(): Collection
+    public static function list(): Collection
     {
-        return CommonQuestion::query()
-            ->select('id', 'answer','question', 'status_id', 'created_at')
-            ->with('status:id,name')
-            ->where('status_id', '=', StatusEnum::ACTIVE->value)
-            ->get();
+        return Cache::remember('commons', $seconds = 600,function () {
+            return CommonQuestion::query()
+                ->select('id', 'answer','question', 'status', 'created_at')
+                ->where('status', '=', StatusEnum::ACTIVE)
+                ->get();
+        });
     }
 }

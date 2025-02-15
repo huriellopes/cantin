@@ -3,17 +3,9 @@
 namespace App\Models;
 
 
-/**
- * @property $name
- * @property $email
- * @property $phone
- * @property $birth
- * @property $sex
- * @property $description_sex
- * @property $address_id
- * @property $type_people_id
- */
-class People extends GenericModels
+use Illuminate\Database\Eloquent\Model;
+
+class People extends Model
 {
     protected $table = "peoples";
 
@@ -27,4 +19,16 @@ class People extends GenericModels
         'address_id',
         'type_people_id',
     ];
+
+    /**
+     * @return string[]
+     */
+    public function casts() : array
+    {
+        return [
+            'birth' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
 }

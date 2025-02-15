@@ -2,21 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * @property $zipcode
- * @property $address
- * @property $complement
- * @property $number
- * @property $neighborhood
- * @property $state_id
- * @property $city_id
- */
-class Address extends GenericModels
+class Address extends Model
 {
-    protected $table = "addresses";
+    use SoftDeletes;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'zipcode',
         'address',

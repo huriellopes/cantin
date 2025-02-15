@@ -12,7 +12,7 @@ class SearchTerreiroForUFService
      * @param object|null $params
      * @return LengthAwarePaginator
      */
-    public function search(object $params = null) : LengthAwarePaginator
+    public static function search(object $params = null) : LengthAwarePaginator
     {
         $terreiro = Terreiro::query()
             ->select('id',

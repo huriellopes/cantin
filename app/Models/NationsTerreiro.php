@@ -2,16 +2,32 @@
 
 namespace App\Models;
 
-/**
- * @property $nation
- * @property $description
- */
-class NationsTerreiro extends GenericModels
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class NationsTerreiro extends Model
 {
+    use SoftDeletes;
+
     protected $table = "nations_terreiros";
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
-        'nation',
+        'name',
         'description'
     ];
+
+    /**
+     * @return string[]
+     */
+    public function casts() : array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime'
+        ];
+    }
 }

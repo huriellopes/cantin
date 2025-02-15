@@ -2,30 +2,34 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * Class TypePeople
- * @package App\Archicture\Entities\TypePeoples\Models
- * @property int $id
- * @property string $type
- * @property string $description
- */
-class TypePeople extends GenericModels
+class TypePeople extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'type_peoples';
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
-        'type',
+        'name',
         'description',
     ];
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getType(): string
+    protected function casts() : array
     {
-        return $this->type;
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime'
+        ];
     }
 
     /**

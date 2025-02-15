@@ -2,63 +2,39 @@
 
 namespace App\Http\Routes\Web;
 
-use App\Archicture\Entities\MenusSites\Models\MenuSite;
-use App\Http\Controllers\Web\Site\Pages\AboutController;
-use App\Http\Controllers\Web\Site\Pages\BlogController;
-use App\Http\Controllers\Web\Site\Pages\ContactController;
-use App\Http\Controllers\Web\Site\Pages\CreatePartnersEntitiesController;
-use App\Http\Controllers\Web\Site\Pages\CreateTerreiroQuestionController;
-use App\Http\Controllers\Web\Site\Pages\CreateTerreirosController;
-use App\Http\Controllers\Web\Site\Pages\CreateTransPeopleController;
-use App\Http\Controllers\Web\Site\Pages\HomeController;
-use App\Http\Controllers\Web\Site\Pages\SearchTerreirosController;
-use Illuminate\Database\Eloquent\Collection;
+use App\Livewire\Cantin\Pages\Home;
+use App\Livewire\Cantin\Pages\About;
+use App\Livewire\Cantin\Pages\PartnersEntities;
+use App\Livewire\Cantin\Pages\Transpeople;
+use App\Livewire\Cantin\Pages\Terreiros\Search;
+use App\Livewire\Cantin\Pages\Terreiros\Create;
+use App\Livewire\Cantin\Pages\Contact;
 use Illuminate\Support\Facades\Route;
 
 class SiteRoute
 {
+    /**
+     * @return void
+     */
     public static function web() : void
     {
         Route::prefix('/')
+            ->name('site.')
             ->group(function () {
-                Route::get('/', HomeController::class)
-                    ->name('home');
+                Route::get('/', Home::class)->name('home');
+                Route::get('/sobre', About::class)->name('about');
+                Route::get('/entidades-parceiras', PartnersEntities::class)->name('partners-entities');
+                Route::get('/pessoas-trans', Transpeople::class)->name('trans-people');
 
-                Route::get('/sobre', AboutController::class)
-                    ->name('about');
-
-                Route::get('/entidades', CreatePartnersEntitiesController::class)
-                    ->name('partners.entities');
-
-                Route::get('/pessoas-trans', CreateTransPeopleController::class)
-                    ->name('people.trans');
-
-                Route::get('/blog', BlogController::class)
-                    ->name('blog');
-
-                Route::get('/contato', ContactController::class)
-                    ->name('contact');
-
+                // Terreiro Route
                 Route::prefix('terreiros')
+                    ->name('terreiros.')
                     ->group(function () {
-                        Route::get('/cadastro', CreateTerreirosController::class)
-                            ->name('create.terreiros');
-                        Route::get('/{id}/questoes', CreateTerreiroQuestionController::class)
-                            ->name('create.questoes');
-                        Route::get('/{uf?}',SearchTerreirosController::class)
-                            ->name('search.terreiros');
+                        Route::get('/', Search::class)->name('search');
+                        Route::get('/cadastro', Create::class)->name('create');
                     });
-            });
-    }
 
-    /**
-     * @return Collection
-     */
-    private function menus() : Collection
-    {
-        return MenuSite::query()
-            ->active()
-            ->select('id', 'name', 'route')
-            ->get();
+                Route::get('contato', Contact::class)->name('contact');
+            });
     }
 }
