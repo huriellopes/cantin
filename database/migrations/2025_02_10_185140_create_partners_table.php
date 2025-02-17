@@ -1,9 +1,9 @@
 <?php
 
+use App\Enum\Status as StatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Enums\Status as StatusEnum;
 
 return new class extends Migration
 {

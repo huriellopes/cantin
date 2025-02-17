@@ -31,7 +31,12 @@ class TypeTerreiroResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')
+                    ->sortable()
+                    ->searchable()
+                    ->label('#'),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nome')
             ])
             ->filters([
                 //

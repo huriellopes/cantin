@@ -23,7 +23,13 @@ class TypePeopleResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->string()
+                    ->label('Nome'),
+                Forms\Components\TextInput::make('description')
+                    ->string()
+                    ->label('Descrição'),
             ]);
     }
 
@@ -31,7 +37,18 @@ class TypePeopleResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')
+                    ->searchable()
+                    ->sortable()
+                    ->label('#'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->label('Nome'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->searchable()
+                    ->sortable()
+                    ->dateTime('d/m/Y')
+                    ->label('Criado em'),
             ])
             ->filters([
                 //
@@ -40,9 +57,6 @@ class TypePeopleResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

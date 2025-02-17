@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Status;
+use App\Enum\Status;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Enum\Role as RoleEnum;
 
 class UserSeederTable extends Seeder
 {
@@ -21,8 +21,8 @@ class UserSeederTable extends Seeder
                 'username' => 'huriellopes',
                 'email' => 'huriellopes1996@gmail.com',
                 'email_verified_at' => Carbon::now(),
-                'password' => bcrypt('secret123'),
-                'role_id' => 1,
+                'password' => bcrypt('Hpr#899629'),
+                'role_id' => RoleEnum::SUPER,
                 'status' => Status::ACTIVE,
                 'remember_token' => null,
                 'created_at' => Carbon::now(),
@@ -34,7 +34,7 @@ class UserSeederTable extends Seeder
                 'email' => 'alanbaloni@gmail.com',
                 'email_verified_at' => Carbon::now(),
                 'password' => bcrypt('secret123'),
-                'role_id' => 2,
+                'role_id' => RoleEnum::ADMIN,
                 'status' => Status::ACTIVE,
                 'remember_token' => null,
                 'created_at' => Carbon::now(),

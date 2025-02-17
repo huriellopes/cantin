@@ -5,6 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class TypeTerreiro
+ * @package App\Models
+ * @property string $name
+ * @property string $description
+ */
 class TypeTerreiro extends Model
 {
     use SoftDeletes;
@@ -15,6 +21,7 @@ class TypeTerreiro extends Model
      * @var string[]
      */
     protected $fillable = [
+        "name",
         "description"
     ];
 

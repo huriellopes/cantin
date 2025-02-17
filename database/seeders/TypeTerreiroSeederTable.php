@@ -15,13 +15,15 @@ class TypeTerreiroSeederTable extends Seeder
     {
         DB::table('type_terreiros')->insert([
             [
-                'description' => 'Trans-inclusivos',
+                'name' => 'Trans-inclusivos',
+                'description' => 'Terreiro que é trans-inclusivo',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null,
             ],
             [
-                'description' => 'Não se aplica',
+                'name' => 'Não se aplica',
+                'description' => null,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null,

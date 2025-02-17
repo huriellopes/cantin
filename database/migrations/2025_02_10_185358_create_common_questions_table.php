@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Enums\Status as StatusEnum;
 
 return new class extends Migration
 {
@@ -17,7 +16,7 @@ return new class extends Migration
             $table->string('question'); // Perguntas
             $table->string('answer'); // Respostas
             $table->smallInteger('status')
-                ->default(StatusEnum::ACTIVE);
+                ->default(\App\Enum\Status::ACTIVE);
             $table->timestamps();
             $table->softDeletes();
         });

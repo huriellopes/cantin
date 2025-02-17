@@ -31,7 +31,20 @@ class StateResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')
+                    ->sortable()
+                    ->searchable()
+                    ->label('#'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->label('Nome'),
+                Tables\Columns\TextColumn::make('abbr')
+                    ->searchable()
+                    ->label('Abreviação'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->sortable()
+                    ->label('Criado em')
+                    ->dateTime('d/m/Y'),
             ])
             ->filters([
                 //
@@ -40,9 +53,6 @@ class StateResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

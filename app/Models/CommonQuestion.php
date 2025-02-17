@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Enum\Status;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\Status as StatusEnum;
 
 /**
  * Class CommonQuestion
@@ -29,7 +29,7 @@ class CommonQuestion extends Model
     protected function casts() : array
     {
         return [
-            'status' => StatusEnum::class,
+            'status' => Status::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime'
