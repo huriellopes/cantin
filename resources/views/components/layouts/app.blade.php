@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
 
     @if (app()->isProduction())
-        <link rel="stylesheet" href="{{ asset('/build/manifest.json') }}"/>
+        <link rel="stylesheet" type="application/json" href="{{ asset('/build/manifest.json') }}"/>
     @else
         @vite(['/resources/js/app.js'])
     @endif
