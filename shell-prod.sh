@@ -6,13 +6,15 @@ clear
 
 # Limpa o cachce
 echo "Limpando o cache..."
-php artisan config:clear &&
-php artisan cache:clear &&
-php artisan optimize:clear &&
-php artisan view:clear &&
+composer clearcache
+php artisan event:clear
+php artisan config:clear
+php artisan cache:clear
+php artisan optimize:clear
+php artisan view:clear
 php artisan filament:optimize-clear
 
-## Cacheia a aplicação
+# Cacheia a aplicação
 echo "Cacheando a aplicação..."
 php artisan optimize &&
 php artisan view:cache &&
