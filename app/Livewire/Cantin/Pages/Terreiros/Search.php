@@ -40,13 +40,14 @@ class Search extends Component
     public function render()
     {
         return view('livewire.cantin.pages.terreiros.search', [
-            'terreiros' => Terreiro::query()->when($this->search, function ($query) {
-                $query->whereHas('address', function ($queryAddress) {
-                    $queryAddress->whereHas('state', function ($queryState) {
-                        $queryState->where('slug', '=', trim($this->search));
+            'terreiros' => Terreiro::query()
+                ->when($this->search, function ($query) {
+                    $query->whereHas('address', function ($queryAddress) {
+                        $queryAddress->whereHas('state', function ($queryState) {
+                            $queryState->where('slug', '=', trim($this->search));
+                        });
                     });
-                });
-            })->paginate(2),
+                })->paginate(10),
         ]);
     }
 }

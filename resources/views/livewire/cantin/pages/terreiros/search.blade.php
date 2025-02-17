@@ -12,7 +12,7 @@
                         aria-describedby="button-addon2" wire:model.live="search" wire:target="search">
                     <option selected>{{ __('Select a state') }}</option>
                     @foreach ($states as $state)
-                        <option value="{{ $state->slug }}" {{ request()->get('search') === $state->slug ? 'selected' : '' }}>
+                        <option value="{{ $state->slug }}">
                             {{ $state->name }}
                         </option>
                     @endforeach
