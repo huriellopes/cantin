@@ -43,7 +43,7 @@ class Search extends Component
             'terreiros' => Terreiro::query()->when($this->search, function ($query) {
                 $query->whereHas('address', function ($queryAddress) {
                     $queryAddress->whereHas('state', function ($queryState) {
-                        $queryState->where('slug', '=', $this->search);
+                        $queryState->where('slug', '=', trim($this->search));
                     });
                 });
             })->paginate(2),
