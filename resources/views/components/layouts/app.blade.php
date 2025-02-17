@@ -35,6 +35,8 @@
 
     {{ $slot }}
 
+    @livewire('cantin.components.whatsapp-button')
+
     <script src="{{ asset('assets/js/jquery.js') }}"></script>
     <script src="{{ asset('assets/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>

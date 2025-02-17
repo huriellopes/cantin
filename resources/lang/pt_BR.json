@@ -30,12 +30,12 @@
     "results": "resultados",
 
     "Registration of Trans People": "Cadastro de Pessoas Trans",
-    "Partner Entities": "Entidades Parceiras",
+    "Registration of Partner Entity": "Cadastro de Entidade Parceira",
 
     "Name": "Name",
     "Email": "E-mail",
     "Phone": "Telefone",
-    "Zip Code": "Cep",
+    "Zip Code": "CEP",
     "Address": "Endereço",
     "Number": "Número",
     "Complement": "Complemento",
@@ -52,10 +52,10 @@
 
     "The name field is required.": "O campo nome é obrigatório.",
     "The name field only allows characters.": "O campo nome é permitido apenas caracteres.",
-    "The email field is required.": "O campo nome é obrigatório.",
+    "The email field is required.": "O campo email é obrigatório.",
     "The email field only allows characters.": "O campo email é permitido apenas caracteres.",
-    "The email field is invalid.": "O campo é inválido.",
-    "The phone field is required.": "O campo nome é obrigatório.",
+    "The email field is invalid.": "O campo email é inválido.",
+    "The phone field is required.": "O campo telefone é obrigatório.",
     "The phone field only allows characters.": "O campo telefone é permitido apenas caracteres.",
     "The zipcode field is required.": "O campo cep é obrigatório.",
     "The zipcode field only allows characters.": "O campo cep é permitido apenas caracteres.",
@@ -106,6 +106,8 @@
     "Zip code not found!": "Cep não encontrado!",
     "Error when searching for zip code!": "Erro ao buscar o cep!",
     "Partner entity successfully registered!": "Entidade parceira cadastrada com sucesso!",
+    "Trans people successfully registered!": "Pessoas trans cadastradas com sucesso!",
+    "Terreiro successfully registered!": "Terreiro cadastrado com sucesso!",
 
     "Register": "Cadastrar",
     "Loading...": "Carregando...",

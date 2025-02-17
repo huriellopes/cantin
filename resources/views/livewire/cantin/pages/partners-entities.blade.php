@@ -26,7 +26,7 @@
 
     <div class="row mt-5">
         <div class="col mt-2">
-            <h1 class="text-center">{{ __('Partner Entities') }}</h1>
+            <h1 class="text-center">{{ __('Registration of Partner Entity') }}</h1>
         </div>
     </div>
 

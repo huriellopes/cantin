@@ -21,7 +21,7 @@
         <label for="zipcode" class="form-label">{{ __('Zip Code') }}</label>
         <div class="input-group">
             <input type="text" name="zipcode" id="zipcode" class="form-control @error('zipcode') border-danger @enderror" maxlength="9" wire:model.live="zipcode" x-mask="99999-999" />
-            <button class="btn btn-outline-secondary zipcode-search" type="button" id="button-addon2" wire:click="searchZipCode" wire:loading.attr="disabled">
+            <button type="button" class="btn btn-outline-secondary zipcode-search" id="button-addon2" wire:click.stop="searchZipCode" wire:loading.attr="disabled">
                 <i class="bi bi-search" id="zipcode-search"></i>
                 <span wire:loading wire:target="searchZipCode" class="spinner"></span>
             </button>

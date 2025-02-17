@@ -18,23 +18,30 @@ class SiteRoute
      */
     public static function web() : void
     {
-        Route::prefix('/')
-            ->name('site.')
+        Route::name('site.')
+            ->prefix('/')
             ->group(function () {
-                Route::get('/', Home::class)->name('home');
-                Route::get('/sobre', About::class)->name('about');
-                Route::get('/entidades-parceiras', PartnersEntities::class)->name('partners-entities');
-                Route::get('/pessoas-trans', Transpeople::class)->name('trans-people');
+                Route::get('/', Home::class)
+                    ->name('home');
+                Route::get('/sobre', About::class)
+                    ->name('about');
+                Route::get('/entidades-parceiras', PartnersEntities::class)
+                    ->name('partners-entities');
+                Route::get('/pessoas-trans', Transpeople::class)
+                    ->name('trans-people');
 
                 // Terreiro Route
-                Route::prefix('terreiros')
-                    ->name('terreiros.')
+                Route::name('terreiros.')
+                    ->prefix('terreiros')
                     ->group(function () {
-                        Route::get('/', Search::class)->name('search');
-                        Route::get('/cadastro', Create::class)->name('create');
+                        Route::get('/', Search::class)
+                            ->name('search');
+                        Route::get('/cadastro', Create::class)
+                            ->name('create');
                     });
 
-                Route::get('contato', Contact::class)->name('contact');
+                Route::get('contato', Contact::class)
+                    ->name('contact');
             });
     }
 }

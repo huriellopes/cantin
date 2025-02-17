@@ -53,7 +53,7 @@
                                 <th scope="row">{{ $terreiro->id }}</th>
                                 <td>{{ $terreiro->name }}</td>
                                 <td>{{ $terreiro->nation->name }}</td>
-                                <td>{{ $terreiro->phone }}</td>
+                                <td>{{ maskPhone($terreiro->phone) }}</td>
                                 <td>{{ $terreiro->leadership_orunko }}</td>
                                 <td>{{ \Carbon\Carbon::parse($terreiro->fundationed_at)->format('d/m/Y') }}</td>
                                 <td>{{ $terreiro->color_of_leadership }}</td>

@@ -14,7 +14,10 @@ use App\Traits\Utils;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Exception;
+use Throwable;
 
 class Create extends Component
 {
@@ -193,57 +196,69 @@ class Create extends Component
 
     /**
      * @return void
-     * @throws ConnectionException
      */
     public function searchZipCode(): void
     {
         $this->loading = true;
 
-        if (empty($this->zipcode)) {
+        try {
+            if (empty($this->zipcode)) {
+                toastr()
+                    ->timeOut(2000)
+                    ->error(__('Invalid zipcode!'));
+                return;
+            }
+
+            if (!preg_match('/^\d{8}$/', $this->clearMask($this->zipcode))) {
+                toastr()
+                    ->timeOut(2000)
+                    ->error(__('Invalid zipcode!'));
+                return;
+            }
+
+            $response = Http::timeout(3000)->withHeaders([
+                'Content-Type' => 'application/json'
+            ])->get(config('services.viacep.endpoint').$this->clearMask($this->zipcode).'/json');
+
+            // Verifique se houve erro na requisição
+            if ($response->failed()) {
+                toastr()
+                    ->timeOut(2000)
+                    ->error(__('Error when searching for zip code!'));
+                return;
+            }
+
+            // Verifique se o CEP foi encontrado
+            if ($response->json('erro')) {
+                toastr()
+                    ->timeOut(2000)
+                    ->error(__('Zip code not found!'));
+                return;
+            }
+
+            // Defina o endereço encontrado
+            $data = $response->json();
+
+            $data['state_id'] = State::query()->select('id', 'name')->where('abbr', $data['uf'])->first();
+            $data['city_id'] = City::query()->select('id', 'name')->where('name', $data['localidade'])->first();
+
+            $this->address = $data['logradouro'];
+            $this->complement = $data['complemento'];
+            $this->neighborhood = $data['bairro'];
+            $this->state_id = $data['state_id']->id;
+            $this->city_id = $data['city_id']->id;
+        } catch (Exception|Throwable $e) {
+            $this->webhook('error', $e, 'Cep not found', null);
+
+            Log::error($e->getMessage(), [
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+
             toastr()
                 ->timeOut(2000)
-                ->error(__('Invalid zipcode!'));
-            return;
+                ->error(__(''));
         }
-
-        if (!preg_match('/^\d{8}$/', $this->clearMask($this->zipcode))) {
-            toastr()
-                ->timeOut(2000)
-                ->error(__('Invalid zipcode!'));
-            return;
-        }
-
-        $response = Http::timeout(3000)->withHeaders([
-            'Content-Type' => 'application/json'
-        ])->get(config('services.viacep.endpoint').$this->clearMask($this->zipcode).'/json');
-
-        // Verifique se houve erro na requisição
-        if ($response->failed()) {
-            toastr()
-                ->timeOut(2000)
-                ->error(__('Error when searching for zip code!'));
-            return;
-        }
-
-        // Verifique se o CEP foi encontrado
-        if ($response->json('erro')) {
-            toastr()
-                ->timeOut(2000)
-                ->error(__('Zip code not found!'));
-            return;
-        }
-
-        // Defina o endereço encontrado
-        $data = $response->object();
-
-        $data->state_id = State::query()->select('id', 'name')->where('abbr', $data->uf)->first();
-        $data->city_id = City::query()->select('id', 'name')->where('state_id', $data->state_id->id)->first();
-
-        $this->address = $data->logradouro;
-        $this->complement = $data->complemento;
-        $this->neighborhood = $data->bairro;
-        $this->state_id = $data->state_id->id;
-        $this->city_id = $data->city_id->id;
 
         $this->loading = false;
     }
@@ -264,7 +279,10 @@ class Create extends Component
         }
     }
 
-    public function store()
+    /**
+     * @return void
+     */
+    public function store() : void
     {
         $this->validate();
 

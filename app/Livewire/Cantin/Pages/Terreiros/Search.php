@@ -47,7 +47,7 @@ class Search extends Component
                             $queryState->where('slug', '=', trim($this->search));
                         });
                     });
-                })->paginate(10),
+                })->paginate(10)
         ]);
     }
 }
