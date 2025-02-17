@@ -257,7 +257,7 @@ class Create extends Component
 
             toastr()
                 ->timeOut(2000)
-                ->error(__(''));
+                ->error(__('Error when searching for zip code!'));
         }
 
         $this->loading = false;

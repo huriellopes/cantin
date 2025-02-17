@@ -1,7 +1,7 @@
 <div>
     <style>
         .whatsapp-button {
-            cursor: pointer;
+            border: none;
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -26,8 +26,7 @@
         }
     </style>
 
-    <a href="" target="_blank" wire:click="openWhatsapp" class="whatsapp-button">
+    <button type="button" wire:click="openWhatsapp" class="whatsapp-button">
         <i class="bi bi-whatsapp" style="font-size: 2em"></i>
-{{--        <img src="https://cdn-icons-png.flaticon.com/512/3536/3536705.png" alt="WhatsApp">--}}
-    </a>
+    </button>
 </div>
