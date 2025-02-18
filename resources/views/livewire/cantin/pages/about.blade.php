@@ -43,7 +43,7 @@
 
         </div>
         <div class="col-4 col-md-4 mt-2 d-sm-none d-md-block d-md-none d-lg-block d-none d-sm-block">
-            <img src="{{ asset('/assets/images/CANTIn.png') }}" alt="CaNTIn" width="100%" title="CaNTIn" />
+            <img src="{{ $image }}" alt="CaNTIn" width="100%" title="CaNTIn" />
         </div>
     </div>
 

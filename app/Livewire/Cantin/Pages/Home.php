@@ -11,6 +11,8 @@ class Home extends Component
 {
     public $commons;
 
+    public string $image;
+
     /**
      * @return void
      */
@@ -21,6 +23,10 @@ class Home extends Component
                 ->select('id', 'answer','question')
                 ->where('status', '=', Status::ACTIVE)
                 ->get();
+        });
+
+        $this->image = Cache::remember('cantin-home', 60 * 60 * 24, function () {
+            return asset('/assets/images/background-outro.png');
         });
     }
     public function render()

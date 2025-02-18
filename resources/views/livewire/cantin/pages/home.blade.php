@@ -1,7 +1,7 @@
 <div>
     <style>
         .banner-topo {
-            background-image: url({{ asset('/assets/images/background-outro.png') }});
+            background-image: url({{ $image }});
             background-repeat: no-repeat;
             background-size: cover;
             background-position: top center;
