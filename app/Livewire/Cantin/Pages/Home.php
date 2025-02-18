@@ -2,16 +2,26 @@
 
 namespace App\Livewire\Cantin\Pages;
 
-use App\Services\CommonQuestion\ListCommonQuestionService;
+use App\Enum\Status;
+use App\Models\CommonQuestion;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class Home extends Component
 {
     public $commons;
 
-    public function mount()
+    /**
+     * @return void
+     */
+    public function mount(): void
     {
-        $this->commons = ListCommonQuestionService::list();
+        $this->commons = Cache::remember('commons', 600,function () {
+            return CommonQuestion::query()
+                ->select('id', 'answer','question')
+                ->where('status', '=', Status::ACTIVE)
+                ->get();
+        });
     }
     public function render()
     {

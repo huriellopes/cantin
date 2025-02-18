@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class CommonQuestion
- * App\Models\CommonQuestion
+ * @package App\Models
+ *
+ * @property $id
  * @property $question
  * @property $answer
  * @property $status

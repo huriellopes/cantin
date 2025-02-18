@@ -66,4 +66,6 @@
             </div>
         </div>
     </div>
+
+    @include('livewire.cantin.pages.contact')
 </div>

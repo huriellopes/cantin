@@ -30,11 +30,11 @@
             </a>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('site.contact') ? 'active' : '' }}" aria-current="page" href="{{ route('site.contact') }}" wire:navigate>
-                {{ __('Contact') }}
-            </a>
-        </li>
+{{--        <li class="nav-item">--}}
+{{--            <a class="nav-link {{ request()->routeIs('site.contact') ? 'active' : '' }}" aria-current="page" href="{{ route('site.contact') }}" wire:navigate>--}}
+{{--                {{ __('Contact') }}--}}
+{{--            </a>--}}
+{{--        </li>--}}
 
         @if (config('app.env') === 'local')
             @if (Route::has('login'))

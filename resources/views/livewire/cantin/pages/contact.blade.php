@@ -1,6 +1,6 @@
-<div class="container mt-4">
-    <div class="row mt-5">
-        <div class="col mt-3">
+<div class="container mt-4 mb-2">
+    <div class="row">
+        <div class="col">
             <h2 class="text-center">
                 {{ __('Contact') }}
             </h2>
