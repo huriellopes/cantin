@@ -13,9 +13,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('partners', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->nullable();
+            $table->id()->index();
+            $table->string('name')->index();
+            $table->string('email')
+                ->index()
+                ->nullable();
             $table->string('phone')->nullable();
             $table->string('path_image')->nullable();
             $table->foreignId('user_id')->constrained();

@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('partners_entities', function (Blueprint $table) {
             $table->id()->index();
-            $table->string('name');
+            $table->string('name')->index();
             $table->text('activity_carried_out'); // Atividade Desenvolvida
-            $table->string('email')->unique()->index();
+            $table->string('email')
+                ->unique()
+                ->index();
             $table->string('phone');
             $table->foreignId('address_id')->constrained('addresses');
             $table->timestamps();

@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('states', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->char('abbr', 2);
-            $table->string('slug');
+            $table->id()->index();
+            $table->string('name')->index();
+            $table->char('abbr', 2)->index();
+            $table->string('slug')->index();
             $table->timestamps();
             $table->softDeletes();
         });

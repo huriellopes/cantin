@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('terreiros_questions', function (Blueprint $table) {
-            $table->id();
+            $table->id()->index();
             $table->foreignId('terreiro_id')->constrained();
             $table->foreignId('type_people_id'); // Sexo da liderança
             $table->integer('number_of_children_of_saint'); // Quantidade de filhos de santo

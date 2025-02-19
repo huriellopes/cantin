@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('trans_peoples', function (Blueprint $table) {
             $table->id()->index();
-            $table->string('name');
-            $table->string('email')->unique()->index();
+            $table->string('name')->index();
+            $table->string('email')
+                ->unique()
+                ->index();
             $table->string('phone');
             $table->foreignId('address_id')->constrained('addresses');
             $table->timestamps();

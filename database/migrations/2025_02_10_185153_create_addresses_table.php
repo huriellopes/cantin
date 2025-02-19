@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('addresses', function (Blueprint $table) {
-            $table->id();
-            $table->string('zipcode'); // Cep
+            $table->id()->index();
+            $table->string('zipcode')->index(); // Cep
             $table->string('address'); // Endereço
             $table->string('complement')->nullable(); // Complemento
             $table->string('number', 10); // Número
