@@ -34,7 +34,12 @@ class Search extends Component
     public function mount(string $slug = null) : void
     {
         $this->search = $slug ?? request()->query('search', '');
-        $this->states = State::query()->select('id', 'name','slug')->get();
+
+        $this->states = Cache::remember('states_search', 60 * 60 * 24, function () {
+            return State::query()
+                ->select('id', 'name', 'slug')
+                ->get();
+        });
     }
 
     public function render()

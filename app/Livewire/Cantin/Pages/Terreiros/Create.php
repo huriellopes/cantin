@@ -162,20 +162,28 @@ class Create extends Component
      */
     public function mount(): void
     {
-        $this->nations = NationsTerreiro::query()->select('id', 'name')->get();
-
-        $this->states = State::query()
+        $this->nations = NationsTerreiro::query()
             ->select('id', 'name')
-            ->limit(1000)
             ->get();
 
-        $this->cities = Cache::remember('cities_terreiro', 600, function () {
+        $this->states = Cache::remember('states_terreiro', 60 * 60 * 24, function () {
+            return State::query()
+                ->select('id', 'name')
+                ->limit(1000)
+                ->get();
+        });
+
+        $this->cities = Cache::remember('cities_terreiro', 60 * 60 * 24, function () {
             return City::query()->select('id', 'name')->limit(10000)->get();
         });
 
-        $this->typePeoples = TypePeople::query()->select('id', 'name')->get();
+        $this->typePeoples = TypePeople::query()
+            ->select('id', 'name')
+            ->get();
 
-        $this->suggestions = Suggestion::query()->select('id', 'name')->get();
+        $this->suggestions = Suggestion::query()
+            ->select('id', 'name')
+            ->get();
     }
 
     /**

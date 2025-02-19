@@ -86,12 +86,14 @@ class Transpeople extends Component
      */
     public function mount(): void
     {
-        $this->states = State::query()
-            ->select('id', 'name')
-            ->limit(1000)
-            ->get();
+        $this->states = Cache::remember('trans_states', 60 * 60 * 24, function () {
+            return State::query()
+                ->select('id', 'name')
+                ->limit(1000)
+                ->get();
+        });
 
-        $this->cities = Cache::remember('cities', 600, function () {
+        $this->cities = Cache::remember('trans_cities', 60 * 60 * 24, function () {
             return City::query()->select('id', 'name')->limit(10000)->get();
         });
     }

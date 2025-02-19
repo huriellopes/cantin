@@ -37,4 +37,9 @@ class CommonQuestion extends Model
             'deleted_at' => 'datetime'
         ];
     }
+
+    public function scopeActive()
+    {
+        return $this->where('status', '=', Status::ACTIVE);
+    }
 }

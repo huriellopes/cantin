@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Cantin\Pages;
 
-use App\Enum\Status;
 use App\Models\CommonQuestion;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
@@ -18,10 +17,10 @@ class Home extends Component
      */
     public function mount(): void
     {
-        $this->commons = Cache::remember('commons', 600,function () {
+        $this->commons = Cache::remember('commons', 60 * 60 * 24,function () {
             return CommonQuestion::query()
                 ->select('id', 'answer','question')
-                ->where('status', '=', Status::ACTIVE)
+                ->active()
                 ->get();
         });
 
