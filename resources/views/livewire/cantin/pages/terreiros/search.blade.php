@@ -22,7 +22,7 @@
     </div>
 
     <div class="d-flex align-items-center gap-2" wire:loading wire:target="search">
-        <div class="spinner-border" role="status" wire:loading>
+        <div class="spinner-border" role="status" wire:loading wire:target="search">
             <span class="visually-hidden">Loading...</span>
         </div>
         <span wire:loading>{{ __('Searching terreiros...') }}</span>

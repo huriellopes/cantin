@@ -48,9 +48,9 @@
                 <div class="form-group">
                     <div class="row mt-4">
                         <div class="col">
-                            <button type="submit" class="btn btn-outline-primary" wire:loading.attr="disabled">
+                            <button type="submit" class="btn btn-outline-primary" wire:loading.attr="disabled" wire:target="store">
                                 {{ __('Register') }}
-                                <span wire:loading class="spinner-border spinner-border-sm" role="status">
+                                <span wire:loading wire:target="store" class="spinner-border spinner-border-sm" role="status">
                                     <span class="visually-hidden">{{ __('Loading...') }}</span>
                                 </span>
                             </button>

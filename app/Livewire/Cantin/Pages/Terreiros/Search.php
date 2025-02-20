@@ -4,8 +4,6 @@ namespace App\Livewire\Cantin\Pages\Terreiros;
 
 use App\Models\State;
 use App\Models\Terreiro;
-use App\Services\States\ListStatesService;
-use App\Services\Terreiros\SearchTerreiroForUFService;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Url;
 use Livewire\Component;

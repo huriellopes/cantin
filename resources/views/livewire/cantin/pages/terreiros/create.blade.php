@@ -317,9 +317,9 @@
                             <button type="button" class="btn btn-outline-primary" wire:click="previousStep" wire:loading.attr="disabled">
                                 Etapa Anterior
                             </button>
-                            <button type="submit" class="btn btn-outline-primary" wire:loading.attr="disabled">
+                            <button type="submit" class="btn btn-outline-primary" wire:loading.attr="disabled" wire:target="store">
                                 Responder
-                                <span wire:loading class="spinner-border spinner-border-sm" role="status">
+                                <span wire:loading wire:target="store" class="spinner-border spinner-border-sm" role="status">
                                     <span class="visually-hidden">{{ __('Loading...') }}</span>
                                 </span>
                             </button>

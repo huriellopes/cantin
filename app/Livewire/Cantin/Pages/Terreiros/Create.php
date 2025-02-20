@@ -11,7 +11,6 @@ use App\Models\Terreiro;
 use App\Models\TerreiroQuestion;
 use App\Models\TypePeople;
 use App\Traits\Utils;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -158,6 +157,15 @@ class Create extends Component
     }
 
     /**
+     * @param $property
+     * @return void
+     */
+    public function updated($property) : void
+    {
+        $this->validateOnly($property);
+    }
+
+    /**
      * @return void
      */
     public function mount(): void
@@ -263,6 +271,8 @@ class Create extends Component
                 'file' => $e->getFile()
             ]);
 
+            sleep(3);
+
             toastr()
                 ->timeOut(2000)
                 ->error(__('Error when searching for zip code!'));
@@ -360,11 +370,13 @@ class Create extends Component
             'suggestion_text',
         ]);
 
+        sleep(3);
+
         toastr()
             ->timeOut(2000)
             ->success(__('Terreiro successfully registered!'));
 
-        $this->redirectRoute('site.home');
+        $this->redirectRoute('site.terreiros.search');
     }
 
     public function render()

@@ -15,7 +15,7 @@
     @if (app()->isProduction())
         <link rel="stylesheet" type="application/json" href="{{ asset('/build/manifest.json') }}"/>
     @else
-        @vite(['/resources/js/app.js'])
+        @vite(['resources/js/app.js'])
     @endif
 
     @livewireStyles

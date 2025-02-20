@@ -103,6 +103,15 @@ class PartnersEntities extends Component
     }
 
     /**
+     * @param $property
+     * @return void
+     */
+    public function updated($property): void
+    {
+        $this->validateOnly($property);
+    }
+
+    /**
      * @return void
      */
     public function searchZipCode(): void
@@ -229,6 +238,8 @@ class PartnersEntities extends Component
             'city_id',
             'activity_carried_out'
         ]);
+
+        sleep(3);
 
         toastr()
             ->timeOut(2000)

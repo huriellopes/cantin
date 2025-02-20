@@ -99,6 +99,15 @@ class Transpeople extends Component
     }
 
     /**
+     * @param $property
+     * @return void
+     */
+    public function updated($property): void
+    {
+        $this->validateOnly($property);
+    }
+
+    /**
      * @return void
      */
     public function searchZipCode(): void
@@ -223,6 +232,8 @@ class Transpeople extends Component
             'state_id',
             'city_id'
         ]);
+
+        sleep(3);
 
         toastr()
             ->timeOut(2000)

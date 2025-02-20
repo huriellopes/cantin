@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine3.17
+FROM php:8.4-fpm-alpine3.17
 
 LABEL image.authors.name="Huriel Lopes"
 LABEL image.authors.email="huriellopes1996@gmail.com"
