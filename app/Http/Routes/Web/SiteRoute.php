@@ -19,6 +19,7 @@ class SiteRoute
     public static function web() : void
     {
         Route::name('site.')
+            ->middleware('visit_register')
             ->prefix('/')
             ->group(function () {
                 Route::get('/', Home::class)
