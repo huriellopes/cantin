@@ -25,10 +25,10 @@
         <div class="spinner-border" role="status" wire:loading wire:target="search">
             <span class="visually-hidden">Loading...</span>
         </div>
-        <span wire:loading>{{ __('Searching terreiros...') }}</span>
+        <span wire:loading wire:target="search">{{ __('Searching terreiros...') }}</span>
     </div>
 
-    <div class="row mt-3" wire:loading.remove="search">
+    <div class="row mt-3" wire:loading.remove="search" wire:target="search">
         <div class="col">
             <div class="table-responsive">
                 <table class="table table-striped" id="table-terreiro">
