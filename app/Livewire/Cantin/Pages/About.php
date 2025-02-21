@@ -12,7 +12,7 @@ class About extends Component
     public function mount()
     {
         $this->image = Cache::remember('cantin-about', 60 * 60 * 24, function () {
-            return asset('/assets/images/CANTIn.png');
+            return asset('/assets/images/new/CANTIn.webp');
         });
     }
 

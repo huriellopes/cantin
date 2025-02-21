@@ -25,7 +25,7 @@ class Home extends Component
         });
 
         $this->image = Cache::remember('cantin-home', 60 * 60 * 24, function () {
-            return asset('/assets/images/background-outro.png');
+            return asset('/assets/images/new/background-outro.webp');
         });
     }
     public function render()
