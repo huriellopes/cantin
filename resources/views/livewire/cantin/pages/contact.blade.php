@@ -17,6 +17,7 @@
                 allowfullscreen=""
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
+                title="Mapa do CaNTIn"
             ></iframe>
         </div>
         <div class="col-12 col-md-6">
