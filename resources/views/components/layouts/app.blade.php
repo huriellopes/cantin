@@ -10,9 +10,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="{{ asset('/assets/images/cantin.ico') }}" type="image/x-icon">
     <title>{{ $title ?? config('app.name') }}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
+    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('/assets/css/all.min.css') }}" />
 
     @if (app()->isProduction())
         <link rel="stylesheet" type="application/json" href="{{ asset('/build/manifest.json') }}"/>
@@ -42,7 +41,7 @@
     <script src="{{ asset('assets/js/jquery.js') }}"></script>
     <script src="{{ asset('assets/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/js/all.min.js"></script>
+    <script src="{{ asset('assets/js/all.min.js') }}"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4VSY21XL8V"></script>
     <script>

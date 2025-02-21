@@ -22,7 +22,7 @@
         <div class="input-group">
             <input type="text" name="zipcode" id="zipcode" class="form-control @error('zipcode') border-danger @enderror" maxlength="9" wire:model.live="zipcode" x-mask="99999-999" />
             <button type="button" class="btn btn-outline-secondary zipcode-search" id="button-addon2" wire:click.stop="searchZipCode" wire:target="searchZipCode" wire:loading.attr="disabled">
-                <i class="bi bi-search" id="zipcode-search"></i>
+                <i class="fa-solid fa-magnifying-glass" id="zipcode-search"></i>
                 <span wire:loading wire:target="searchZipCode" class="spinner"></span>
             </button>
         </div>
