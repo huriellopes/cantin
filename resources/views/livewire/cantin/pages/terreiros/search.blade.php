@@ -28,7 +28,7 @@
         <span wire:loading wire:target="search">{{ __('Searching terreiros...') }}</span>
     </div>
 
-    <div class="row mt-3" wire:loading.remove="search" wire:target="search">
+    <div class="row mt-3" wire:loading.remove wire:target="search">
         <div class="col">
             <div class="table-responsive">
                 <table class="table table-striped" id="table-terreiro">
