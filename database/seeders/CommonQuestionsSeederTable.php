@@ -50,7 +50,7 @@ class CommonQuestionsSeederTable extends Seeder
             ],
             [
                 'question' => 'Como posso encontrar um terreiro trans-inclusivo na minha região?',
-                'answer' => 'A página do CANTIn oferece uma ferramenta de busca que permite localizar terreiros cadastrados por região ou estado. <a href="'.route('site.terreiros.search').'" wire:navigate>Clique aqui</a>.',
+                'answer' => 'A página do CANTIn oferece uma ferramenta de busca que permite localizar terreiros cadastrados por região ou estado. <a href="'.route('site.terreiros.search').'" wire:navigate title="lista de terreiros">Lista de Terreiros</a>.',
                 'status' => Status::ACTIVE->value,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

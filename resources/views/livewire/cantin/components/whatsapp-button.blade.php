@@ -26,7 +26,7 @@
         }
     </style>
 
-    <button type="button" wire:click="openWhatsapp" class="whatsapp-button">
+    <button type="button" wire:click="openWhatsapp" class="whatsapp-button" name="whatsapp-button" title="whatsapp-button">
         <i class="bi bi-whatsapp" style="font-size: 2em"></i>
     </button>
 </div>
