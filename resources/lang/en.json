@@ -28,7 +28,7 @@
     "Cadastro de Pessoas Trans": "Registration of Trans People",
     "Cadastro de Entidade Parceira": "Registration of Partner Entity",
 
-    "Name": "Name",
+    "Nome": "Name",
     "E-mail": "Email",
     "Telefone": "Phone",
     "CEP": "Zip Code",
@@ -108,5 +108,6 @@
     "Cadastrar": "Register",
     "Carregando...": "Loading...",
 
-    "Buscando terreiros...": "Searching terreiros..."
+    "Buscando terreiros...": "Searching terreiros...",
+    "Total de Visitas": "Total of Visits"
 }

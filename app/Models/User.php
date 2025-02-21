@@ -59,14 +59,20 @@ class User extends Authenticatable implements FilamentUser
         return str_ends_with($this->email, '@gmail.com') && $this->hasVerifiedEmail();
     }
 
+    /**
+     * @return bool
+     */
     public function isSuperAdmin() : bool
     {
-        return $this->role_id === Role::SUPER->value;
+        return $this->role_id === RoleEnum::SUPER->value;
     }
 
+    /**
+     * @return bool
+     */
     public function isAdmin() : bool
     {
-        return $this->role_id === Role::ADMIN->value;
+        return $this->role_id === RoleEnum::ADMIN->value;
     }
 
     public function getVerifyStatusAttribute()
