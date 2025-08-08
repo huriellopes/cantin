@@ -26,7 +26,6 @@ return new class extends Migration
             $table->foreignId('suggestion_id')->nullable()->constrained();
             $table->text('suggestion_text')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

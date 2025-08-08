@@ -9,14 +9,16 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    /* @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, HasApiTokens, Notifiable, KeepsDeletedModels;
 
     /**
      * The attributes that are mass assignable.
@@ -25,10 +27,14 @@ class User extends Authenticatable implements FilamentUser
      */
     protected $fillable = [
         'name',
+        'username',
+        'slug',
         'email',
         'password',
         'role_id',
         'status',
+//        'avatar_url',
+//        'custom_fields'
     ];
 
     /**
@@ -41,6 +47,9 @@ class User extends Authenticatable implements FilamentUser
         'remember_token',
     ];
 
+    /**
+     * @return string[]
+     */
     public function casts(): array
     {
         return [
@@ -50,7 +59,6 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
         ];
     }
 
@@ -62,17 +70,17 @@ class User extends Authenticatable implements FilamentUser
     /**
      * @return bool
      */
-    public function isSuperAdmin() : bool
+    public function isSuperAdmin(): bool
     {
-        return $this->role_id === RoleEnum::SUPER->value;
+        return $this->role_id === RoleEnum::SUPER;
     }
 
     /**
      * @return bool
      */
-    public function isAdmin() : bool
+    public function isAdmin(): bool
     {
-        return $this->role_id === RoleEnum::ADMIN->value;
+        return $this->role_id === RoleEnum::ADMIN;
     }
 
     public function getVerifyStatusAttribute()
@@ -80,8 +88,21 @@ class User extends Authenticatable implements FilamentUser
         return $this->deleted_at ?? null;
     }
 
-    public function role() : BelongsTo
+    /**
+     * @return BelongsTo
+     */
+    public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'user_id');
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role->slug === $role;
     }
 }

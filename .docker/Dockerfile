@@ -44,8 +44,22 @@ RUN set -eux; \
         \
         apk del --no-network .build-deps
 
-RUN apk add npm
+# Instala dependências necessárias incluindo supervisor
+RUN apk add --no-cache \
+    npm \
+    supervisor \
+    bash
+
+# Configuração do Supervisor
+RUN mkdir -p /etc/supervisor/conf.d
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+
+# Cria diretório para logs do supervisor
+RUN mkdir -p /var/log/supervisor
 
 EXPOSE 9000
 
-CMD ["php-fpm"]
+# CMD ["php-fpm"]
+
+# Inicia tanto o PHP-FPM quanto o Supervisor
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]

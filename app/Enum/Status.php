@@ -2,7 +2,9 @@
 
 namespace App\Enum;
 
-enum Status: int
+use Filament\Support\Contracts\HasColor;
+
+enum Status: int implements HasColor
 {
     case ACTIVE = 1;
     case INACTIVE = 0;
@@ -15,6 +17,17 @@ enum Status: int
         return match ($this) {
             self::ACTIVE => 'Ativo',
             self::INACTIVE => 'Inativo',
+        };
+    }
+
+    /**
+     * @return string|array|null
+     */
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::ACTIVE => 'success',
+            self::INACTIVE => 'danger',
         };
     }
 }

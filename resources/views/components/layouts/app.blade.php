@@ -11,15 +11,17 @@
     <link rel="shortcut icon" href="{{ asset('/assets/images/cantin.ico') }}" type="image/x-icon">
     <title>{{ $title ?? config('app.name') }}</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="{{ asset('/assets/css/all.min.css') }}" />
 
-    @if (app()->isProduction())
-        <link rel="stylesheet" type="application/json" href="{{ asset('/build/manifest.json') }}"/>
-    @else
+{{--    @if (app()->isProduction())--}}
+{{--        <link rel="stylesheet" type="application/json" href="{{ asset('/build/manifest.json') }}"/>--}}
+{{--    @else--}}
         @vite(['resources/js/app.js'])
-    @endif
+{{--    @endif--}}
 
     @livewireStyles
+    {!! ToastMagic::styles() !!}
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-dark fixed-top" data-bs-theme="dark" wire:navigate>
@@ -54,5 +56,7 @@
         gtag('config', 'G-4VSY21XL8V');
     </script>
     @livewireScripts
+    {!! ToastMagic::scripts() !!}
+    @yield('scripts')
 </body>
 </html>

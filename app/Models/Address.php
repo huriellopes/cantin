@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class Address extends Model
 {
-    use SoftDeletes;
+    use KeepsDeletedModels;
 
     /**
      * @var string[]
@@ -22,6 +22,14 @@ class Address extends Model
         'state_id',
         'city_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
 
     /**
      * @return BelongsTo

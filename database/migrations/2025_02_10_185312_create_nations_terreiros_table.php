@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Carbon\Carbon;
 
 return new class extends Migration
 {
@@ -14,10 +15,70 @@ return new class extends Migration
         Schema::create('nations_terreiros', function (Blueprint $table) {
             $table->id()->index();
             $table->string('name')->index();
-            $table->string('description');
+            $table->string('slug')->index();
             $table->timestamps();
-            $table->softDeletes();
+
+            $table->index('created_at');
         });
+
+        if (app()->isProduction()) {
+            DB::table('nations_terreiros')->insert([
+                [
+                    'name' => 'Candomblé Ketu',
+                    'slug' => 'candomble-ketu',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+                [
+                    'name' => 'Candomblé Jeje',
+                    'slug' => 'candomble-jeje',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+                [
+                    'name' => 'Candomblé Nagô',
+                    'slug' => 'candomble-nago',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+                [
+                    'name' => 'Candomblé Angola',
+                    'slug' => 'candomble-angola',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+                [
+                    'name' => 'Umbanda',
+                    'slug' => 'umbanda',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+                [
+                    'name' => 'Tambor de Mina',
+                    'slug' => 'tambor-de-mina',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+                [
+                    'name' => 'Xangô',
+                    'slug' => 'xango',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+                [
+                    'name' => 'Batuque',
+                    'slug' => 'batuque',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+                [
+                    'name' => 'Outros',
+                    'slug' => 'outros',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]
+            ]);
+        }
     }
 
     /**

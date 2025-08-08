@@ -9,7 +9,9 @@ use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource\RelationManagers;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -30,24 +32,34 @@ class UserResource extends Resource
 
     protected static ?string $navigationLabel = 'Usuários';
 
+    protected static ?string $navigationGroup = 'Gestão';
+
+    protected static ?int $navigationSort = 1;
+
+    public static function canAccess() : bool
+    {
+        return auth()->user()->hasRole('super-admin');
+    }
+
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Fieldset::make('Acesso do usuário')->schema([
-                    Forms\Components\ToggleButtons::make('level_id')
+                    Forms\Components\ToggleButtons::make('role_id')
                         ->label('Perfil de Acesso')
                         ->required()
                         ->markAsRequired(false)
-                        ->options(Role::all()->sortBy('level')->pluck('level', 'id'))
+                        ->options(Role::all()->sortBy('name')->pluck('name', 'id'))
                         ->grouped()
                         ->reactive()
                         ->default(3)
                         ->columnSpan(2)
                         ->afterStateUpdated(function ($record, $state, $livewire) {
                             if ($record) {
-                                $record->level_id = $state;
-                                $livewire->dispatch(['level_id' => $state]);
+                                $record->role_id = $state;
+                                $livewire->dispatch(['role_id' => $state]);
                             }
                         }),
                     Forms\Components\TextInput::make('name')
@@ -65,6 +77,7 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 TextColumn::make('id')
                     ->sortable()
@@ -75,34 +88,48 @@ class UserResource extends Resource
                     ->label('Nome'),
                 TextColumn::make('email')
                     ->label('Email'),
-                IconColumn::make('status')
+                TextColumn::make('status')
+                    ->sortable()
+                    ->searchable()
                     ->label('Status')
-                    ->icon(fn ($state) => match ($state->value) {
-                        1 => 'heroicon-s-check-circle',
-                        0 => 'heroicon-s-x-circle',
-                    })
-                    ->color(fn ($state): string => match ($state->value) {
-                        1 => 'success',
-                        0 => 'danger',
-                    })->boolean(),
-                TextColumn::make('level_id')
-                    ->formatStateUsing(fn ($state) => $state === Role::SUPER ? 'Super Usuário' : 'Administrador')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => $state->label())
+                    ->color(fn ($state) => $state->getColor()),
+                TextColumn::make('role_id')
+                    ->formatStateUsing(fn ($state) => $state->label())
                     ->label('Perfil'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('level_id')
+                Tables\Filters\SelectFilter::make('role_id')
                     ->label('Perfil')
-                    ->relationship('level', 'level'),
-                Tables\Filters\TrashedFilter::make(),
+                    ->relationship('role', 'name'),
                 Tables\Filters\SelectFilter::make('status')
-                    ->options([
-                        1 => 'Ativo',
-                        0 => 'Inativo',
-                    ]),
+//                    ->options(fn ($state) => $state->label()),
             ])
+            ->deferFilters()
             ->filtersFormWidth(MaxWidth::ExtraLarge)
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->tooltip('Editar usuário')
+                    ->label(''),
+                Tables\Actions\Action::make('exclude')
+                    ->size(10)
+                    ->color(Color::Red)
+                    ->tooltip('Excluir usuário')
+                    ->requiresConfirmation()
+                    ->modalHeading('Excluir Usuário')
+                    ->modalDescription(' Vocé tem certeza que deseja excluir o usuário?')
+                    ->icon('heroicon-o-trash')
+                    ->label('')
+                    ->action(function (User $record) {
+                        $record->delete();
+
+                        Notification::make()
+                            ->success()
+                            ->title('Usuário excluido com sucesso!')
+                            ->send();
+                    }),
             ]);
     }
 
@@ -112,9 +139,6 @@ class UserResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ])
             ->where('id', '<>', auth()->user()->id);
     }
 

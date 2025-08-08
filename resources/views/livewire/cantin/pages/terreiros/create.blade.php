@@ -74,13 +74,17 @@
         <form wire:submit.prevent="store" class="needs-validation">
             @csrf
             @if($currentStep === 1)
-                <div class="form-group">
+                <fieldset class="form-group border p-3">
+                    <legend class="float-none w-auto px-1">Dados do Terreiro</legend>
                     <div class="row">
-                        <div class="col-md-6 col-12">
+                        <div class="col-md-12 col-12">
                             <label for="name">Nome do Terreiro</label>
                             <input type="text" name="name" id="name" class="form-control @error('name') border-danger @enderror" wire:model.live="name" />
                             @error('name') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
+                    </div>
+
+                    <div class="row">
                         <div class="col-md-6 col-12">
                             <label for="nation_terreiro_id">{{ __('Nation') }}</label>
                             <select name="nation_terreiro_id" id="nation_terreiro_id" class="form-control @error('nation_terreiro_id') border-danger @enderror" wire:model.live="nation_terreiro_id">
@@ -91,24 +95,16 @@
                             </select>
                             @error('nation_terreiro_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
-                    </div>
-
-                    <div class="row">
                         <div class="col-md-6 col-12">
                             <label for="phone">Telefone</label>
                             <input type="text" class="form-control @error('phone') border-danger @enderror" name="phone" id="phone" x-mask="(99) 9 9999-9999" wire:model.live="phone" />
                             @error('phone') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
-                        <div class="col-md-6 col-12">
-                            <label for="fundationed_at">Fundação da Terreiro</label>
-                            <input type="date" class="form-control @error('fundationed_at') border-danger @enderror" name="fundationed_at" id="fundationed_at" wire:model.live="fundationed_at" />
-                            @error('fundationed_at') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 col-12">
-                            <label for="leadership_orunko">Orunko da liderança</label>
+                            <label for="leadership_orunko">Orukó ou nome da liderança</label>
                             <input type="text" class="form-control @error('leadership_orunko') border-danger @enderror" name="leadership_orunko" id="leadership_orunko" wire:model.live="leadership_orunko" />
                             @error('leadership_orunko') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
@@ -116,16 +112,17 @@
                             <label for="color_of_leadership">Cor de pele da liderança</label>
                             <select name="color_of_leadership" id="color_of_leadership" class="form-control @error('color_of_leadership') border-danger @enderror" wire:model.live="color_of_leadership">
                                 <option selected value="">Selecione a cor de pele</option>
-                                <option value="amarelo">Amarelo</option>
-                                <option value="branco">Branco</option>
-                                <option value="indígena">Indígena</option>
-                                <option value="pardo">Pardo</option>
-                                <option value="preto">Preto</option>
+                                @foreach(config('color-leader.list') as $color => $name)
+                                    <option value="{{ $color }}">{{ $name }}</option>
+                                @endforeach
                             </select>
                             @error('color_of_leadership') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                     </div>
+                </fieldset>
 
+                <fieldset class="form-group border p-3 mt-3">
+                    <legend class="float-none w-auto px-1">Endereço do Terreiro</legend>
                     <div class="row">
                         <div class="col-md-6 col-12">
                             <label for="zipcode" class="form-label">{{ __('Zip Code') }}</label>
@@ -147,21 +144,21 @@
 
                     <div class="row">
                         <div class="col-md-6 col-12">
-                            <label for="number">{{ __('Number') }}</label>
-                            <input type="text" id="number" name="number" class="form-control @error('number') border-danger @enderror" wire:model.live="number" />
-                            @error('number') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 col-12">
                             <label for="complement">{{ __('Complement') }}</label>
                             <input type="text" name="complement" id="complement" class="form-control @error('complement') border-danger @enderror" wire:model.live="complement" />
                             @error('complement') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
+                        <div class="col-md-6 col-12">
+                            <label for="neighborhood">{{ __('Neighborhood') }}</label>
+                            <input type="text" name="neighborhood" id="neighborhood" class="form-control @error('neighborhood') border-danger @enderror" wire:model.live="neighborhood" />
+                            @error('neighborhood') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4 col-12">
+                        <div class="col-md-6 col-12">
                             <label for="state_id">{{ __('State') }}</label>
-                            <select name="state_id" id="state_id" class="form-control @error('state_id') border-danger @enderror" wire:model.live="state_id" wire:change="searchCity($event.target.value)">
+                            <select name="state_id" id="state_id" class="form-control @error('state_id') border-danger @enderror" wire:model.live="state_id">
                                 <option selected value="">{{ __('Select the state') }}</option>
                                 @foreach($states as $state)
                                     <option value="{{ $state->id }}" {{ $state_id === $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
@@ -169,23 +166,20 @@
                                 @error('state_id') <div class="text-danger">{{ $message }}</div> @enderror
                             </select>
                         </div>
-                        <div class="col-md-4 col-12">
+                        <div class="col-md-6 col-12">
                             <label for="city_id">{{ __('City') }}</label>
-                            <select name="city_id" id="city_id" class="form-control @error('city_id') border-danger @enderror" wire:model.live="city_id">
+                            <select name="city_id" id="city_id" class="form-control @error('city_id') border-danger @enderror" wire:model.live="city_id" wire:loading.attr="disabled" wire:target="state_id">
                                 <option selected value="">{{ __('Select the city') }}</option>
-                                @foreach($cities as $city)
-                                    <option value="{{ $city->id }}" {{ $city_id === $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
-                                @endforeach
+                                @if (!empty($cities))
+                                    @foreach ($cities as $city)
+                                        <option value="{{ $city->id }}" {{ $city_id === $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+                                    @endforeach
+                                @endif
                             </select>
                             @error('city_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
-                        <div class="col-md-4 col-12">
-                            <label for="neighborhood">{{ __('Neighborhood') }}</label>
-                            <input type="text" name="neighborhood" id="neighborhood" class="form-control @error('neighborhood') border-danger @enderror" wire:model.live="neighborhood" />
-                        </div>
-                        @error('neighborhood') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
-                </div>
+                </fieldset>
 
                 <div class="form-group">
                     <div class="row mt-4 mb-4">
@@ -208,7 +202,7 @@
                             @error('type_people_id') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-6 col-12">
-                            <label for="number_of_children_of_saint">Quantos filhos de santo o terreiro tem?</label>
+                            <label for="number_of_children_of_saint">Quantos membros ativos o terreiro tem?</label>
                             <input type="number" class="form-control @error('number_of_children_of_saint') border-danger @enderror" name="number_of_children_of_saint" id="number_of_children_of_saint" wire:model.live="number_of_children_of_saint" />
                             @error('number_of_children_of_saint') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
@@ -216,7 +210,7 @@
 
                     <div class="row">
                         <div class="col-md-6 col-12 mt-4">
-                            <label for="number_of_children_of_saint_trans">Quantas pessoas trans/travestis são filhos nesse terreiro?</label>
+                            <label for="number_of_children_of_saint_trans">Quantas pessoas trans/travestis são integrantes desse terreiro?</label>
                             <input type="number" class="form-control @error('number_of_children_of_saint_trans') border-danger @enderror" name="number_of_children_of_saint_trans" id="number_of_children_of_saint_trans" wire:model.live="number_of_children_of_saint_trans" />
                             @error('number_of_children_of_saint_trans') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>

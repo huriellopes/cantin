@@ -20,21 +20,18 @@ class SuggestionSeederTable extends Seeder
                 'description' => 'Criticas construtivas e sugestões de melhorias',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-                'deleted_at' => null
             ],
             [
                 'name' => 'Dúvidas',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-                'deleted_at' => null
             ],
             [
                 'name' => 'Indicações',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-                'deleted_at' => null
             ],
         ]);
     }

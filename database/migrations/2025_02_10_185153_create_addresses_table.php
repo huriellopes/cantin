@@ -12,16 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('addresses', function (Blueprint $table) {
-            $table->id()->index();
+            $table->id();
             $table->string('zipcode')->index(); // Cep
             $table->string('address'); // Endereço
             $table->string('complement')->nullable(); // Complemento
-            $table->string('number', 10); // Número
             $table->string('neighborhood'); // Bairro
             $table->foreignId('state_id')->constrained(); // Estado
             $table->foreignId('city_id')->constrained(); // Cidade
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

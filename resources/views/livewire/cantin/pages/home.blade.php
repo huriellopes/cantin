@@ -25,7 +25,7 @@
         <div class="container">
             <div class="row content-banner">
                 <div class="col">
-                    <h1 class="text-white">{{ __('National Register of') }} <br> {{ __('Trans-Inclusive Terreiros') }}</h1>
+                    <h1 class="text-white">{{ __('National Register of') }} <br> {{ __('Inclusive Terreiros') }}</h1>
                     <a href="{{ route('site.terreiros.create') }}" class="btn btn-lg btn-outline-primary" wire:navigate>{{ __('Register your Terreiro') }}</a>
                 </div>
             </div>

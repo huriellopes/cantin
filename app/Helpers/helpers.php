@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 if (!function_exists('maskPhone')) {
     /**
      * @param string $phone
@@ -27,5 +29,15 @@ if (!function_exists('maskPhone')) {
         }
 
         return $phone;
+    }
+}
+
+if (! function_exists('readingTime')) {
+    function readingTime(string $text, $wordsPerMinute = 200): string
+    {
+        $words = str_word_count(strip_tags($text));
+        $minutes = ceil($words / $wordsPerMinute);
+
+        return $minutes.__(' minute(s) of reading.');
     }
 }

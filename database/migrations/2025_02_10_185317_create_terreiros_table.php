@@ -15,14 +15,12 @@ return new class extends Migration
             $table->id()->index();
             $table->string('name')->index();
             $table->string('phone');
-            $table->date('fundationed_at');
             $table->foreignId('nation_terreiro_id')
                 ->constrained('nations_terreiros');
             $table->foreignId('address_id')->constrained();
-            $table->string('leadership_orunko'); // Orunkó da liderança
+            $table->string('leadership_orunko'); // Orukó da liderança
             $table->string("color_of_leadership"); // Qual a cor da pele da liderança do terreiro?
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

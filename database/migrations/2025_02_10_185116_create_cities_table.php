@@ -17,8 +17,11 @@ return new class extends Migration
             $table->foreignId('state_id')
                 ->constrained();
             $table->timestamps();
-            $table->softDeletes();
         });
+
+        if (app()->isProduction()) {
+            DB::unprepared(file_get_contents(__DIR__ . '/sql/CitySeeder.sql'));
+        }
     }
 
     /**

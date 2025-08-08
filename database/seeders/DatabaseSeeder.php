@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             CitySeederTable::class,
             SuggestionSeederTable::class,
             CommonQuestionsSeederTable::class,
+            CategorySeeder::class,
+            PostSeeder::class
         ]);
     }
 }

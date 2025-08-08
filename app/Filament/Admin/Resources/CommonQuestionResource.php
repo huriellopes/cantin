@@ -19,11 +19,28 @@ class CommonQuestionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-question-mark-circle';
 
+    protected static ?string $modelLabel = 'Perguntas Frequentes';
+
+    protected static ?string $navigationLabel = 'Perguntas Frequentes';
+
+    protected static ?string $breadcrumb = 'Perguntas Frequentes';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Fieldset::make()
+                    ->schema([
+                        Forms\Components\TextInput::make('question')
+                            ->columnSpanFull()
+                            ->required()
+                            ->maxLength(255)
+                            ->label(__('Question')),
+                        Forms\Components\TextInput::make('answer')
+                            ->columnSpanFull()
+                            ->required()
+                            ->label(__('Answer')),
+                    ])
             ]);
     }
 
@@ -45,11 +62,7 @@ class CommonQuestionResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->bulkActions([]);
     }
 
     public static function getRelations(): array

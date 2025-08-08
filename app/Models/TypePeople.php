@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class TypePeople extends Model
 {
-    use SoftDeletes;
+    use KeepsDeletedModels;
 
     protected $table = 'type_peoples';
 
@@ -28,7 +28,6 @@ class TypePeople extends Model
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'deleted_at' => 'datetime'
         ];
     }
 

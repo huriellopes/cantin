@@ -4,18 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class Terreiro extends Model
 {
-    use SoftDeletes;
+    use KeepsDeletedModels;
 
     protected $table = "terreiros";
 
     protected $fillable = [
         'name',
         'phone',
-        'fundationed_at',
         'nation_terreiro_id',
         'leadership_orunko',
         'color_of_leadership',
@@ -28,10 +27,8 @@ class Terreiro extends Model
     public function casts() : array
     {
         return [
-            'fundationed_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'deleted_at' => 'datetime'
         ];
     }
 

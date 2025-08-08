@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class ParternEntity extends Model
 {
-    use SoftDeletes;
+    use KeepsDeletedModels;
 
     protected $table = 'partners_entities';
 
@@ -30,7 +30,6 @@ class ParternEntity extends Model
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'deleted_at' => 'datetime'
         ];
     }
 }

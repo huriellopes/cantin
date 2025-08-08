@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('trans_peoples', function (Blueprint $table) {
-            $table->id()->index();
+            $table->id();
             $table->string('name')->index();
             $table->string('email')
                 ->unique()
@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('phone');
             $table->foreignId('address_id')->constrained('addresses');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

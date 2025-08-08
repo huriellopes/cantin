@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\NationsTerreiro;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -13,70 +14,67 @@ class NationsTerreirosSeederTable extends Seeder
      */
     public function run(): void
     {
-        DB::table('nations_terreiros')->insert([
-            [
-                'name' => 'Candomblé Ketu',
-                'description' => '',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null
-            ],
-            [
-                'name' => 'Candomblé Jejé',
-                'description' => '',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null
-            ],
-            [
-                'name' => 'Candomblé Nagô',
-                'description' => '',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null
-            ],
-            [
-                'name' => 'Candomblé Angola',
-                'description' => '',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null
-            ],
-            [
-                'name' => 'Umbanda',
-                'description' => '',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null
-            ],
-            [
-                'name' => 'Tambor de Mina',
-                'description' => '',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null
-            ],
-            [
-                'name' => 'Xangô',
-                'description' => '',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null
-            ],
-            [
-                'name' => 'Batuque',
-                'description' => '',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null
-            ],
-            [
-                'name' => 'Outros',
-                'description' => '',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null
-            ]
+        NationsTerreiro::query()->create([
+            'name' => 'Candomblé Ketu',
+            'slug' => 'candomble-ketu',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        NationsTerreiro::query()->create([
+            'name' => 'Candomblé Jeje',
+            'slug' => 'candomble-jeje',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        NationsTerreiro::query()->create([
+            'name' => 'Candomblé Nagô',
+            'slug' => 'candomble-nago',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        NationsTerreiro::query()->create([
+            'name' => 'Candomblé Angola',
+            'slug' => 'candomble-angola',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        NationsTerreiro::query()->create([
+            'name' => 'Umbanda',
+            'slug' => 'umbanda',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        NationsTerreiro::query()->create([
+            'name' => 'Tambor de Mina',
+            'slug' => 'tambor-de-mina',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        NationsTerreiro::query()->create([
+            'name' => 'Xangô',
+            'slug' => 'xango',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        NationsTerreiro::query()->create([
+            'name' => 'Batuque',
+            'slug' => 'batuque',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        NationsTerreiro::query()->create([
+            'name' => 'Outros',
+            'slug' => 'outros',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
     }
 }

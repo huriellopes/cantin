@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enum\Status;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 /**
  * Class CommonQuestion
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CommonQuestion extends Model
 {
+    use KeepsDeletedModels;
+
     /**
      * @var string[]
      */
@@ -34,7 +37,6 @@ class CommonQuestion extends Model
             'status' => Status::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'deleted_at' => 'datetime'
         ];
     }
 

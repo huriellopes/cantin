@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Cantin\Pages;
 
+use App\Actions\Address\FillAddressAction;
 use App\Models\Address;
 use App\Models\City;
 use App\Models\State;
 use App\Traits\Utils;
+use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -18,20 +20,20 @@ class Transpeople extends Component
 {
     use Utils;
 
-    public string $name;
-    public string $email;
-    public string $phone;
-    public string $zipcode;
-    public string $address;
-    public int $number;
-    public string $complement;
-    public string $neighborhood;
-    public int $state_id;
+    public string $name = '';
+    public string $email = '';
+    public string $phone = '';
+    public string $zipcode = '';
+    public string $address = '';
+    public int $number = 0;
+    public string $complement = '';
+    public string $neighborhood = '';
+    public ?int $state_id = null;
     public $states;
-    public int $city_id;
+    public ?int $city_id = null;
     public $cities;
 
-    public $loading = false;
+    public bool $loading = false;
 
     /**
      * @return string[]
@@ -86,16 +88,30 @@ class Transpeople extends Component
      */
     public function mount(): void
     {
-        $this->states = Cache::remember('trans_states', 60 * 60 * 24, function () {
+        $this->states = Cache::remember('all_brazilian_states', 60 * 60 * 24, function () {
             return State::query()
                 ->select('id', 'name')
-                ->limit(1000)
+                ->orderBy('name')
                 ->get();
         });
 
-        $this->cities = Cache::remember('trans_cities', 60 * 60 * 24, function () {
-            return City::query()->select('id', 'name')->limit(10000)->get();
-        });
+        $this->cities = collect();
+
+        if ($this->state_id) {
+            $this->loadCities($this->state_id);
+        }
+    }
+
+    public function updatedStateId(?int $value): void
+    {
+        $this->validateOnly('state_id');
+
+        $this->city_id = null;
+        $this->cities = null;
+
+        if ($value) {
+            $this->loadCities($value);
+        }
     }
 
     /**
@@ -104,62 +120,73 @@ class Transpeople extends Component
      */
     public function updated($property): void
     {
-        $this->validateOnly($property);
+        if ($property !== 'state_id') {
+            $this->validateOnly($property);
+        }
+    }
+
+    protected function loadCities(int $stateId): void
+    {
+        $cacheKey = 'cities_of_state_' . $stateId;
+
+        $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
+            return City::query()
+                ->select('id', 'name')
+                ->where('state_id', '=', $stateId)
+                ->orderBy('name')
+                ->get();
+        });
     }
 
     /**
      * @return void
+     * @throws Exception
      */
     public function searchZipCode(): void
     {
         $this->loading = true;
-
         try {
             if (empty($this->zipcode)) {
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
+                $this->loading = false;
                 return;
             }
-
-            if (!preg_match('/^\d{8}$/', $this->clearMask($this->zipcode))) {
+            $cleanedZipCode = $this->clearMask($this->zipcode);
+            if (!preg_match('/^\d{8}$/', $cleanedZipCode)) {
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
                 return;
             }
 
-            $response = Http::timeout(3000)->withHeaders([
-                'Content-Type' => 'application/json'
-            ])->get(config('services.viacep.endpoint').$this->clearMask($this->zipcode).'/json');
+            $address = FillAddressAction::exec($this->zipcode);
 
-            // Verifique se houve erro na requisição
-            if ($response->failed()) {
-                toastr()
-                    ->timeOut(2000)
-                    ->error(__('Error when searching for zip code!'));
-                return;
+            $stateModel = State::query()
+                ->where('name', '=', $address->state)
+                ->first();
+
+            $cityModel = City::query()
+                ->where('name', '=', $address->city)
+                ->where('state_id', '=', $stateModel->id ?? null)
+                ->first();
+
+            $this->address = $address->address;
+            $this->complement = $address->complement;
+            $this->neighborhood = $address->neighborhood;
+            if ($stateModel) {
+                $this->state_id = $stateModel->id;
+            } else {
+                $this->state_id = null;
+                $this->cities = collect();
             }
 
-            // Verifique se o CEP foi encontrado
-            if ($response->json('erro')) {
-                toastr()
-                    ->timeOut(2000)
-                    ->error(__('Zip code not found!'));
-                return;
+            if ($cityModel && $this->state_id === $cityModel->state_id) {
+                $this->city_id = $cityModel->id;
+            } else {
+                $this->city_id = null;
             }
-
-            // Defina o endereço encontrado
-            $data = $response->json();
-
-            $data['state_id'] = State::query()->select('id', 'name')->where('abbr', $data['uf'])->first();
-            $data['city_id'] = City::query()->select('id', 'name')->where('name', $data['localidade'])->first();
-
-            $this->address = $data['logradouro'];
-            $this->complement = $data['complemento'];
-            $this->neighborhood = $data['bairro'];
-            $this->state_id = $data['state_id']->id;
-            $this->city_id = $data['city_id']->id;
         } catch (Exception|Throwable $e) {
             $this->webhook('error', $e, 'Cep not found', null);
 
@@ -171,24 +198,8 @@ class Transpeople extends Component
             toastr()
                 ->timeOut(2000)
                 ->error(__('Error when searching for zip code!'));
-        }
-
-        $this->loading = false;
-    }
-
-    /**
-     * @param int $state
-     * @return void
-     */
-    public function searchCity(int $state): void
-    {
-        if (!empty($state)) {
-            $this->cities = null;
-
-            $this->cities = City::query()
-                ->select('id', 'name')
-                ->where('state_id', '=', $state)
-                ->get();
+        } finally {
+            $this->loading = false;
         }
     }
 
@@ -199,7 +210,9 @@ class Transpeople extends Component
     {
         $this->validate();
 
-        $address = Address::query()->where('zipcode', '=', $this->clearMask($this->zipcode))->first();
+        $address = Address::query()
+            ->where('zipcode', '=', $this->clearMask($this->zipcode))
+            ->first();
 
         if (!$address) {
             $address = Address::create([
@@ -233,7 +246,7 @@ class Transpeople extends Component
             'city_id'
         ]);
 
-        sleep(3);
+        ToastMagic::success('Team added successfully!');
 
         toastr()
             ->timeOut(2000)

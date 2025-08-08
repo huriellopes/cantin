@@ -30,28 +30,30 @@
             </a>
         </li>
 
-{{--        <li class="nav-item">--}}
-{{--            <a class="nav-link {{ request()->routeIs('site.contact') ? 'active' : '' }}" aria-current="page" href="{{ route('site.contact') }}" wire:navigate>--}}
-{{--                {{ __('Contact') }}--}}
-{{--            </a>--}}
-{{--        </li>--}}
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('site.blog.posts') ? 'active' : '' }}" aria-current="page" href="{{ route('site.blog.posts') }}" wire:navigate>
+                {{ __('Blog') }}
+            </a>
+        </li>
 
-        @if (config('app.env') === 'local')
-            @if (Route::has('login'))
-                @auth
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{{ route('filament.admin.pages.dashboard') }}" wire:navigate>
-                            Admin
-                        </a>
-                    </li>F
-                @else
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{{ route('filament.admin.auth.login') }}" wire:navigate>
-                            {{ __('Access Restricted') }}
-                        </a>
-                    </li>
-                @endauth
-            @endif
+        @if (auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')))
+            <li class="nav-item">
+                <a class="nav-link" onclick="window.location.href = '{{ route('filament.admin.pages.dashboard') }}'" style="cursor: pointer;">
+                    Painel do Admin
+                </a>
+            </li>
+        @elseif (auth()->check() && auth()->user()->hasRole('user'))
+            <li class="nav-item">
+                <a class="nav-link" onclick="window.location.href = '{{ route('filament.userCommon.pages.dashboard') }}'" style="cursor: pointer;">
+                    Painel do Usuário
+                </a>
+            </li>
+        @else
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('site.auth.login-cantin') ? 'active' : '' }}" aria-current="page" href="{{ route('site.auth.login-cantin') }}" wire:navigate>
+                    {{ __('Access Restricted') }}
+                </a>
+            </li>
         @endif
     </ul>
 </div>

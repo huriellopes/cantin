@@ -26,7 +26,7 @@
 
     <div class="row mt-5">
         <div class="col mt-2">
-            <h1 class="text-center">{{ __('Registration of Trans People') }}</h1>
+            <h1 class="text-center">{{ __('Terreiro Trans People Registry') }}</h1>
         </div>
     </div>
 

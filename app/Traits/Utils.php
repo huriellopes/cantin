@@ -339,7 +339,7 @@ trait Utils
      * @param array|null $data
      * @return void
      */
-    public function webhook(string $type = "error", Exception|Throwable $e = null, string $message, array $data = null): void
+    public static function webhook(string $type = "error", Exception|Throwable $e = null, string $message, array $data = null): void
     {
         if ($type === 'error') {
             DiscordAlert::message("Error: $message \nMensagem: {$e->getMessage()}\nArquivo: {$e->getFile()}\nLinha: {$e->getLine()}!", [

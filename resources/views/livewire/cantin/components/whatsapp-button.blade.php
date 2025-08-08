@@ -26,7 +26,13 @@
         }
     </style>
 
-    <button type="button" wire:click="openWhatsapp" class="whatsapp-button" name="Entre em contato com nosso WhatsApp" title="Entre em contato com nosso WhatsApp">
+    <button
+        type="button"
+        wire:click.prevent="openWhatsapp"
+        class="whatsapp-button"
+        name="Entre em contato com nosso WhatsApp"
+        title="Entre em contato com nosso WhatsApp"
+    >
         <i class="fa-brands fa-whatsapp" style="font-size: 2em"></i>
     </button>
 </div>

@@ -3,18 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class Role extends Model
 {
-    use SoftDeletes;
+    use KeepsDeletedModels;
 
     /**
      * @var string[]
      */
     protected $fillable = [
         'name',
-        'description'
+        'slug'
     ];
 
     /**
@@ -25,7 +25,6 @@ class Role extends Model
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'deleted_at' => 'datetime'
         ];
     }
 }

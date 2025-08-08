@@ -33,9 +33,10 @@ class Search extends Component
     {
         $this->search = $slug ?? request()->query('search', '');
 
-        $this->states = Cache::remember('states_search', 60 * 60 * 24, function () {
+        $this->states = Cache::remember('all_brazilian_states', 60 * 60 * 24, function () {
             return State::query()
-                ->select('id', 'name', 'slug')
+                ->select('id', 'name')
+                ->orderBy('name')
                 ->get();
         });
     }

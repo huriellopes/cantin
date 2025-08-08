@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 /**
  * Class TypeTerreiro
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class TypeTerreiro extends Model
 {
-    use SoftDeletes;
+    use KeepsDeletedModels;
 
     protected $table = "type_terreiros";
 
@@ -33,7 +33,6 @@ class TypeTerreiro extends Model
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'deleted_at' => 'datetime'
         ];
     }
 }

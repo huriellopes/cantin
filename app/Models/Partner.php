@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Enum\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class Partner extends Model
 {
-    use SoftDeletes;
+    use KeepsDeletedModels;
 
     protected $table = "partners";
 
@@ -30,7 +31,6 @@ class Partner extends Model
             'status' => Status::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'deleted_at' => 'datetime'
         ];
     }
 

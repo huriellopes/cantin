@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class RoleSeederTable extends Seeder
 {
@@ -14,21 +13,25 @@ class RoleSeederTable extends Seeder
      */
     public function run(): void
     {
-        DB::table('roles')->insert([
-            [
-                'name' => 'Super Admin',
-                'description' => 'Usuário super administrador',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null,
-            ],
-            [
-                'name' => 'Admin',
-                'description' => 'Usuário administrador',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null,
-            ]
+        Role::query()->create([
+            'name' => 'Super Admin',
+            'slug' => 'super-admin',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        Role::query()->create([
+            'name' => 'Admin',
+            'slug' => 'admin',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        Role::query()->create([
+            'name' => 'User',
+            'slug' => 'user',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
     }
 }

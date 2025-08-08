@@ -4,20 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class NationsTerreiro extends Model
 {
-    use SoftDeletes;
-
-    protected $table = "nations_terreiros";
+    use KeepsDeletedModels;
 
     /**
      * @var string[]
      */
     protected $fillable = [
         'name',
-        'description'
+        'slug'
     ];
+
+    /**
+     * @return string
+     */
+    public function getRouteKeyName() : string
+    {
+        return 'slug';
+    }
 
     /**
      * @return string[]
@@ -27,7 +34,6 @@ class NationsTerreiro extends Model
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'deleted_at' => 'datetime'
         ];
     }
 }

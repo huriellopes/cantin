@@ -23,7 +23,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->smallInteger('status')->default(StatusEnum::ACTIVE);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

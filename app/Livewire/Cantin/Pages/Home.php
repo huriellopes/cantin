@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class Home extends Component
 {
-    public $commons;
+    public object $commons;
 
     public string $image;
 

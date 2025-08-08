@@ -38,8 +38,7 @@
                         <th>Nome do Terreiro</th>
                         <th>Nação da casa</th>
                         <th>Telefone</th>
-                        <th>Orunko do dono da casa</th>
-                        <th>Fundação da casa</th>
+                        <th>Orukó ou nome da liderança</th>
                         <th>Cor de pele da liderança</th>
                         <th>Estado</th>
                         <th>Cidade</th>
@@ -55,7 +54,6 @@
                                 <td>{{ $terreiro->nation->name }}</td>
                                 <td>{{ maskPhone($terreiro->phone) }}</td>
                                 <td>{{ $terreiro->leadership_orunko }}</td>
-                                <td>{{ \Carbon\Carbon::parse($terreiro->fundationed_at)->format('d/m/Y') }}</td>
                                 <td>{{ $terreiro->color_of_leadership }}</td>
                                 <td>{{ $terreiro->address->state->name }}</td>
                                 <td>{{ $terreiro->address->city->name }}</td>
@@ -74,7 +72,7 @@
                                             <table class="table table-striped">
                                                 <tr>
                                                     <td>Endereço</td>
-                                                    <td>{{ $terreiro->address->address }}, {{ $terreiro->address->number }}
+                                                    <td>{{ $terreiro->address->address }}
                                                         , {{ $terreiro->address->neighborhood }}{{ !empty($terreiro->address->complement) ? ','. $terreiro->address->complement : '' }}
                                                         , {{ $terreiro->address->zipcode }}</td>
                                                 </tr>

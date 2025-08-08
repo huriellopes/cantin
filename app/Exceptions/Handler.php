@@ -36,7 +36,7 @@ class Handler extends ExceptionHandler
     public function render($request, Exception|Throwable $e): Response|JsonResponse|HTTPResponse
     {
         if ($e instanceof ValidationException) {
-            if (env('APP_ENV') === 'local') {
+            if (app()->isLocal()) {
                 return response()->json([
                     'success' => false,
                     'status' => HTTPResponse::HTTP_BAD_REQUEST,
@@ -50,6 +50,7 @@ class Handler extends ExceptionHandler
                     'trace' => $e->getTrace()
                 ], 400);
             }
+
             return response()->json([
                 'success' => false,
                 'status' => HTTPResponse::HTTP_BAD_REQUEST,

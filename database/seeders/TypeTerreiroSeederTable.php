@@ -19,14 +19,12 @@ class TypeTerreiroSeederTable extends Seeder
                 'description' => 'Terreiro que é trans-inclusivo',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-                'deleted_at' => null,
             ],
             [
                 'name' => 'Não se aplica',
                 'description' => null,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-                'deleted_at' => null,
             ],
         ]);
     }
