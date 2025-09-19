@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\Dashboard;
+use App\Http\Middleware\CheckImpersonateMiddleware;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -37,13 +39,23 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->navigationItems([
                 NavigationItem::make('Página Inicial')
-                    ->group('Links Externos')
+                    ->group('Links Uteis')
                     ->sort(10)
                     ->url('/', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-link'),
+                NavigationItem::make('Blog')
+                    ->group('Links Uteis')
+                    ->sort(10)
+                    ->url('/blog', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-link'),
+                NavigationItem::make('Terreiros')
+                    ->group('Links Uteis')
+                    ->sort(10)
+                    ->url('/terreiros', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-link'),
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
@@ -58,6 +70,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                // CheckImpersonateMiddleware::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

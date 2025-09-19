@@ -9,11 +9,4 @@ use Filament\Resources\Pages\ListRecords;
 class ListTypeTerreiros extends ListRecords
 {
     protected static string $resource = TypeTerreiroResource::class;
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-        ];
-    }
 }

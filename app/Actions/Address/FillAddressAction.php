@@ -6,7 +6,7 @@ use App\Models\City;
 use App\Models\State;
 use App\Services\Address\ViaCepService;
 use App\Traits\Utils;
-use Flasher\Toastr\Laravel\Facade\Toastr;
+use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
@@ -25,7 +25,7 @@ final class FillAddressAction
     {
         try {
             if (empty($zipcode)) {
-                throw new Exception(__('Invalid zipcode!'), Response::HTTP_BAD_REQUEST);
+                throw new \RuntimeException(__('Invalid zipcode!'), Response::HTTP_BAD_REQUEST);
             }
 
             $address = resolve(ViaCepService::class)
@@ -42,13 +42,26 @@ final class FillAddressAction
                 ->pluck('id')
                 ->first();
 
-            return (object) [
+            $street = $address->address.','.str($address->zipcode)->replace('-', '').','.$address->neighborhood.','.$address->state .', Brasil';
+            $result = Geocoder::geocode($street)->get();
+
+            if ($result->isNotEmpty()) {
+                $firstResult = $result->first();
+                $latitude = $firstResult->getCoordinates()->getLatitude();
+                $longitude = $firstResult->getCoordinates()->getLongitude();
+            }
+
+            $data = [
                 'address' => $address->address,
                 'neighborhood' => $address->neighborhood,
                 'complement' => $address->complement,
                 'state' => $state_id,
                 'city' => $city_id,
+                'latitude' => $latitude ?? null,
+                'longitude' => $longitude ?? null,
             ];
+
+            return (object) $data;
         } catch (Exception|Throwable $e) {
             self::webhook('error', $e, 'Cep not found', null);
 

@@ -5,6 +5,8 @@ namespace App\Filament\UserCommon\Resources;
 use App\Filament\UserCommon\Resources\CommentResource\Pages;
 use App\Filament\UserCommon\Resources\CommentResource\RelationManagers;
 use App\Models\Comment;
+use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,7 +19,7 @@ class CommentResource extends Resource
 {
     protected static ?string $model = Comment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
 
     protected static ?string $modelLabel = 'Comentários';
 
@@ -48,20 +50,20 @@ class CommentResource extends Resource
                     ->label('Post'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->sortable()
+                    ->label('Criado em')
                     ->dateTime('d/m/Y H:i:s'),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\Action::make('view_comment_post')
+            ->recordActions([
+                Action::make('view_comment_post')
                     ->label('')
                     ->url(fn (Comment $record) => route('site.blog.show', $record->post->slug))
                     ->openUrlInNewTab()
                     ->tooltip('Ver Comentario')
                     ->icon('heroicon-o-eye'),
-            ])
-            ->bulkActions([]);
+            ]);
     }
 
     public static function getRelations(): array

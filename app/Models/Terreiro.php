@@ -48,11 +48,8 @@ class Terreiro extends Model
         return $this->belongsTo(Address::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function question() : BelongsTo
+    public function question()
     {
-        return $this->belongsTo(TerreiroQuestion::class);
+        return $this->hasOne(TerreiroQuestion::class);
     }
 }

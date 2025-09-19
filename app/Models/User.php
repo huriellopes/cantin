@@ -27,9 +27,9 @@ class User extends Authenticatable implements FilamentUser
      */
     protected $fillable = [
         'name',
-        'username',
         'slug',
         'email',
+        'email_verified_at',
         'password',
         'role_id',
         'status',
@@ -53,10 +53,10 @@ class User extends Authenticatable implements FilamentUser
     public function casts(): array
     {
         return [
+            'password' => 'hashed',
             'role_id' => RoleEnum::class,
             'status' => Status::class,
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
@@ -64,7 +64,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, '@gmail.com') && $this->hasVerifiedEmail();
+        return $this->hasVerifiedEmail();
     }
 
     /**

@@ -10,15 +10,18 @@ return new class extends Migration {
         Schema::create('likes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
+                ->index()
                 ->nullable()
                 ->constrained()
                 ->onDelete('cascade');
             $table->foreignId('comment_id')
+                ->index()
                 ->nullable()
                 ->constrained()
                 ->onDelete('cascade');
-            $table->ipAddress();
+            $table->ipAddress()->index();
             $table->foreignId('post_id')
+                ->index()
                 ->nullable()
                 ->constrained()
                 ->onDelete('cascade');

@@ -37,9 +37,14 @@ class UserCommonPanelProvider extends PanelProvider
             ])
             ->navigationItems([
                 NavigationItem::make('Página Inicial')
-                    ->group('Links Externos')
+                    ->group('Links Uteis')
                     ->sort(10)
                     ->url('/', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-link'),
+                NavigationItem::make('Blog')
+                    ->group('Links Uteis')
+                    ->sort(10)
+                    ->url('/blog', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-link'),
             ])
             ->discoverWidgets(in: app_path('Filament/UserCommon/Widgets'), for: 'App\\Filament\\UserCommon\\Widgets')

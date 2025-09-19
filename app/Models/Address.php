@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class Address extends Model
 {
-    use KeepsDeletedModels;
+    /* @use HasFactory<\Database\Factories\AddressFactory> */
+    use KeepsDeletedModels, HasFactory;
 
     /**
      * @var string[]
@@ -21,6 +23,9 @@ class Address extends Model
         'neighborhood',
         'state_id',
         'city_id',
+        'latitude',
+        'longitude',
+        'location',
     ];
 
     protected function casts(): array

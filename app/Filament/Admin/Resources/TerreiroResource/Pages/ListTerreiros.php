@@ -10,6 +10,7 @@ class ListTerreiros extends ListRecords
 {
     protected static string $resource = TerreiroResource::class;
 
+
     protected function getHeaderActions(): array
     {
         return [

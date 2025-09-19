@@ -18,7 +18,12 @@ return new class extends Migration
                 ->unique()
                 ->index();
             $table->string('phone');
-            $table->foreignId('address_id')->constrained('addresses');
+            $table->foreignId('address_id')
+                ->index()
+                ->constrained('addresses')
+                ->onDelete('cascade');
+            $table->smallInteger('status')
+                ->default(\App\Enum\Status::ACTIVE);
             $table->timestamps();
         });
     }

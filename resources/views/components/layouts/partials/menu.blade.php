@@ -36,6 +36,12 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('site.links.external') ? 'active' : '' }}" aria-current="page" href="{{ route('site.links.external') }}" wire:navigate>
+                {{ __('External Links') }}
+            </a>
+        </li>
+
         @if (auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')))
             <li class="nav-item">
                 <a class="nav-link" onclick="window.location.href = '{{ route('filament.admin.pages.dashboard') }}'" style="cursor: pointer;">
@@ -50,7 +56,7 @@
             </li>
         @else
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('site.auth.login-cantin') ? 'active' : '' }}" aria-current="page" href="{{ route('site.auth.login-cantin') }}" wire:navigate>
+                <a class="nav-link {{ request()->routeIs('site.auth.login') ? 'active' : '' }}" aria-current="page" href="{{ route('site.auth.login') }}" wire:navigate>
                     {{ __('Access Restricted') }}
                 </a>
             </li>

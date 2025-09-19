@@ -9,11 +9,4 @@ use Filament\Resources\Pages\ListRecords;
 class ListTypePeople extends ListRecords
 {
     protected static string $resource = TypePeopleResource::class;
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-        ];
-    }
 }

@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Carbon\Carbon;
 
 return new class extends Migration
 {
@@ -13,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('roles', function (Blueprint $table) {
-            $table->id()
-                ->index();
+            $table->id();
             $table->string('name')
                 ->index();
             $table->string('slug')
@@ -28,20 +26,14 @@ return new class extends Migration
                 [
                     'name' => 'Super User',
                     'slug' => 'super-user',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
                 ],
                 [
                     'name' => 'Admin',
                     'slug' => 'admin',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
                 ],
                 [
                     'name' => 'User',
                     'slug' => 'user',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
                 ],
             ]);
         }

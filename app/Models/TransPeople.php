@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Enum\Status;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class TransPeople extends Model
 {
-    use KeepsDeletedModels;
+    /* @use HasFactory<\Database\Factories\TransPeopleFactory> */
+    use KeepsDeletedModels, HasFactory;
 
     protected $table = 'trans_peoples';
 
@@ -20,6 +23,7 @@ class TransPeople extends Model
         'email',
         'phone',
         'address_id',
+        'status',
     ];
 
     /**
@@ -28,6 +32,7 @@ class TransPeople extends Model
     protected function casts() : array
     {
         return [
+            'status' => Status::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

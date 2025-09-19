@@ -4,34 +4,44 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enum\StatusPost;
 use App\Filament\Admin\Resources\PostsResource\Pages;
-use App\Filament\Admin\Resources\PostsResource\RelationManagers;
 use App\Models\Category;
 use App\Models\Post;
+use BackedEnum;
 use Carbon\Carbon;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class PostsResource extends Resource
 {
     protected static ?string $model = Post::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationGroup = 'Blog';
+    protected static ?string $navigationLabel = 'Posts';
+
+    protected static ?string $pluralLabel = 'Posts';
+
+    protected static ?string $modelLabel = 'Post';
+
+    protected static string | UnitEnum | null $navigationGroup = 'Blog';
 
     protected static ?int $navigationSort = 1;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Fieldset::make()
+        return $schema
+            ->components([
+                Fieldset::make()
+                    ->columnSpanFull()
                     ->schema([
                         Forms\Components\TextInput::make('title')
                             ->required()
@@ -64,6 +74,7 @@ class PostsResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->sortable()
@@ -76,9 +87,13 @@ class PostsResource extends Resource
                 Tables\Columns\TextColumn::make('published_at')
                     ->label(__('Published at'))
                     ->dateTime('d/m/Y'),
-                Tables\Columns\TextColumn::make('likes')
-                    ->label('Likes'),
+                Tables\Columns\TextColumn::make('likes_count')
+                    ->badge()
+                    ->counts('likes')
+                    ->label(__('Likes')),
                 Tables\Columns\TextColumn::make('views')
+                    ->badge()
+                    ->color('success')
                     ->label('Views'),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label(__('Author')),
@@ -94,11 +109,22 @@ class PostsResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                     ->icon('heroicon-m-pencil-square')
+                    ->tooltip(__('Edit'))
                     ->label(''),
-                Tables\Actions\Action::make('publish')
+                DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->tooltip(__('Delete'))
+                    ->requiresConfirmation()
+                    ->modalHeading('Excluir o post')
+                    ->modalDescription('Você tem certeza que deseja excluir o post?')
+                    ->modalSubmitActionLabel(__('Delete'))
+                    ->color('danger')
+                    ->visible(fn (Post $post) => $post->status === StatusPost::PENDING)
+                    ->label(''),
+                Action::make('publish')
                     ->action(function (Post $post) {
                         if (Carbon::parse($post->published_at)->format('Y-m-d') <= Carbon::now()->format('Y-m-d')) {
                             $post->status = StatusPost::PUBLISHED;
@@ -117,11 +143,14 @@ class PostsResource extends Resource
                     })
                     ->tooltip(__('Publish'))
                     ->requiresConfirmation()
+                    ->modalHeading('Publicar o post')
+                    ->modalDescription('Tem certeza que deseja publicar o post?')
+                    ->color('success')
                     ->icon('heroicon-m-check-circle')
                     ->label('')
                     ->visible(fn (Post $post) => $post->status === StatusPost::PENDING),
 
-                Tables\Actions\Action::make('not_publish')
+                Action::make('not_publish')
                     ->action(function (Post $post) {
                         if (Carbon::parse($post->published_at)->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
                             return Notification::make()
@@ -131,21 +160,28 @@ class PostsResource extends Resource
                         }
                         $post->status = StatusPost::PENDING;
                         $post->save();
+
+                        Notification::make()
+                            ->success()
+                            ->title('Não Publicado com sucesso')
+                            ->send();
                     })
                     ->tooltip(__('Not Publish'))
+                    ->color('danger')
                     ->requiresConfirmation()
+                    ->modalHeading('Despublicar o post')
+                    ->modalDescription('Tem certeza que deseja des-publicar o post?')
                     ->icon('heroicon-m-x-circle')
                     ->label('')
                     ->visible(fn (Post $post) => $post->status === StatusPost::PUBLISHED),
 
-                Tables\Actions\Action::make('link')
+                Action::make('link')
                     ->tooltip(__('View Post in web'))
                     ->icon('heroicon-m-link')
                     ->label('')
                     ->url(fn (Post $post) => route('site.blog.show', ['post' => $post->slug]))
                     ->openUrlInNewTab(),
-            ])
-            ->bulkActions([]);
+            ]);
     }
 
     public static function getRelations(): array

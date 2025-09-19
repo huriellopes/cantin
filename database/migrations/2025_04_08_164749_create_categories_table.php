@@ -20,7 +20,7 @@ return new class extends Migration
                 ->unique()
                 ->index();
             $table->smallInteger('status')
-                ->default(1);
+                ->default(\App\Enum\Status::ACTIVE);
             $table->timestamps();
 
             $table->index('created_at');

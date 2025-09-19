@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')
                 ->nullable()
+                ->index()
                 ->constrained()
-                ->onDelete('set null')
-                ->index();
+                ->onDelete('set null');
             $table->ipAddress();
             $table->string('name')
                 ->nullable()
@@ -30,6 +30,7 @@ return new class extends Migration
             $table->foreignId('parent_id')
                 ->nullable()->constrained('comments')->onDelete('cascade');
             $table->text('body');
+            $table->smallInteger('status')->default(\App\Enum\Status::ACTIVE);
             $table->timestamps();
         });
     }

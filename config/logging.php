@@ -65,6 +65,20 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'telegram' => [
+            'driver' => 'single',
+            'path' => storage_path("logs/telegram-alerts-".date('Y-m-d').".log"),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
+        'info-log' => [
+            'driver' => 'single',
+            'path' => storage_path("logs/laravel-log-".date('Y-m-d').".log"),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
@@ -80,14 +94,6 @@ return [
             'emoji' => ':boom:',
             'level' => env('LOG_LEVEL', 'critical'),
             'replace_placeholders' => true,
-        ],
-
-        'telegram' => [
-            'driver' => 'custom',
-            'via' => App\Broadcasting\TelegramLogger::class,
-            'level' => 'error',
-            'token' => env('TELEGRAM_BOT_TOKEN'),
-            'chat_id' => env('TELEGRAM_BOT_CHAT_ID'),
         ],
 
         'papertrail' => [

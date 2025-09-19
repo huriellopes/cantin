@@ -17,7 +17,7 @@ class VisitsRegister
      */
     public function handle(Request $request, Closure $next): Response
     {
-        Visit::create([
+        Visit::query()->create([
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'url' => $request->url(),

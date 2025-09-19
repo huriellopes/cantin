@@ -2,9 +2,11 @@
 
 namespace App\Enum;
 
+use BackedEnum;
 use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
 
-enum Status: int implements HasColor
+enum Status: int implements HasColor, HasIcon
 {
     case ACTIVE = 1;
     case INACTIVE = 0;
@@ -28,6 +30,14 @@ enum Status: int implements HasColor
         return match ($this) {
             self::ACTIVE => 'success',
             self::INACTIVE => 'danger',
+        };
+    }
+
+    public function getIcon(): string|BackedEnum|null
+    {
+        return match ($this) {
+            self::ACTIVE => 'heroicon-o-check-circle',
+            self::INACTIVE => 'heroicon-o-x-circle',
         };
     }
 }

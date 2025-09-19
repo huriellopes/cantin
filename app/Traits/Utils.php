@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
+use Telegram\Bot\Laravel\Facades\Telegram;
 use Throwable;
 use Exception;
 
@@ -34,7 +35,7 @@ trait Utils
      * @param string $variable
      * @return array|string|null
      */
-    public function clearMask(string $variable): array|string|null
+    public static function clearMask(string $variable): array|string|null
     {
         return preg_replace('/[^0-9]/', '', $variable);
     }
@@ -353,6 +354,35 @@ trait Utils
                     ],
                     'data' => json_encode($data),
                 ]
+            ]);
+        }
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public static function botCantinbr(Throwable|Exception $e, array $data = null): void
+    {
+        $chatId = config('telegram.bots.cantinbrBot.chatID');
+
+        $message = "🚨 **Erro na Aplicação Laravel** 🚨\n\n";
+        $message .= "Caminho: " . request()->fullUrl() . "\n";
+        $message .= "Mensagem: " . $e->getMessage() . "\n";
+        $message .= "Usuário logado: " . auth()->check() ? auth()->user()->id.'-'.auth()->user()->name : 'Não foi usuário logado' . "\n";
+        $message .= "Data e hora: " . Carbon::now()->format('Y-m-d H:i:s') . "\n";
+        $message .= "Dados: " . json_encode($data, JSON_THROW_ON_ERROR) . "\n";
+        $message .= "Arquivo: " . $e->getFile() . " (Linha: " . $e->getLine() . ")\n";
+
+        try {
+            Telegram::sendMessage([
+                'chat_id' => $chatId,
+                'text' => $message,
+                'parse_mode' => 'Markdown'
+            ]);
+        } catch (\Exception $e) {
+            Log::channel('telegram')->error('Erro ao enviar mensagem para o Telegram:', [
+                'message' => $message,
+                'error' => $e->getMessage()
             ]);
         }
     }

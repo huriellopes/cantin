@@ -3,39 +3,65 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\TypePeopleResource\Pages;
-use App\Filament\Admin\Resources\TypePeopleResource\RelationManagers;
 use App\Models\TypePeople;
+use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class TypePeopleResource extends Resource
 {
     protected static ?string $model = TypePeople::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
 
-    public static function form(Form $form): Form
+    protected static ?string $navigationLabel = 'Genêros';
+
+    protected static ?string $pluralLabel = 'Genêros';
+
+    protected static ?string $modelLabel = "Genêro";
+
+    protected static string | UnitEnum | null $navigationGroup = 'Cadastros';
+
+    protected static ?int $navigationSort = 5;
+
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->string()
-                    ->label('Nome'),
-                Forms\Components\TextInput::make('description')
-                    ->string()
-                    ->label('Descrição'),
+                Fieldset::make()
+                    ->columnSpanFull()
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->validationMessages([
+                                'required' => 'O campo :attribute é obrigatório.'
+                            ])
+                            ->label('Nome'),
+                        Forms\Components\TextInput::make('description')
+                            ->unique()
+                            ->required()
+                            ->validationMessages([
+                                'required' => 'O campo :attribute é obrigatório.',
+                                'unique' => 'O slug do genêro já existe. Tente novamente!'
+                            ])
+                            ->label('Slug'),
+                    ])
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->searchable()
@@ -44,35 +70,41 @@ class TypePeopleResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->label('Nome'),
-                Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('slug')
                     ->searchable()
-                    ->sortable()
-                    ->dateTime('d/m/Y')
-                    ->label('Criado em'),
+                    ->label('Slug'),
+            ])
+            ->headerActions([
+                CreateAction::make()
+                    ->icon('heroicon-m-plus')
+                    ->label('Criar Genêro')
+                    ->extraModalFooterActions([
+                        Action::make('cancel')
+                            ->label('Cancelar'),
+                    ]),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
+            ->recordActions([
+                EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->tooltip('Editar')
+                    ->label(''),
+                DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->tooltip('Excluir')
+                    ->modalHeading('Excluir')
+                    ->modalDescription('Tem certeza que deseja excluir este registro?')
+                    ->requiresConfirmation()
+                    ->label(''),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListTypePeople::route('/'),
-            'create' => Pages\CreateTypePeople::route('/create'),
-            'edit' => Pages\EditTypePeople::route('/{record}/edit'),
         ];
     }
 }

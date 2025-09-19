@@ -127,7 +127,7 @@ class Post extends Model
 
     public function likes(): HasMany
     {
-        return $this->hasMany(Like::class); // Ou belongsToMany(User::class, 'likes');
+        return $this->hasMany(Like::class);
     }
 
     /**
@@ -136,10 +136,5 @@ class Post extends Model
     public function dislikes(): HasMany
     {
         return $this->hasMany(Dislike::class); // Ou belongsToMany(User::class, 'dislikes');
-    }
-
-    public function tags(): BelongsToMany
-    {
-        return $this->belongsToMany(Tag::class);
     }
 }

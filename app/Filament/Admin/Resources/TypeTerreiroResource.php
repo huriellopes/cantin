@@ -3,67 +3,108 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\TypeTerreiroResource\Pages;
-use App\Filament\Admin\Resources\TypeTerreiroResource\RelationManagers;
 use App\Models\TypeTerreiro;
+use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class TypeTerreiroResource extends Resource
 {
     protected static ?string $model = TypeTerreiro::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-c-home';
 
-    public static function form(Form $form): Form
+    protected static string | UnitEnum | null $navigationGroup = 'Cadastros';
+
+    protected static ?string $navigationLabel = 'Tipos de Terreiros';
+
+    protected static ?string $pluralLabel = 'Tipos de Terreiros';
+
+    protected static ?string $label = 'Tipo de Terreiro';
+
+    protected static ?int $navigationSort = 4;
+
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                //
+        return $schema
+            ->components([
+                Fieldset::make()
+                    ->columnSpanFull()
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->validationMessages([
+                                'required' => 'O campo :attribute é obrigatório.'
+                            ])
+                            ->label('Nome'),
+                        Forms\Components\TextInput::make('slug')
+                            ->unique()
+                            ->required()
+                            ->validationMessages([
+                                'required' => 'O campo :attribute é obrigatório.',
+                                'unique' => 'O slug do tipo de terreiro já existe. Tente novamente!',
+                            ])
+                            ->label('Slug'),
+                    ]),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->sortable()
                     ->searchable()
                     ->label('#'),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nome')
+                    ->searchable()
+                    ->label('Nome'),
+                Tables\Columns\TextColumn::make('slug')
+                    ->searchable()
+                    ->label('Slug'),
+            ])
+            ->headerActions([
+                CreateAction::make()
+                    ->icon('heroicon-o-plus')
+                    ->label('Criar Tipo de Terreiro')
+                    ->extraModalFooterActions([
+                        Action::make('cancel')
+                            ->label('Cancelar')
+                    ]),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+            ->recordActions([
+                EditAction::make()
+                    ->icon('heroicon-o-pencil-square')
+                    ->tooltip('Editar')
+                    ->label(''),
+                DeleteAction::make()
+                    ->icon('heroicon-o-trash')
+                    ->tooltip('Excluir')
+                    ->requiresConfirmation()
+                    ->modalHeading('Excluir Tipo de Terreiro')
+                    ->modalDescription('Deseja excluir o tipo de terreiro?')
+                    ->label(''),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListTypeTerreiros::route('/'),
-            'create' => Pages\CreateTypeTerreiro::route('/create'),
-            'edit' => Pages\EditTypeTerreiro::route('/{record}/edit'),
         ];
     }
 }

@@ -3,68 +3,112 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\NationTerreiroResource\Pages;
-use App\Filament\Admin\Resources\NationTerreiroResource\RelationManagers;
 use App\Models\NationsTerreiro;
-use Filament\Forms;
-use Filament\Forms\Form;
+use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class NationTerreiroResource extends Resource
 {
     protected static ?string $model = NationsTerreiro::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-s-globe-americas';
 
-    public static function form(Form $form): Form
+    protected static ?string $navigationLabel = 'Nações';
+
+    protected static ?string $pluralLabel = 'Nações';
+
+    protected static ?string $modelLabel = 'Nação';
+
+    protected static string | UnitEnum | null $navigationGroup = 'Cadastros';
+
+    protected static ?int $navigationSort = 4;
+
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                //
+        return $schema
+            ->components([
+                Fieldset::make()
+                    ->columnSpanFull()
+                    ->schema([
+                        TextInput::make('name')
+                            ->required()
+                            ->validationMessages([
+                                'required' => 'O campo :attribute é obrigatório.',
+                            ])
+                            ->label('Nome'),
+                        TextInput::make('slug')
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->validationMessages([
+                                'required' => 'O campo :attribute é obrigatório.',
+                                'unique' => 'O slug já existe.'
+                            ]),
+                    ]),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 Tables\Columns\TextColumn::make('id')
+                    ->sortable()
+                    ->searchable()
                     ->label('#'),
                 Tables\Columns\TextColumn::make('name')
+                    ->sortable()
+                    ->searchable()
                     ->label(__('Name')),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d/m/Y')
-                    ->label(__('Created At'))
+                Tables\Columns\TextColumn::make('slug')
+                    ->label(__('Slug')),
+            ])
+            ->headerActions([
+                CreateAction::make()
+                    ->label('Criar Nação')
+                    ->icon('heroicon-m-plus-circle')
+                    ->extraModalFooterActions([
+                        Action::make('cancel')
+                            ->label('Cancelar'),
+                    ]),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+            ->recordActions([
+                EditAction::make()
+                    ->label('')
+                    ->requiresConfirmation()
+                    ->modalHeading('Editar')
+                    ->modalDescription('Tem certeza que deseja editar?')
+                    ->tooltip('Editar')
+                    ->color('primary')
+                    ->icon('heroicon-m-pencil-square'),
+                DeleteAction::make()
+                    ->label('')
+                    ->requiresConfirmation()
+                    ->modalHeading('Excluir')
+                    ->modalDescription('Tem certeza que deseja excluir?')
+                    ->tooltip('Excluir')
+                    ->color('danger')
+                    ->icon('heroicon-m-trash'),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListNationTerreiros::route('/'),
-            'create' => Pages\CreateNationTerreiro::route('/create'),
-            'edit' => Pages\EditNationTerreiro::route('/{record}/edit'),
         ];
     }
 }

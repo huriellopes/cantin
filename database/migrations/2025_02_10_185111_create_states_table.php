@@ -13,10 +13,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('states', function (Blueprint $table) {
-            $table->id()->index();
-            $table->string('name')->index();
-            $table->char('abbr', 2)->index();
-            $table->string('slug')->index();
+            $table->id();
+            $table->string('name')
+                ->index();
+            $table->char('abbr', 2)
+                ->index();
+            $table->string('slug')
+                ->unique()
+                ->index();
             $table->timestamps();
         });
 

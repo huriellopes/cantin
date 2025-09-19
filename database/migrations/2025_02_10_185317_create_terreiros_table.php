@@ -17,9 +17,14 @@ return new class extends Migration
             $table->string('phone');
             $table->foreignId('nation_terreiro_id')
                 ->constrained('nations_terreiros');
-            $table->foreignId('address_id')->constrained();
+            $table->foreignId('address_id')
+                ->index()
+                ->constrained()
+                ->onDelete('cascade');
             $table->string('leadership_orunko'); // Orukó da liderança
             $table->string("color_of_leadership"); // Qual a cor da pele da liderança do terreiro?
+            $table->smallInteger('status')
+                ->default(\App\Enum\Status::ACTIVE);
             $table->timestamps();
         });
     }

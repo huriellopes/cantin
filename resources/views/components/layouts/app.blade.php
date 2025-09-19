@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="{{ asset('/assets/images/cantin.ico') }}" type="image/x-icon">
     <title>{{ $title ?? config('app.name') }}</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="{{ asset('/assets/css/all.min.css') }}" />
 
 {{--    @if (app()->isProduction())--}}
@@ -32,18 +32,23 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            @include('components.layouts.partials.menu')
+            <x-layouts.partials.menu />
         </div>
     </nav>
 
     {{ $slot }}
 
-    @livewire('cantin.components.whatsapp-button')
+    <livewire:site.components.whatsapp-button />
+
+    @if (!request()->routeIs('site.auth.login') && !request()->routeIs('site.terreiros.search'))
+        <livewire:site.components.footer />
+    @endif
 
     <script src="{{ asset('assets/js/jquery.js') }}"></script>
     <script src="{{ asset('assets/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/all.min.js') }}"></script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4VSY21XL8V"></script>
     <script>
@@ -55,6 +60,7 @@
 
         gtag('config', 'G-4VSY21XL8V');
     </script>
+
     @livewireScripts
     {!! ToastMagic::scripts() !!}
     @yield('scripts')

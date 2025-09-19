@@ -20,10 +20,16 @@ class DatabaseSeeder extends Seeder
             NationsTerreirosSeederTable::class,
             StateSeederTable::class,
             CitySeederTable::class,
+            AddressSeeder::class,
             SuggestionSeederTable::class,
             CommonQuestionsSeederTable::class,
             CategorySeeder::class,
-            PostSeeder::class
+            PostSeeder::class,
+            TypeExternalLinkSeeder::class,
+            PartnerEntitySeeder::class,
+            TransPeopleSeeder::class,
+            ExternalLinkSeeder::class,
+            PageSeeder::class,
         ]);
     }
 }

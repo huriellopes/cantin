@@ -3,17 +3,17 @@
 namespace App\Http\Routes\Web;
 
 use App\Http\Controllers\Web\Auth\LoginController;
-use App\Livewire\Cantin\Pages\Auth\AuthFlip;
-use App\Livewire\Cantin\Pages\Auth\Login;
-use App\Livewire\Cantin\Pages\Auth\Register;
-use App\Livewire\Cantin\Pages\Home;
-use App\Livewire\Cantin\Pages\About;
-use App\Livewire\Cantin\Pages\PartnersEntities;
-use App\Livewire\Cantin\Pages\Transpeople;
-use App\Livewire\Cantin\Pages\Terreiros\Search;
-use App\Livewire\Cantin\Pages\Terreiros\Create;
-use App\Livewire\Cantin\Pages\Blog\Posts;
-use App\Livewire\Cantin\Pages\Blog\Show;
+use App\Livewire\Site\Pages\PartnersEntities;
+use App\Livewire\Site\Pages\StaticPage;
+use App\Livewire\Site\Pages\Terreiros\Create;
+use App\Livewire\Site\Pages\Transpeople;
+use App\Livewire\Site\Pages\About;
+use App\Livewire\Site\Pages\Auth\Login;
+use App\Livewire\Site\Pages\Blog\Posts;
+use App\Livewire\Site\Pages\Blog\Show;
+use App\Livewire\Site\Pages\ExternalLinks;
+use App\Livewire\Site\Pages\Home;
+use App\Livewire\Site\Pages\Terreiros\Search;
 use Illuminate\Support\Facades\Route;
 
 class SiteRoute
@@ -55,14 +55,26 @@ class SiteRoute
                             ->name('show');
                     });
 
+                Route::name('links.')
+                    ->prefix('links')
+                    ->group(function () {
+                        Route::get('/', ExternalLinks::class)->name('external');
+                    });
+
+                Route::name('static.')
+                    ->prefix('paginas-estaticas')
+                    ->group(function () {
+                        Route::get('/{staticPage}', StaticPage::class)
+                            ->name('page');
+                    });
+
                 Route::name('auth.')
                     ->prefix('login')
                     ->group(function () {
-                        Route::get('/', AuthFlip::class)
-                            ->name('login-cantin');
-                        Route::post('/', [LoginController::class, 'login'])->name('login-post');
-                        Route::post('/register', [LoginController::class, 'register'])
-                            ->name('register.post');
+                        Route::get('/', Login::class)
+                            ->name('login');
+                        Route::post('/', [LoginController::class, 'login'])
+                            ->name('login.post');
                     });
             });
     }

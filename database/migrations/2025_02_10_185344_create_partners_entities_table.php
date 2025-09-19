@@ -18,9 +18,18 @@ return new class extends Migration
             $table->string('email')
                 ->unique()
                 ->index();
-            $table->string('phone');
+            $table->string('phone')
+                ->nullable();
             $table->foreignId('address_id')
                 ->constrained('addresses');
+            $table->string('path_image')
+                ->nullable();
+            $table->foreignId('user_id')
+                ->index()
+                ->nullable()
+                ->constrained('users');
+            $table->smallInteger('status')
+                ->default(\App\Enum\Status::INACTIVE);
             $table->timestamps();
         });
     }

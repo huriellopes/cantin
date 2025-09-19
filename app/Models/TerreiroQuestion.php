@@ -17,7 +17,6 @@ class TerreiroQuestion extends Model
      * @var string[]
      */
     protected $fillable = [
-        'id',
         'terreiro_id',
         'type_people_id',
         'number_of_children_of_saint',

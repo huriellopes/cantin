@@ -172,6 +172,7 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\UserCommonPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Geocoder\Laravel\Providers\GeocoderService::class,
     ])->toArray(),
 
     /*

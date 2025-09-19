@@ -2,11 +2,11 @@
 
 namespace App\Http\Responses;
 
-use Filament\Http\Responses\Auth\Contracts\LogoutResponse as Responsable;
+use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-class LogoutResponse implements Responsable
+class LogoutResponse implements LogoutResponseContract
 {
     /**
      * @param Request $request
@@ -14,6 +14,6 @@ class LogoutResponse implements Responsable
      */
     public function toResponse($request): RedirectResponse
     {
-        return redirect()->route('site.auth.login-cantin');
+        return redirect()->route('site.auth.login');
     }
 }

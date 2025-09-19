@@ -2,22 +2,31 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enum\Status;
 use App\Filament\Admin\Resources\CommonQuestionResource\Pages;
-use App\Filament\Admin\Resources\CommonQuestionResource\RelationManagers;
 use App\Models\CommonQuestion;
+use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Notifications\Notification;
+use UnitEnum;
 
 class CommonQuestionResource extends Resource
 {
     protected static ?string $model = CommonQuestion::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-question-mark-circle';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-question-mark-circle';
 
     protected static ?string $modelLabel = 'Perguntas Frequentes';
 
@@ -25,18 +34,23 @@ class CommonQuestionResource extends Resource
 
     protected static ?string $breadcrumb = 'Perguntas Frequentes';
 
-    public static function form(Form $form): Form
+    protected static string | UnitEnum | null $navigationGroup = 'Site';
+
+    protected static ?int $navigationSort = 1;
+
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Fieldset::make()
+        return $schema
+            ->components([
+                Fieldset::make()
+                    ->columnSpanFull()
                     ->schema([
                         Forms\Components\TextInput::make('question')
                             ->columnSpanFull()
                             ->required()
                             ->maxLength(255)
                             ->label(__('Question')),
-                        Forms\Components\TextInput::make('answer')
+                        Forms\Components\Textarea::make('answer')
                             ->columnSpanFull()
                             ->required()
                             ->label(__('Answer')),
@@ -47,37 +61,100 @@ class CommonQuestionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 Tables\Columns\TextColumn::make('id')
+                    ->sortable()
+                    ->searchable()
                     ->label('#'),
                 Tables\Columns\TextColumn::make('question')
                     ->label(__('Question')),
-                Tables\Columns\IconColumn::make('status')
-                    ->label('Status')
-                    ->boolean()
+                TextColumn::make('status')
+                    ->sortable()
+                    ->badge()
+                    ->color(fn (Status $state) => $state->getColor())
+                    ->formatStateUsing(fn ($state) => $state->label())
+                    ->label('Status'),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        Status::ACTIVE->value => Status::ACTIVE->label(),
+                        Status::INACTIVE->value => Status::INACTIVE->label(),
+                    ])
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->headerActions([
+                CreateAction::make()
+                    ->icon('heroicon-m-plus')
+                    ->tooltip('Criar uma Pergunta Frequente')
+                    ->label('Criar uma Pergunta Frequente'),
             ])
-            ->bulkActions([]);
-    }
+            ->recordActions([
+                EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->tooltip('Editar')
+                    ->label(''),
+                DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->tooltip('Excluir')
+                    ->label(''),
+                ViewAction::make()
+                    ->icon('heroicon-m-eye')
+                    ->tooltip('Visualizar')
+                    ->schema([
+                        Forms\Components\TextInput::make('question')
+                            ->columnSpanFull()
+                            ->disabled()
+                            ->label(__('Question')),
+                        Forms\Components\Textarea::make('answer')
+                            ->columnSpanFull()
+                            ->disabled()
+                            ->label(__('Answer')),
+                    ])
+                    ->label(''),
+                Action::make('active')
+                    ->label('')
+                    ->icon('heroicon-m-check-circle')
+                    ->color('success')
+                    ->tooltip('Ativar')
+                    ->requiresConfirmation()
+                    ->modalHeading('Ativar')
+                    ->modalDescription('Voce tem certeza que deseja ativar essa pergunta?')
+                    ->visible(fn (CommonQuestion $record) => $record->status == Status::INACTIVE)
+                    ->action(function (CommonQuestion $record) {
+                        $record->status = Status::ACTIVE;
+                        $record->save();
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+                        Notification::make()
+                            ->success()
+                            ->title('Ativado com sucesso!')
+                            ->send();
+                    }),
+                Action::make('inactive')
+                    ->label('')
+                    ->icon('heroicon-m-x-circle')
+                    ->color('danger')
+                    ->tooltip('Inativar')
+                    ->requiresConfirmation()
+                    ->modalHeading('Inativar')
+                    ->modalDescription('Voce tem certeza que deseja inativar essa pergunta?')
+                    ->visible(fn (CommonQuestion $record) => $record->status == Status::ACTIVE)
+                    ->action(function (CommonQuestion $record) {
+                        $record->status = Status::INACTIVE;
+                        $record->save();
+
+                        Notification::make()
+                            ->success()
+                            ->title('Inativado com sucesso!')
+                            ->send();
+                    }),
+            ]);
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListCommonQuestions::route('/'),
-            'create' => Pages\CreateCommonQuestion::route('/create'),
-            'edit' => Pages\EditCommonQuestion::route('/{record}/edit'),
         ];
     }
 }

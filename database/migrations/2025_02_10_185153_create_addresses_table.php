@@ -13,12 +13,22 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->string('zipcode')->index(); // Cep
+            $table->string('zipcode')
+                ->index(); // Cep
             $table->string('address'); // Endereço
-            $table->string('complement')->nullable(); // Complemento
+            $table->string('complement')
+                ->nullable(); // Complemento
             $table->string('neighborhood'); // Bairro
-            $table->foreignId('state_id')->constrained(); // Estado
-            $table->foreignId('city_id')->constrained(); // Cidade
+            $table->foreignId('state_id')
+                ->index()
+                ->constrained(); // Estado
+            $table->foreignId('city_id')
+                ->index()
+                ->constrained(); // Cidade
+            $table->decimal('latitude', 10, 8)
+                ->nullable();
+            $table->decimal('longitude', 11, 8)
+                ->nullable();
             $table->timestamps();
         });
     }

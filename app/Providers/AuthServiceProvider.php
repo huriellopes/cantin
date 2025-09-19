@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Archicture\Entities\Levels\Policies\UsersPolicy;
-use App\Archicture\Entities\Users\Models\User;
+use App\Models\User;
+use App\Policies\UsersPolicy;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 

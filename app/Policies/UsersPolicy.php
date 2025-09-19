@@ -20,7 +20,7 @@ class UsersPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
+        return $user->hasRole('super-admin');
     }
 
     /**
@@ -28,7 +28,7 @@ class UsersPolicy
      */
     public function view(User $user): bool
     {
-        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
+        return $user->hasRole('super-admin') || $user->hasRole('admin');
     }
 
     /**
@@ -36,7 +36,7 @@ class UsersPolicy
      */
     public function create(User $user): bool
     {
-        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
+        return $user->hasRole('super-admin') || $user->hasRole('admin');
     }
 
     /**
@@ -44,7 +44,7 @@ class UsersPolicy
      */
     public function update(User $user): bool
     {
-        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
+        return $user->hasRole('super-admin') || $user->hasRole('admin');
     }
 
     /**
@@ -52,7 +52,7 @@ class UsersPolicy
      */
     public function delete(User $user): bool
     {
-        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
+        return $user->hasRole('super-admin') || $user->hasRole('admin');
     }
 
     /**
@@ -60,7 +60,7 @@ class UsersPolicy
      */
     public function restore(User $user): bool
     {
-        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
+        return $user->hasRole('super-admin') || $user->hasRole('admin');
     }
 
     /**
@@ -68,6 +68,6 @@ class UsersPolicy
      */
     public function forceDelete(User $user): bool
     {
-        return $user->role_id === RoleEnum::SUPER->value && auth()->user()->role_id === $user->role_id;
+        return $user->hasRole('super-admin');
     }
 }

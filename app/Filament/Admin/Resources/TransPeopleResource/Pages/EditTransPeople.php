@@ -10,10 +10,17 @@ class EditTransPeople extends EditRecord
 {
     protected static string $resource = TransPeopleResource::class;
 
-    protected function getHeaderActions(): array
+    public function mount($record): void
     {
-        return [
-            Actions\DeleteAction::make(),
-        ];
+        parent::mount($record);
+
+        $this->record->load(['address']);
+
+        $this->form->fill([
+            'name' => $this->record->name,
+            'phone' => $this->record->phone,
+            'email' => $this->record->email,
+            'address' => $this->record->address?->toArray(),
+        ]);
     }
 }

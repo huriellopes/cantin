@@ -3,7 +3,9 @@
 namespace App\Services\Auth;
 
 use App\Enum\Role;
-use App\Http\Requests\Api\Auth\LoginRequest;
+use App\Enum\Status;
+use App\Http\DTO\Auth\RegisterDTO;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Carbon\Carbon;
@@ -25,10 +27,13 @@ class LoginService
     {
         $user = User::query()
             ->where('email', '=', $request->get('email'))
+            ->where('status', '=', Status::ACTIVE)
             ->first();
 
-        if (!$user) {
-            return $user;
+        if (empty($user)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
         }
 
         $this->ensureIsNotRateLimited($request);
@@ -42,10 +47,12 @@ class LoginService
         return $user;
     }
 
-    public function HasRegister(RegisterRequest $request) : ?User
+    public function HasRegister(RegisterDTO $params) : ?User
     {
-        $validated = $request->validated();
-        $userAlreadyExists = User::query()->where('email', '=', $validated['email'])->exists();
+        $userAlreadyExists = User::query()
+            ->where('email', '=', $params->email)
+            ->where('status', '=', Status::ACTIVE)
+            ->first();
 
         if ($userAlreadyExists) {
             throw ValidationException::withMessages([
@@ -53,21 +60,16 @@ class LoginService
             ]);
         }
 
-        try {
-            $user = User::create([
-                'name' => $validated['name'],
-                'slug' => Str::slug($validated['name']),
-                'email' => $validated['email'],
-                'email_verified_at' => Carbon::now(),
-                'password' => Hash::make($validated['password']),
-                'role_id' => Role::USER,
-            ]);
+        $user = User::query()->create([
+            'name' => $params->name,
+            'slug' => Str::slug($params->name),
+            'email' => $params->email,
+            'email_verified_at' => Carbon::now(),
+            'password' => Hash::make($params->password),
+            'role_id' => Role::USER,
+        ]);
 
-            return $user;
-        } catch (Exception $e) {
-            Log::error('Error creating user: ' . $e->getMessage());
-            return null;
-        }
+        return $user;
     }
 
     private function ensureIsNotRateLimited($request): void

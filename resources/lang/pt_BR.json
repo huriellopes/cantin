@@ -16,6 +16,7 @@
     "Partners Entities": "Entidades Parceiras",
     "Trans People": "Pessoas Trans",
     "Contact": "Contato",
+    "External Links": "Links Externos",
     "Access Restricted": "Acesso Restrito",
 
     "National Register of Inclusive Terreiros": "Cadastro Nacional de Terreiros Inclusivos",
@@ -115,5 +116,8 @@
     "Loading...": "Carregando...",
 
     "Searching terreiros...": "Buscando terreiros...",
-    "Total of Visits": "Total de Visitas"
+    "Total of Visits": "Total de Visitas",
+
+    "Read more...": "Leia mais...",
+    "Comment": "Comentário"
 }

@@ -5,8 +5,11 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
+use Telegram\Bot\Laravel\Facades\Telegram;
 use Throwable;
 use Exception;
 
@@ -33,37 +36,36 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Exception|Throwable $e): Response|JsonResponse|HTTPResponse
+    public function report(Throwable $e)
     {
-        if ($e instanceof ValidationException) {
-            if (app()->isLocal()) {
-                return response()->json([
-                    'success' => false,
-                    'status' => HTTPResponse::HTTP_BAD_REQUEST,
-                    'error' => [
-                        'type' => 'Api',
-                        'code' => HTTPResponse::HTTP_BAD_REQUEST,
-                        'details' => [
-                            'message' => $e->validator->errors()->first()
-                        ]
-                    ],
-                    'trace' => $e->getTrace()
-                ], 400);
-            }
+        if ($this->shouldReport($e)) {
+            $chatId = config('telegram.bots.cantinbrBot.chatID');
 
-            return response()->json([
-                'success' => false,
-                'status' => HTTPResponse::HTTP_BAD_REQUEST,
-                'error' => [
-                    'type' => 'Api',
-                    'code' => HTTPResponse::HTTP_BAD_REQUEST,
-                    'details' => [
-                        'message' => $e->validator->errors()->first()
-                    ]
-                ]
-            ], 400);
+            $message = "🚨 **Erro na Aplicação CaNTIn ". app()->isLocal() ? "Local" : "Produção"."** 🚨\n\n";
+            $message .= "Caminho: " . request()->fullUrl() . "\n";
+            $message .= "Mensagem: " . $e->getMessage() . "\n";
+            $message .= "IP: " . request()->ip() . "\n";
+            $message .= "Navegador: " . request()->header('User-Agent') . "\n";
+            $message .= "Arquivo: " . $e->getFile() . " (Linha: " . $e->getLine() . ")\n";
+
+            try {
+                Telegram::sendMessage([
+                    'chat_id' => $chatId,
+                    'text' => $message,
+                    'parse_mode' => 'Markdown'
+                ]);
+            } catch (\Exception $e) {
+                Log::channel('telegram')->error('Erro ao enviar mensagem para o Telegram:', [
+                    'message' => $message,
+                    'error' => $e->getMessage()
+                ]);
+            }
         }
 
+    }
+
+    public function render($request, Exception|Throwable $e): Response|JsonResponse|HTTPResponse
+    {
         return parent::render($request, $e);
     }
 }

@@ -14,7 +14,8 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->index();
+            $table->string('title')
+                ->index();
             $table->string('slug')
                 ->unique()
                 ->index();
@@ -25,7 +26,8 @@ return new class extends Migration
             $table->smallInteger('status')
                 ->index()
                 ->default(StatusPost::PENDING);
-            $table->integer('views')->default(0);
+            $table->integer('views')
+                ->default(0);
             $table->foreignId('user_id')
                 ->index()
                 ->constrained();

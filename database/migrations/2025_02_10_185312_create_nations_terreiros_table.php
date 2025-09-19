@@ -13,9 +13,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('nations_terreiros', function (Blueprint $table) {
-            $table->id()->index();
-            $table->string('name')->index();
-            $table->string('slug')->index();
+            $table->id();
+            $table->string('name')
+                ->index();
+            $table->string('slug')
+                ->index();
             $table->timestamps();
 
             $table->index('created_at');

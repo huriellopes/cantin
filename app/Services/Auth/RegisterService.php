@@ -4,7 +4,7 @@ namespace App\Services\Auth;
 
 use App\Enum\Role;
 use App\Enum\Status;
-use App\Http\Requests\Api\Auth\RegisterRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Str;
 

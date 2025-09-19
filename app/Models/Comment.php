@@ -17,6 +17,7 @@ class Comment extends Model
         'user_id',
         'name',
         'email',
+        'ip_address',
         'post_id',
         'parent_id',
         'body',
