@@ -8,91 +8,64 @@ LABEL image.authors.email="huriellopes1996@gmail.com"
 # Define o diretório de trabalho dentro do contêiner.
 WORKDIR /app
 
-# Instala as dependências de sistema necessárias para compilação das extensões PHP,
-# Composer e Node.js/NPM (se precisar para assets).
-# Usamos '--virtual .build-deps' para agrupar e remover essas dependências facilmente.
+# Instala o composer e pacote para paralelismo
+RUN set -eux; \
+  ln -s /var/www /app  && \
+  \
+  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer && \
+  \
+  # Instala e configura timezone
+  apk add --no-cache --virtual .fetch-deps \
+  && apk del --no-network .fetch-deps
+
+# Dependências para compilação das extensões
 RUN set -eux; \
     apk add --no-cache --virtual .build-deps \
-        $PHPIZE_DEPS \
-        curl \
-        freetype-dev \
-        libzip-dev \
-        postgresql-dev \
-        icu-dev \
-        nodejs \
-        npm \
-        bash;
+            $PHPIZE_DEPS \
+            freetype-dev \
+            libzip-dev \
+            postgresql-dev \
+            icu-dev && \
+        \
+        docker-php-ext-configure gd --with-freetype && \
+        docker-php-ext-configure pdo_pgsql --with-pdo-pgsql && \
+        docker-php-ext-configure zip && \
+        \
+        docker-php-ext-install -j$(nproc) \
+            gd \
+            intl \
+            bcmath \
+            zip \
+            pdo_pgsql \
+            opcache && \
+        \
+        runDeps="$( \
+            scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
+                | tr ',' '\n' \
+                | sort -u \
+                | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+        )" && \
+        apk add --no-cache $runDeps && \
+        \
+        apk del --no-network .build-deps
 
-# Instala o Composer globalmente.
-# Fixamos a versão para garantir reprodutibilidade.
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer --version=2.7.7
+# Instala dependências necessárias incluindo supervisor
+RUN apk add --no-cache \
+    npm \
+    supervisor \
+    bash
 
-# Configura e instala as extensões PHP.
-# '-j$(nproc)' utiliza todos os núcleos da CPU para paralelizar a compilação,
-# acelerando o processo.
-RUN set -eux; \
-    docker-php-ext-configure gd --with-freetype && \
-    docker-php-ext-configure pdo_pgsql --with-pdo-pgsql && \
-    docker-php-ext-configure zip && \
-    \
-    docker-php-ext-install -j$(nproc) \
-        gd \
-        intl \
-        bcmath \
-        zip \
-        pdo_pgsql; \
-    \
-    apk del --no-cache .build-deps;
-
-# --- Aqui você pode adicionar passos de build específicos da sua aplicação ---
-# Por exemplo, copiar o código-fonte e instalar dependências PHP ou Node.js.
-# Se o seu aplicativo for um projeto Laravel, você faria algo como:
-# COPY . /app
-# RUN composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
-# Se você tiver assets frontend para compilar com Node.js/NPM:
-# RUN npm install && npm run production
-
-# Stage 2: Runner - Cria a imagem final com o mínimo necessário para a aplicação rodar.
-FROM php:8.4-fpm-alpine3.20 AS runner
-
-# Metadados da imagem (repetidos para clareza, mas podem ser omitidos se forem os mesmos)
-LABEL image.authors.name="Huriel Lopes"
-LABEL image.authors.email="huriellopes1996@gmail.com"
-
-# Define o diretório de trabalho dentro do contêiner.
-WORKDIR /app
-
-# Instala as dependências de runtime necessárias para as extensões PHP instaladas
-# e para o Supervisor.
-RUN set -eux; \
-    apk add --no-cache \
-        supervisor \
-        bash \
-        libpq \
-        libintl \
-        freetype \
-        libzip;
-
-# Copia as extensões PHP compiladas do estágio 'builder' para o estágio 'runner'.
-# Isso garante que apenas as extensões compiladas (e não todas as ferramentas de build)
-# sejam incluídas na imagem final.
-COPY --from=builder /usr/local/lib/php/extensions/no-debug-non-zts-* /usr/local/lib/php/extensions/no-debug-non-zts-*
-# Copia o executável do Composer.
-COPY --from=builder /usr/local/bin/composer /usr/local/bin/composer
-
-# Copia o código da sua aplicação para o contêiner.
-# Este passo deve ser feito após as dependências para aproveitar o cache do Docker.
-# Se você usa volumes para o código, esta linha pode ser removida.
-# Exemplo: COPY . /app
+# Adiciona o arquivo de configuração do OPcache
+COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # Configuração do Supervisor
-RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor
+RUN mkdir -p /etc/supervisor/conf.d
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
-# Expõe a porta que o PHP-FPM está escutando.
+# Cria diretório para logs do supervisor
+RUN mkdir -p /var/log/supervisor
+
 EXPOSE 9000
 
-# Define o comando principal que será executado quando o contêiner iniciar.
-# '-n' é crucial para que o supervisord seja executado em primeiro plano,
-# mantendo o contêiner ativo.
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf", "-n"]
+# Inicia tanto o PHP-FPM quanto o Supervisor
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
