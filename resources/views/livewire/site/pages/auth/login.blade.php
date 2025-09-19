@@ -1,153 +1,152 @@
-<div class="container mt-5 mb-4">
-    <style>
-        /**
- * Login Page
- */
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-        }
+@assets
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+    }
 
-        .login-card-wrapper {
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(8px);
-            overflow: hidden;
-        }
+    .login-card-wrapper {
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(8px);
+        overflow: hidden;
+    }
 
+    .image-col {
+        background-image: url({{ $image }});
+        background-size: cover;
+        background-position: center;
+        min-height: 400px;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+    }
+    .form-col {
+        padding: 40px;
+    }
+    .card-title {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    .form-control {
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.25);
+        border-color: #6a11cb;
+    }
+    /* Estilos para validação */
+    .form-control.is-invalid {
+        border-color: #dc3545; /* Cor da borda vermelha para erro */
+        padding-right: calc(1.5em + 0.75rem); /* Espaço para ícone de erro, se usar */
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e"); /* Ícone de erro */
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    }
+    .invalid-feedback {
+        color: #dc3545; /* Cor do texto da mensagem de erro */
+        font-size: 0.875em;
+        margin-top: 0.25rem;
+    }
+
+    .btn-primary {
+        border-radius: 8px;
+        padding: 12px 0;
+        font-weight: bold;
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+    .text-muted a {
+        color: #6a11cb;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .text-muted a:hover {
+        color: #2575fc;
+        text-decoration: underline;
+    }
+    .input-group-text {
+        border-radius: 8px 0 0 8px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-right: none;
+        color: #6c757d;
+    }
+
+    @media (max-width: 767.98px) {
         .image-col {
-            background-image: url({{ $image }});
-            background-size: cover;
-            background-position: center;
-            min-height: 400px;
-            border-top-left-radius: 15px;
-            border-bottom-left-radius: 15px;
+            border-radius: 15px 15px 0 0;
+            min-height: 200px;
         }
         .form-col {
-            padding: 40px;
+            padding: 30px;
         }
-        .card-title {
-            font-size: 2.2rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        .form-control {
-            border-radius: 8px;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            transition: all 0.3s ease;
-        }
-        .form-control:focus {
-            box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.25);
-            border-color: #6a11cb;
-        }
-        /* Estilos para validação */
-        .form-control.is-invalid {
-            border-color: #dc3545; /* Cor da borda vermelha para erro */
-            padding-right: calc(1.5em + 0.75rem); /* Espaço para ícone de erro, se usar */
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e"); /* Ícone de erro */
-            background-repeat: no-repeat;
-            background-position: right calc(0.375em + 0.1875rem) center;
-            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-        }
-        .invalid-feedback {
-            color: #dc3545; /* Cor do texto da mensagem de erro */
-            font-size: 0.875em;
-            margin-top: 0.25rem;
-        }
-
-        .btn-primary {
-            border-radius: 8px;
-            padding: 12px 0;
-            font-weight: bold;
-            background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
-            border: none;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-        .text-muted a {
-            color: #6a11cb;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .text-muted a:hover {
-            color: #2575fc;
-            text-decoration: underline;
-        }
-        .input-group-text {
-            border-radius: 8px 0 0 8px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-right: none;
-            color: #6c757d;
-        }
-
-        @media (max-width: 767.98px) {
-            .image-col {
-                border-radius: 15px 15px 0 0;
-                min-height: 200px;
-            }
-            .form-col {
-                padding: 30px;
-            }
-            .login-card-wrapper {
-                border-radius: 15px;
-            }
-        }
-
-        .flipper-container {
-            perspective: 1000px;
-            /* Adicione estas duas linhas para que o container tenha uma altura base */
-            min-height: 400px; /* Ou o valor que for apropriado para a sua UI */
-            display: flex;
-        }
-
-        .flipper {
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-            width: 100%; /* Garante que o flipper ocupe todo o espaço */
-        }
-
-        .flipper.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .front, .back {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 15px;
-        }
-
-        .back {
-            transform: rotateY(180deg);
-        }
-
         .login-card-wrapper {
-            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(8px);
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
         }
-    </style>
+    }
+
+    .flipper-container {
+        perspective: 1000px;
+        /* Adicione estas duas linhas para que o container tenha uma altura base */
+        min-height: 400px; /* Ou o valor que for apropriado para a sua UI */
+        display: flex;
+    }
+
+    .flipper {
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+        width: 100%; /* Garante que o flipper ocupe todo o espaço */
+    }
+
+    .flipper.flipped {
+        transform: rotateY(180deg);
+    }
+
+    .front, .back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 15px;
+    }
+
+    .back {
+        transform: rotateY(180deg);
+    }
+
+    .login-card-wrapper {
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(8px);
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+@endassets
+<div class="container mt-5 mb-4">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
             <div class="flipper-container">

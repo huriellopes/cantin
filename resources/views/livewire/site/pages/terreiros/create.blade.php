@@ -1,54 +1,37 @@
+@assets
+<style>
+    .steps {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        margin-top: 30px;
+    }
+
+    .step {
+        display: flex;
+        align-items: center;
+        margin: 0 10px;
+    }
+
+    .step-number {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #ccc;
+        color: #fff;
+        margin-right: 5px;
+    }
+
+    .step.active .step-number {
+        background-color: #007bff;
+    }
+</style>
+
+@endassets
 <div class="container mt-5">
-    <style>
-        .steps {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            margin-top: 30px;
-        }
-
-        .step {
-            display: flex;
-            align-items: center;
-            margin: 0 10px;
-        }
-
-        .step-number {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #ccc;
-            color: #fff;
-            margin-right: 5px;
-        }
-
-        .step.active .step-number {
-            background-color: #007bff;
-        }
-
-        .spinner {
-            display: none; /* Oculta o spinner por padrão */
-            border: 2px solid #f3f3f3; /* Cor de fundo */
-            border-top: 2px solid #3498db; /* Cor do spinner */
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            animation: spin 2s linear infinite;
-        }
-
-        .spinner.active {
-            display: inline-block; /* Exibe o spinner durante o carregamento */
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-
     <div class="row mt-5">
         <div class="col">
             <div class="steps">
