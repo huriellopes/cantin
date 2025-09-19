@@ -41,7 +41,12 @@ class Handler extends ExceptionHandler
         if ($this->shouldReport($e)) {
             $chatId = config('telegram.bots.cantinbrBot.chatID');
 
-            $message = "🚨 **Erro na Aplicação CaNTIn ". app()->isLocal() ? "Local" : "Produção"."** 🚨\n\n";
+            if (app()->isLocal()) {
+                $message = "🚨 **Erro na Aplicação CaNTIn Local ** 🚨\n\n";
+            } else {
+                $message = "🚨 **Erro na Aplicação CaNTIn Produção ** 🚨\n\n";
+            }
+
             $message .= "Caminho: " . request()->fullUrl() . "\n";
             $message .= "Mensagem: " . $e->getMessage() . "\n";
             $message .= "IP: " . request()->ip() . "\n";
