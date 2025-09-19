@@ -81,7 +81,7 @@
                     <img src="{{ $logo }}" alt="CaNTIn" title="CaNTIn" class="img-fluid" style="max-height: 80px;">
                 </div>
 
-                @if (!empty($static_pages))
+                @if (!empty($static_pages) && count($static_pages) > 0)
                     <div class="col-md-4 col-12 text-center mb-3 mb-md-0">
                         <h5>Páginas Estáticas</h5>
                         <ul>
