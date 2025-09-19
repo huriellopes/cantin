@@ -13,12 +13,11 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="{{ asset('/assets/css/all.min.css') }}" />
-
-{{--    @if (app()->isProduction())--}}
-{{--        <link rel="stylesheet" type="application/json" href="{{ asset('/build/manifest.json') }}"/>--}}
-{{--    @else--}}
+    @if (app()->isProduction())
+        <link rel="stylesheet" type="application/json" href="{{ asset('/build/manifest.json') }}"/>
+    @else
         @vite(['resources/js/app.js'])
-{{--    @endif--}}
+    @endif
 
     @livewireStyles
     {!! ToastMagic::styles() !!}

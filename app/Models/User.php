@@ -68,27 +68,6 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * @return bool
-     */
-    public function isSuperAdmin(): bool
-    {
-        return $this->role_id === RoleEnum::SUPER;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAdmin(): bool
-    {
-        return $this->role_id === RoleEnum::ADMIN;
-    }
-
-    public function getVerifyStatusAttribute()
-    {
-        return $this->deleted_at ?? null;
-    }
-
-    /**
      * @return BelongsTo
      */
     public function role(): BelongsTo
