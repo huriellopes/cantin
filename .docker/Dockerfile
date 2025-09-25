@@ -1,5 +1,5 @@
 # Stage 1: Builder - Constrói as extensões PHP e instala dependências de build.
-FROM php:8.4-fpm-alpine3.20 AS builder
+FROM php:8.3-fpm-alpine3.19 AS builder
 
 # Metadados da imagem
 LABEL image.authors.name="Huriel Lopes"
