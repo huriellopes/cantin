@@ -34,7 +34,7 @@ class UserSeederTable extends Seeder
         User::query()->create([
             'name' => 'Jorge Alan Baloni',
             'slug' => 'alanbaloni',
-            'email' => 'alanbaloni@gmail.com',
+            'email' => 'seggvg@gmail.com',
             'email_verified_at' => Carbon::now(),
             'password' => bcrypt('secret123'),
             'role_id' => RoleEnum::ADMIN,

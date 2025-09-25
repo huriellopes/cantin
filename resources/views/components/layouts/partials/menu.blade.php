@@ -55,8 +55,13 @@
                 </a>
             </li>
         @else
+{{--            <li class="nav-item">--}}
+{{--                <a class="nav-link {{ request()->routeIs('site.auth.login') ? 'active' : '' }}" aria-current="page" href="{{ route('site.auth.login') }}" wire:navigate>--}}
+{{--                    {{ __('Access Restricted') }}--}}
+{{--                </a>--}}
+{{--            </li>--}}
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('site.auth.login') ? 'active' : '' }}" aria-current="page" href="{{ route('site.auth.login') }}" wire:navigate>
+                <a class="nav-link" onclick="window.location.href = '{{ route('filament.admin.auth.login') }}'" style="cursor: pointer;">
                     {{ __('Access Restricted') }}
                 </a>
             </li>

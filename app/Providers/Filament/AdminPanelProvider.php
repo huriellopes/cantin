@@ -30,7 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->darkMode(true)
             ->path('admin')
             ->favicon('../public/assets/images/cantin.ico')
-            ->login(false)
+            ->login()
             ->colors([
                 'primary' => Color::Blue,
             ])

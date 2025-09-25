@@ -45,7 +45,7 @@ services:
       POSTGRES_PASSWORD: cantin2025
     restart: always
     volumes:
-      - ./.docker/database:/docker-entrypoint-initdb.d/
+      - ./.docker/database:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
