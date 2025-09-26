@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources\StaticPages\Pages;
 
-use App\Filament\Admin\Resources\StaticPages\StaticPageResource;
+use App\Filament\Admin\Resources\StaticPages\StaticPages\StaticPageResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

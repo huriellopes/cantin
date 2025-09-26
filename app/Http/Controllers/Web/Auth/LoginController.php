@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Auth;
 
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
@@ -16,7 +17,7 @@ class LoginController extends Controller
 {
     use Utils;
 
-    public function login(LoginRequest $request): ?\Illuminate\Http\RedirectResponse
+    public function login(LoginRequest $request): ?RedirectResponse
     {
         try {
             if (empty($request->email) || empty($request->password)) {

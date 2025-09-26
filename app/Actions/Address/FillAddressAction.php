@@ -2,6 +2,7 @@
 
 namespace App\Actions\Address;
 
+use RuntimeException;
 use App\Models\City;
 use App\Models\State;
 use App\Services\Address\ViaCepService;
@@ -25,7 +26,7 @@ final class FillAddressAction
     {
         try {
             if (empty($zipcode)) {
-                throw new \RuntimeException(__('Invalid zipcode!'), Response::HTTP_BAD_REQUEST);
+                throw new RuntimeException(__('Invalid zipcode!'), Response::HTTP_BAD_REQUEST);
             }
 
             $address = resolve(ViaCepService::class)

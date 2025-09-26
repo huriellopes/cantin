@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 
+use DateTime;
+use Illuminate\Http\Client\ConnectionException;
+use JsonException;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -46,12 +49,12 @@ trait Utils
      * @param string $format
      * @param string $slep
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function intervalDate (string $start_date, string $end_date, string $format = 'Y-m-d', string $slep = '+1day'): array
     {
-        $dateStart = new \DateTime($start_date);
-        $dateEnd = new \DateTime($end_date);
+        $dateStart = new DateTime($start_date);
+        $dateEnd = new DateTime($end_date);
 
         $rangeDate = [];
         while($dateStart <= $dateEnd){
@@ -318,7 +321,7 @@ trait Utils
      * @param array|null $data
      * @param string $method
      * @return array|mixed
-     * @throws \Illuminate\Http\Client\ConnectionException
+     * @throws ConnectionException
      */
     public function consultAPI(string $endpoint, string $params, array $data = null, string $method = 'GET'): mixed
     {
@@ -359,7 +362,7 @@ trait Utils
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
     public static function botCantinbr(Throwable|Exception $e, array $data = null): void
     {
@@ -379,7 +382,7 @@ trait Utils
                 'text' => $message,
                 'parse_mode' => 'Markdown'
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('telegram')->error('Erro ao enviar mensagem para o Telegram:', [
                 'message' => $message,
                 'error' => $e->getMessage()

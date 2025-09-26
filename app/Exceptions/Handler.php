@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
                     'text' => $message,
                     'parse_mode' => 'Markdown'
                 ]);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::channel('telegram')->error('Erro ao enviar mensagem para o Telegram:', [
                     'message' => $message,
                     'error' => $e->getMessage()

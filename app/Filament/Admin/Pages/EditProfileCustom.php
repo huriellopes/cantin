@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Pages;
 
+use Exception;
 use App\Models\User;
 use BackedEnum;
 use Filament\Facades\Filament;
@@ -26,7 +27,7 @@ class EditProfileCustom extends Page
         return auth()->check();
     }
 
-    protected static string | UnitEnum | null $navigationGroup = 'Gestão';
+    protected static string | \UnitEnum | null $navigationGroup = 'Gestão';
 
     protected static ?int $navigationSort = 2;
 
@@ -36,7 +37,7 @@ class EditProfileCustom extends Page
 
     protected static ?string $slug = 'edit-profile';
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-user';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user';
 
     public ?array $data = [];
 
@@ -52,9 +53,9 @@ class EditProfileCustom extends Page
         ]);
     }
 
-    public function form(Schema $form) : Schema
+    public function form(Schema $schema) : Schema
     {
-        return $form
+        return $schema
             ->components([
                 Fieldset::make()
                     ->label('Dados Pessoais')
@@ -133,7 +134,7 @@ class EditProfileCustom extends Page
                 ->send();
 
             $this->redirectRoute('filament.admin.pages.dashboard');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Erro ao atualizar o perfil: '. $e->getMessage());
             Notification::make()
                 ->title('Erro ao atualizar perfil!')
