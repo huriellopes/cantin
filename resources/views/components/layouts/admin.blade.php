@@ -28,7 +28,7 @@
                     ['Pessoas Trans', '#', false],
                     ['Entidades Parceiras', '#', false],
                     ['Posts', '#', false],
-                    ['Comentários', '#', false],
+                    ['Comentários', route('admin.comments.index'), request()->routeIs('admin.comments.*')],
                     ['Páginas', '#', false],
                 ];
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Routes\Web;
 
+use App\Livewire\Admin\Comments\Index as CommentsIndex;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Users\Index as UsersIndex;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,8 @@ class AdminRoute
             ->middleware(['auth', 'role:admin,super-admin'])
             ->group(function () {
                 Route::get('/', Dashboard::class)->name('dashboard');
+
+                Route::get('/comments', CommentsIndex::class)->name('comments.index');
 
                 // Apenas super-admin
                 Route::get('/users', UsersIndex::class)

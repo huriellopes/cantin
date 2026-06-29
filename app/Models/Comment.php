@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,14 +22,16 @@ class Comment extends Model
         'post_id',
         'parent_id',
         'body',
+        'status',
     ];
 
     /**
-     * @return string[]
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
+            'status' => Status::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
