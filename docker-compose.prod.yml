@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   nginx:
     container_name: nginx
-    image: nginx:1.25-alpine3.17
+    image: nginx:1.27-alpine
     ports:
       - "80:80"
 #      - "443:443"
@@ -13,6 +11,7 @@ services:
       - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - app
+    restart: unless-stopped
     networks:
       - cantin
 
@@ -29,28 +28,26 @@ services:
       - ./:/app
     external_links:
       - nginx:app.test
-    ports:
-      - "9000:9000"
-    command: >
-      sh -c "php-fpm"
     networks:
       - cantin
 
   db:
     container_name: database
-    image: postgres:15.1-alpine
+    image: postgres:15-alpine
     environment:
-      POSTGRES_DB: cantin
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: cantin2025
+      POSTGRES_DB: ${DB_DATABASE:-cantin}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD no .env}
     restart: always
     volumes:
-      - ./.docker/database:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+      - cantin-db:/var/lib/postgresql/data
+    # Porta não exposta ao host em produção; acesso apenas pela rede interna.
     networks:
       - cantin
 
 networks:
   cantin:
     driver: bridge
+
+volumes:
+  cantin-db:

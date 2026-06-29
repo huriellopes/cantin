@@ -1,5 +1,5 @@
-# Stage 1: Builder - Constrói as extensões PHP e instala dependências de build.
-FROM php:8.3-fpm-alpine3.19 AS builder
+# Imagem de produção (PHP 8.4 — requisito do Laravel 13).
+FROM php:8.4-fpm-alpine AS app
 
 # Metadados da imagem
 LABEL image.authors.name="Huriel Lopes"
