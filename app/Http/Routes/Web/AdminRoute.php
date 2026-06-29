@@ -4,6 +4,7 @@ namespace App\Http\Routes\Web;
 
 use App\Livewire\Admin\Comments\Index as CommentsIndex;
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\Posts\Index as PostsIndex;
 use App\Livewire\Admin\Users\Index as UsersIndex;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,7 @@ class AdminRoute
                 Route::get('/', Dashboard::class)->name('dashboard');
 
                 Route::get('/comments', CommentsIndex::class)->name('comments.index');
+                Route::get('/posts', PostsIndex::class)->name('posts.index');
 
                 // Apenas super-admin
                 Route::get('/users', UsersIndex::class)

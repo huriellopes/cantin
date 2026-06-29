@@ -27,7 +27,7 @@
                     ['Terreiros', '#', false],
                     ['Pessoas Trans', '#', false],
                     ['Entidades Parceiras', '#', false],
-                    ['Posts', '#', false],
+                    ['Posts', route('admin.posts.index'), request()->routeIs('admin.posts.*')],
                     ['Comentários', route('admin.comments.index'), request()->routeIs('admin.comments.*')],
                     ['Páginas', '#', false],
                 ];
