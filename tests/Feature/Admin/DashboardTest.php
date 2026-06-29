@@ -1,17 +1,8 @@
 <?php
 
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
-
-function userWithRole(string $slug): User
-{
-    $role = Role::query()->firstOrCreate(['slug' => $slug], ['name' => ucfirst($slug)]);
-
-    return User::factory()->create(['role_id' => $role->id]);
-}
 
 it('redirects guests to the site login', function () {
     $this->get('/admin')->assertRedirect(route('site.auth.login'));

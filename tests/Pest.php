@@ -42,7 +42,12 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Cria um usuário com a role indicada (criando a role se necessário).
+ */
+function userWithRole(string $slug): \App\Models\User
 {
-    // ..
+    $role = \App\Models\Role::query()->firstOrCreate(['slug' => $slug], ['name' => ucfirst($slug)]);
+
+    return \App\Models\User::factory()->create(['role_id' => $role->id]);
 }

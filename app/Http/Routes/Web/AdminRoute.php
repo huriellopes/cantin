@@ -3,6 +3,7 @@
 namespace App\Http\Routes\Web;
 
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\Users\Index as UsersIndex;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,11 @@ class AdminRoute
             ->middleware(['auth', 'role:admin,super-admin'])
             ->group(function () {
                 Route::get('/', Dashboard::class)->name('dashboard');
+
+                // Apenas super-admin
+                Route::get('/users', UsersIndex::class)
+                    ->middleware('role:super-admin')
+                    ->name('users.index');
 
                 Route::post('/logout', function () {
                     Auth::logout();

@@ -23,15 +23,18 @@
         <nav class="mt-4 space-y-1 px-3 text-sm">
             @php
                 $nav = [
-                    ['Painel', route('admin.dashboard'), true],
+                    ['Painel', route('admin.dashboard'), request()->routeIs('admin.dashboard')],
                     ['Terreiros', '#', false],
                     ['Pessoas Trans', '#', false],
                     ['Entidades Parceiras', '#', false],
                     ['Posts', '#', false],
                     ['Comentários', '#', false],
                     ['Páginas', '#', false],
-                    ['Usuários', '#', false],
                 ];
+
+                if (auth()->user()?->hasRole('super-admin')) {
+                    $nav[] = ['Usuários', route('admin.users.index'), request()->routeIs('admin.users.*')];
+                }
             @endphp
             @foreach ($nav as [$label, $url, $active])
                 <a href="{{ $url }}" @class([
