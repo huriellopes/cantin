@@ -10,7 +10,7 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 class Address extends Model
 {
     /* @use HasFactory<\Database\Factories\AddressFactory> */
-    use KeepsDeletedModels, HasFactory;
+    use HasFactory, KeepsDeletedModels;
 
     /**
      * @var string[]
@@ -19,13 +19,11 @@ class Address extends Model
         'zipcode',
         'address',
         'complement',
-        'number',
         'neighborhood',
         'state_id',
         'city_id',
         'latitude',
         'longitude',
-        'location',
     ];
 
     protected function casts(): array
@@ -36,18 +34,12 @@ class Address extends Model
         ];
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function state() : BelongsTo
+    public function state(): BelongsTo
     {
         return $this->belongsTo(State::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function city() : BelongsTo
+    public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
     }

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Enum\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enum\Status;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
@@ -15,12 +15,12 @@ class ExternalLink extends Model
     use HasFactory, KeepsDeletedModels;
 
     protected $fillable = [
-        'name',
+        'title',
         'url',
         'description',
         'status',
         'user_id',
-        'type_external_link_id'
+        'type_external_link_id',
     ];
 
     protected function casts(): array
@@ -35,18 +35,18 @@ class ExternalLink extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            if (!app()->runningInConsole()) {
+            if (! app()->runningInConsole()) {
                 $model->user_id = auth()->user()->id;
             }
         });
     }
 
-    public function type() : HasOne
+    public function type(): HasOne
     {
         return $this->hasOne(TypeExternalLink::class, 'id', 'type_external_link_id');
     }
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
