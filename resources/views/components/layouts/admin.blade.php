@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Painel' }} · CaNTIn</title>
+    {{-- Aplica o estado da sidebar antes da pintura (evita flicker no reload) --}}
+    <script>
+        if (localStorage.getItem('sidebarCollapsed') === '1') {
+            document.documentElement.classList.add('sidebar-collapsed');
+        }
+    </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
@@ -12,9 +18,14 @@
 <div
     x-data="{
         sidebarOpen: false,
-        collapsed: localStorage.getItem('sidebarCollapsed') === '1',
+        collapsed: document.documentElement.classList.contains('sidebar-collapsed'),
         tip: { show: false, text: '', y: 0 },
-        toggleCollapse() { this.collapsed = ! this.collapsed; localStorage.setItem('sidebarCollapsed', this.collapsed ? '1' : '0'); this.tip.show = false },
+        toggleCollapse() {
+            this.collapsed = ! this.collapsed;
+            document.documentElement.classList.toggle('sidebar-collapsed', this.collapsed);
+            localStorage.setItem('sidebarCollapsed', this.collapsed ? '1' : '0');
+            this.tip.show = false;
+        },
         showTip(el, text) { if (! this.collapsed) return; const r = el.getBoundingClientRect(); this.tip = { show: true, text, y: r.top + r.height / 2 } }
     }"
     class="min-h-full"
@@ -58,20 +69,20 @@
 
     {{-- Sidebar fixa --}}
     <aside
-        class="fixed inset-y-0 left-0 z-40 flex w-64 transform flex-col bg-slate-900 text-slate-300 transition-all duration-200 lg:translate-x-0"
-        :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': ! sidebarOpen, 'lg:w-16': collapsed, 'lg:w-64': ! collapsed }"
+        class="admin-aside fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full transform flex-col bg-slate-900 text-slate-300 transition-all duration-200 lg:translate-x-0"
+        :class="sidebarOpen && 'translate-x-0'"
     >
         {{-- Logo + chevron (ambos sempre visíveis, lado a lado) --}}
-        <div class="flex h-16 shrink-0 items-center gap-2 px-3" :class="collapsed && 'lg:justify-center lg:gap-1 lg:px-1'">
+        <div class="admin-logo-row flex h-16 shrink-0 items-center gap-2 px-3">
             <a href="{{ route('admin.dashboard') }}" class="text-xl font-extrabold tracking-tight text-white">
-                <span :class="collapsed && 'lg:hidden'">Ca<span class="text-violet-400">NTI</span>n</span>
-                <span class="hidden" :class="collapsed ? 'lg:inline' : 'lg:hidden'">Ca<span class="text-violet-400">N</span></span>
+                <span class="admin-logo-full">Ca<span class="text-violet-400">NTI</span>n</span>
+                <span class="admin-logo-mark">Ca<span class="text-violet-400">N</span></span>
             </a>
             <button type="button" @click="toggleCollapse()"
                     @mouseenter="showTip($el, collapsed ? 'Expandir menu' : 'Recolher menu')" @mouseleave="tip.show = false"
-                    class="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-                    :class="! collapsed && 'lg:ml-auto'" aria-label="Recolher/expandir menu">
-                <svg class="h-5 w-5 transition-transform" :class="collapsed && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+                    class="admin-chevron-toggle rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                    aria-label="Recolher/expandir menu">
+                <svg class="admin-chevron h-5 w-5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
             </button>
         </div>
 
@@ -80,14 +91,13 @@
                 <a href="{{ $url }}"
                    @mouseenter="showTip($el, @js($label))" @mouseleave="tip.show = false"
                    @class([
-                        'group flex items-center gap-3 rounded-lg px-3 py-2 transition',
+                        'admin-nav-item group flex items-center gap-3 rounded-lg px-3 py-2 transition',
                         'bg-violet-600 text-white' => $active,
                         'hover:bg-slate-800 hover:text-white' => ! $active,
                     ])
-                    :class="collapsed && 'lg:justify-center lg:px-0'"
                 >
                     <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $icon }}"/></svg>
-                    <span :class="collapsed && 'lg:hidden'">{{ $label }}</span>
+                    <span class="admin-label">{{ $label }}</span>
                 </a>
             @endforeach
         </nav>
@@ -103,7 +113,7 @@
     <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 z-30 bg-black/40 lg:hidden"></div>
 
     {{-- Conteúdo --}}
-    <div class="transition-all duration-200" :class="collapsed ? 'lg:pl-16' : 'lg:pl-64'">
+    <div class="admin-content transition-all duration-200">
         <header class="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-slate-200 bg-white px-4 lg:px-8">
             <button @click="sidebarOpen = ! sidebarOpen" class="rounded-md p-2 text-slate-500 hover:bg-slate-100 lg:hidden" aria-label="Menu">
                 <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>

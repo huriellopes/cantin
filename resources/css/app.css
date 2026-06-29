@@ -36,6 +36,28 @@
     background-clip: content-box;
 }
 
+/* ----------------------------------------------------------------------- */
+/* Estado da sidebar do admin via classe no <html> (anti-flicker no reload) */
+/* O estado é aplicado por script no <head> antes da pintura.               */
+/* ----------------------------------------------------------------------- */
+.admin-logo-mark { display: none; }
+
+@media (min-width: 1024px) {
+    .admin-aside { width: 16rem; }
+    .admin-content { padding-left: 16rem; }
+    .admin-chevron-toggle { margin-left: auto; }
+
+    html.sidebar-collapsed .admin-aside { width: 4rem; }
+    html.sidebar-collapsed .admin-content { padding-left: 4rem; }
+    html.sidebar-collapsed .admin-label { display: none; }
+    html.sidebar-collapsed .admin-logo-full { display: none; }
+    html.sidebar-collapsed .admin-logo-mark { display: inline; }
+    html.sidebar-collapsed .admin-logo-row { justify-content: center; gap: .25rem; padding-inline: .25rem; }
+    html.sidebar-collapsed .admin-chevron-toggle { margin-left: 0; }
+    html.sidebar-collapsed .admin-chevron { transform: rotate(180deg); }
+    html.sidebar-collapsed .admin-nav-item { justify-content: center; padding-inline: 0; }
+}
+
 /* Variante escura — usada na sidebar do admin */
 .scrollbar-dark {
     scrollbar-color: #475569 transparent; /* slate-600 */
