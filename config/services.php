@@ -35,6 +35,10 @@ return [
         'endpoint' => env('API_VIACEP', 'https://viacep.com.br/ws'),
     ],
 
+    'brasilapi' => [
+        'cep_endpoint' => env('API_BRASILAPI_CEP', 'https://brasilapi.com.br/api/cep/v1'),
+    ],
+
     'telegram_bot_api' => [
         'token' => env('TELEGRAM_BOT_TOKEN'),
         'chat_id' => env('TELEGRAM_CHAT_ID'),

@@ -41,13 +41,22 @@ final class FillAddressAction
                 ->pluck('id')
                 ->first();
 
-            $street = $address->address.','.str($address->zipcode)->replace('-', '').','.$address->neighborhood.','.$address->state.', Brasil';
-            $result = Geocoder::geocode($street)->get();
+            // Geocoding é best-effort: se o provedor (Google Maps) falhar ou não
+            // estiver configurado, o endereço ainda é preenchido (lat/long ficam nulos).
+            $latitude = null;
+            $longitude = null;
 
-            if ($result->isNotEmpty()) {
-                $firstResult = $result->first();
-                $latitude = $firstResult->getCoordinates()->getLatitude();
-                $longitude = $firstResult->getCoordinates()->getLongitude();
+            try {
+                $street = $address->address.','.str($address->zipcode)->replace('-', '').','.$address->neighborhood.','.$address->state.', Brasil';
+                $result = Geocoder::geocode($street)->get();
+
+                if ($result->isNotEmpty()) {
+                    $coordinates = $result->first()->getCoordinates();
+                    $latitude = $coordinates->getLatitude();
+                    $longitude = $coordinates->getLongitude();
+                }
+            } catch (Exception|Throwable $e) {
+                Log::warning('Geocoding indisponível; lat/long não preenchidos.', ['error' => $e->getMessage()]);
             }
 
             $data = [
