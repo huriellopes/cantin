@@ -24,7 +24,7 @@
             @php
                 $nav = [
                     ['Painel', route('admin.dashboard'), request()->routeIs('admin.dashboard')],
-                    ['Terreiros', '#', false],
+                    ['Terreiros', route('admin.terreiros.index'), request()->routeIs('admin.terreiros.*')],
                     ['Pessoas Trans', '#', false],
                     ['Entidades Parceiras', '#', false],
                     ['Posts', route('admin.posts.index'), request()->routeIs('admin.posts.*')],

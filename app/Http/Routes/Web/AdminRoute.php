@@ -5,6 +5,7 @@ namespace App\Http\Routes\Web;
 use App\Livewire\Admin\Comments\Index as CommentsIndex;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Posts\Index as PostsIndex;
+use App\Livewire\Admin\Terreiros\Index as TerreirosIndex;
 use App\Livewire\Admin\Users\Index as UsersIndex;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,7 @@ class AdminRoute
             ->group(function () {
                 Route::get('/', Dashboard::class)->name('dashboard');
 
+                Route::get('/terreiros', TerreirosIndex::class)->name('terreiros.index');
                 Route::get('/comments', CommentsIndex::class)->name('comments.index');
                 Route::get('/posts', PostsIndex::class)->name('posts.index');
 
