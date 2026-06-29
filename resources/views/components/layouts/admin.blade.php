@@ -36,6 +36,7 @@
                     ['Páginas', route('admin.pages.index'), request()->routeIs('admin.pages.*')],
                     ['Páginas Estáticas', route('admin.static-pages.index'), request()->routeIs('admin.static-pages.*')],
                     ['Tipos de Link', route('admin.type-external-links.index'), request()->routeIs('admin.type-external-links.*')],
+                    ['Links Externos', route('admin.external-links.index'), request()->routeIs('admin.external-links.*')],
                 ];
 
                 if (auth()->user()?->hasRole('super-admin')) {

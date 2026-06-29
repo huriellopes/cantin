@@ -5,6 +5,7 @@ namespace App\Http\Routes\Web;
 use App\Livewire\Admin\Categories\Index as CategoriesIndex;
 use App\Livewire\Admin\Comments\Index as CommentsIndex;
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\ExternalLinks\Index as ExternalLinksIndex;
 use App\Livewire\Admin\Nations\Index as NationsIndex;
 use App\Livewire\Admin\Pages\Index as PagesIndex;
 use App\Livewire\Admin\Posts\Index as PostsIndex;
@@ -35,6 +36,7 @@ class AdminRoute
                 Route::get('/type-terreiros', TypeTerreirosIndex::class)->name('type-terreiros.index');
                 Route::get('/type-peoples', TypePeoplesIndex::class)->name('type-peoples.index');
                 Route::get('/type-external-links', TypeExternalLinksIndex::class)->name('type-external-links.index');
+                Route::get('/external-links', ExternalLinksIndex::class)->name('external-links.index');
                 Route::get('/pages', PagesIndex::class)->name('pages.index');
                 Route::get('/static-pages', StaticPagesIndex::class)->name('static-pages.index');
 
