@@ -1,1 +1,8 @@
 @import 'tailwindcss';
+
+/* Garante que os Resources do admin (blade) sejam escaneados pelo Tailwind */
+@source '../views';
+
+[x-cloak] {
+    display: none !important;
+}

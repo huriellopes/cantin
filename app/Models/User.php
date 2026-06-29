@@ -5,8 +5,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enum\Role as RoleEnum;
 use App\Enum\Status;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,10 +13,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable
 {
     /* @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasApiTokens, Notifiable, KeepsDeletedModels;
+    use HasApiTokens, HasFactory, KeepsDeletedModels, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -46,9 +44,9 @@ class User extends Authenticatable implements FilamentUser
     ];
 
     /**
-     * @return string[]
+     * @return array<string, string>
      */
-    public function casts(): array
+    protected function casts(): array
     {
         return [
             'password' => 'hashed',
@@ -60,14 +58,6 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    public function canAccessPanel(Panel $panel): bool
-    {
-        return true;
-    }
-
-    /**
-     * @return BelongsTo
-     */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
@@ -78,8 +68,8 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Comment::class, 'user_id');
     }
 
-    public function hasRole(string $role): bool
+    public function hasRole(string ...$roles): bool
     {
-        return $this->role->slug === $role;
+        return in_array($this->role?->slug, $roles, true);
     }
 }

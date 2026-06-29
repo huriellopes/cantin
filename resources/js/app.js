@@ -24,6 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const emailError = document.getElementById('emailError');
     const passwordError = document.getElementById('passwordError');
 
+    if (! loginForm || ! emailInput || ! passwordInput) {
+        return;
+    }
+
     loginForm.addEventListener('submit', function(event) {
         event.preventDefault(); // Impede o envio padrão do formulário
         event.stopPropagation(); // Impede a propagação do evento

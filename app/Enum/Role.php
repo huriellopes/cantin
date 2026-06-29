@@ -2,9 +2,7 @@
 
 namespace App\Enum;
 
-use Filament\Support\Contracts\HasColor;
-
-enum Role : int implements HasColor
+enum Role: int
 {
     case SUPER = 1;
     case ADMIN = 2;
@@ -12,8 +10,7 @@ enum Role : int implements HasColor
 
     public function label(): string
     {
-        return match ($this)
-        {
+        return match ($this) {
             self::SUPER => 'Super Usuário',
             self::ADMIN => 'Administrador(a)',
             self::USER => 'Usuário(a)',
@@ -26,7 +23,7 @@ enum Role : int implements HasColor
      */
     public function getColor(): string|array|null
     {
-        return match($this) {
+        return match ($this) {
             self::SUPER => 'success',
             self::ADMIN => 'warning',
             self::USER => 'primary',

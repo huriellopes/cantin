@@ -4,17 +4,18 @@ namespace App\Livewire\Site\Pages\Auth;
 
 use App\Http\DTO\Auth\RegisterDTO;
 use App\Services\Auth\LoginService;
+use Exception;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Exception;
 use Throwable;
 
 class Register extends Component
 {
     public string $name = '';
+
     public string $email = '';
+
     public string $password = '';
 
     protected function rules(): array
@@ -26,7 +27,7 @@ class Register extends Component
         ];
     }
 
-    protected function messages() : array
+    protected function messages(): array
     {
         return [
             'name.required' => 'O campo nome é obrigatório!',
@@ -36,7 +37,7 @@ class Register extends Component
             'email.email' => 'O campo email é inválido!',
             'password.required' => 'O campo senha é obrigatório!',
             'password.string' => 'O campo senha deve ser uma string!',
-            'password.min' => 'O campo senha deve ser de no mínimo 8 caracteres!'
+            'password.min' => 'O campo senha deve ser de no mínimo 8 caracteres!',
         ];
     }
 
@@ -57,7 +58,8 @@ class Register extends Component
 
             if ($user) {
                 Auth::login($user);
-                return redirect()->route('filament.userCommon.pages.dashboard');
+
+                return redirect()->route('site.home');
             }
         } catch (Exception|Throwable $e) {
             Log::error('Error: '.$e->getMessage(), [

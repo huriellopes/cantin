@@ -16,11 +16,9 @@ use App\Observers\PartnerEntityObserver;
 use App\Observers\StaticPageObserver;
 use App\Services\Address\ViaCepService;
 use App\Services\BotWebhook\TelegramService;
-use App\Http\Responses\LogoutResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
-use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContracts;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,8 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(LogoutResponseContracts::class, LogoutResponse::class);
-
         $this->app->singleton(
             IAddressService::class,
             ViaCepService::class
@@ -52,8 +48,8 @@ class AppServiceProvider extends ServiceProvider
         CommonQuestion::observe(CommonQuestionObserver::class);
         PartnerEntity::observe(PartnerEntityObserver::class);
         Page::observe(PageObserver::class);
-        Paginator::useBootstrap();
+        Paginator::useTailwind();
         Model::unguard();
-//        Model::preventLazyLoading();
+        //        Model::preventLazyLoading();
     }
 }

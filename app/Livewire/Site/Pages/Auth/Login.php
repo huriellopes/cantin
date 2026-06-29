@@ -20,13 +20,13 @@ class Login extends Component
 
     public function toggleForm(): void
     {
-        $this->showLogin = !$this->showLogin;
+        $this->showLogin = ! $this->showLogin;
     }
 
     public function render()
     {
         if (auth()->check()) {
-            redirect()->route('filament.admin.pages.dashboard');
+            return redirect()->route('site.home');
         }
 
         return view('livewire.site.pages.auth.login');
