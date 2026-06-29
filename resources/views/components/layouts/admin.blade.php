@@ -25,11 +25,17 @@
                 $nav = [
                     ['Painel', route('admin.dashboard'), request()->routeIs('admin.dashboard')],
                     ['Terreiros', route('admin.terreiros.index'), request()->routeIs('admin.terreiros.*')],
+                    ['Nações', route('admin.nations.index'), request()->routeIs('admin.nations.*')],
+                    ['Tipos de Terreiro', route('admin.type-terreiros.index'), request()->routeIs('admin.type-terreiros.*')],
+                    ['Gêneros', route('admin.type-peoples.index'), request()->routeIs('admin.type-peoples.*')],
                     ['Pessoas Trans', '#', false],
                     ['Entidades Parceiras', '#', false],
                     ['Posts', route('admin.posts.index'), request()->routeIs('admin.posts.*')],
+                    ['Categorias', route('admin.categories.index'), request()->routeIs('admin.categories.*')],
                     ['Comentários', route('admin.comments.index'), request()->routeIs('admin.comments.*')],
-                    ['Páginas', '#', false],
+                    ['Páginas', route('admin.pages.index'), request()->routeIs('admin.pages.*')],
+                    ['Páginas Estáticas', route('admin.static-pages.index'), request()->routeIs('admin.static-pages.*')],
+                    ['Tipos de Link', route('admin.type-external-links.index'), request()->routeIs('admin.type-external-links.*')],
                 ];
 
                 if (auth()->user()?->hasRole('super-admin')) {
