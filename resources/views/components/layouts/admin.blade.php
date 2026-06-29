@@ -13,7 +13,9 @@
     x-data="{
         sidebarOpen: false,
         collapsed: localStorage.getItem('sidebarCollapsed') === '1',
-        toggleCollapse() { this.collapsed = ! this.collapsed; localStorage.setItem('sidebarCollapsed', this.collapsed ? '1' : '0') }
+        tip: { show: false, text: '', y: 0 },
+        toggleCollapse() { this.collapsed = ! this.collapsed; localStorage.setItem('sidebarCollapsed', this.collapsed ? '1' : '0'); this.tip.show = false },
+        showTip(el, text) { if (! this.collapsed) return; const r = el.getBoundingClientRect(); this.tip = { show: true, text, y: r.top + r.height / 2 } }
     }"
     class="min-h-full"
 >
@@ -59,18 +61,29 @@
         class="fixed inset-y-0 left-0 z-40 flex w-64 transform flex-col bg-slate-900 text-slate-300 transition-all duration-200 lg:translate-x-0"
         :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': ! sidebarOpen, 'lg:w-16': collapsed, 'lg:w-64': ! collapsed }"
     >
-        <div class="flex h-16 shrink-0 items-center gap-2 px-4">
-            <span class="text-xl font-bold tracking-tight text-white" :class="collapsed && 'lg:hidden'">Ca<span class="text-violet-400">NTI</span>n</span>
-            <span class="hidden text-xl font-bold text-violet-400" :class="collapsed ? 'lg:block' : 'lg:hidden'">C</span>
-            <button @click="toggleCollapse()" class="ml-auto hidden rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white lg:block" aria-label="Recolher menu">
-                <svg class="h-5 w-5 transition-transform" :class="collapsed && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
-            </button>
+        {{-- Logo (sempre visível) --}}
+        <div class="flex h-16 shrink-0 items-center px-4" :class="collapsed && 'lg:justify-center lg:px-0'">
+            <a href="{{ route('admin.dashboard') }}" class="text-xl font-extrabold tracking-tight text-white">
+                <span :class="collapsed && 'lg:hidden'">Ca<span class="text-violet-400">NTI</span>n</span>
+                <span class="hidden" :class="collapsed ? 'lg:inline' : 'lg:hidden'">Ca<span class="text-violet-400">N</span></span>
+            </a>
         </div>
 
-        <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-2 text-sm">
+        <nav class="flex-1 space-y-1 overflow-y-auto overflow-x-hidden px-3 py-2 text-sm">
+            {{-- Toggle recolher/expandir (com tooltip quando recolhido) --}}
+            <button type="button" @click="toggleCollapse()"
+                    @mouseenter="showTip($el, collapsed ? 'Expandir menu' : 'Recolher menu')" @mouseleave="tip.show = false"
+                    class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                    :class="collapsed && 'lg:justify-center lg:px-0'">
+                <svg class="h-5 w-5 shrink-0 transition-transform" :class="collapsed && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+                <span :class="collapsed && 'lg:hidden'">Recolher menu</span>
+            </button>
+
             @foreach ($nav as [$label, $url, $active, $icon])
-                <a href="{{ $url }}" @class([
-                        'group relative flex items-center gap-3 rounded-lg px-3 py-2 transition',
+                <a href="{{ $url }}"
+                   @mouseenter="showTip($el, @js($label))" @mouseleave="tip.show = false"
+                   @class([
+                        'group flex items-center gap-3 rounded-lg px-3 py-2 transition',
                         'bg-violet-600 text-white' => $active,
                         'hover:bg-slate-800 hover:text-white' => ! $active,
                     ])
@@ -78,16 +91,16 @@
                 >
                     <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $icon }}"/></svg>
                     <span :class="collapsed && 'lg:hidden'">{{ $label }}</span>
-                    {{-- Tooltip (apenas quando recolhido) --}}
-                    <template x-if="collapsed">
-                        <span class="pointer-events-none absolute left-full z-50 ml-3 hidden whitespace-nowrap rounded-md bg-slate-900 px-2.5 py-1 text-xs font-medium text-white shadow-lg ring-1 ring-slate-700 group-hover:block">
-                            {{ $label }}
-                        </span>
-                    </template>
                 </a>
             @endforeach
         </nav>
     </aside>
+
+    {{-- Tooltip flutuante (fixed): escapa do overflow do menu, fica acima do conteúdo --}}
+    <div x-show="tip.show" x-cloak
+         :style="`top: ${tip.y}px`"
+         class="pointer-events-none fixed left-16 z-[60] ml-2 hidden -translate-y-1/2 whitespace-nowrap rounded-md bg-slate-900 px-2.5 py-1 text-xs font-medium text-white shadow-lg ring-1 ring-slate-700 lg:block"
+         x-text="tip.text"></div>
 
     {{-- Overlay mobile --}}
     <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 z-30 bg-black/40 lg:hidden"></div>
