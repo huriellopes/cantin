@@ -14,12 +14,14 @@
     {!! ToastMagic::styles() !!}
 </head>
 <body class="min-h-screen bg-white text-slate-800 antialiased">
-    <nav x-data="{ open: false, scrolled: false }" @scroll.window="scrolled = window.scrollY > 10"
+    @php $transparentNav = request()->routeIs('site.home'); @endphp
+    <nav x-data="{ open: false, scrolled: false, get solid() { return {{ $transparentNav ? 'false' : 'true' }} || this.scrolled || this.open } }"
+         @scroll.window="scrolled = window.scrollY > 10"
          class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
-         :class="scrolled || open ? 'bg-white/95 shadow-sm backdrop-blur' : 'bg-transparent'">
+         :class="solid ? 'bg-white/95 shadow-sm backdrop-blur' : 'bg-transparent'">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
             <a href="{{ route('site.home') }}" wire:navigate class="text-2xl font-extrabold tracking-tight"
-               :class="scrolled || open ? 'text-slate-900' : 'text-white drop-shadow'">
+               :class="solid ? 'text-slate-900' : 'text-white drop-shadow'">
                 Ca<span class="bg-gradient-to-r from-violet-500 to-pink-500 bg-clip-text text-transparent">NTI</span>n
             </a>
 
@@ -39,7 +41,7 @@
                 @foreach ($links as [$route, $label])
                     <a href="{{ route($route) }}" wire:navigate
                        class="text-sm font-medium transition hover:opacity-70 {{ request()->routeIs($route) ? 'text-violet-600' : '' }}"
-                       :class="(scrolled || open) ? '{{ request()->routeIs($route) ? 'text-violet-600' : 'text-slate-700' }}' : 'text-white drop-shadow'">
+                       :class="solid ? '{{ request()->routeIs($route) ? 'text-violet-600' : 'text-slate-700' }}' : 'text-white drop-shadow'">
                         {{ $label }}
                     </a>
                 @endforeach
@@ -55,7 +57,7 @@
             </div>
 
             <button @click="open = !open" class="lg:hidden" aria-label="Menu"
-                    :class="scrolled || open ? 'text-slate-800' : 'text-white'">
+                    :class="solid ? 'text-slate-800' : 'text-white'">
                 <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path x-show="!open" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/><path x-show="open" x-cloak stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
             </button>
         </div>
@@ -71,7 +73,9 @@
         </div>
     </nav>
 
-    {{ $slot }}
+    <main class="{{ request()->routeIs('site.home') ? '' : 'pt-16' }}">
+        {{ $slot }}
+    </main>
 
     <livewire:site.components.whatsapp-button />
 
