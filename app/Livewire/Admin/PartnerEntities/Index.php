@@ -1,0 +1,132 @@
+<?php
+
+namespace App\Livewire\Admin\PartnerEntities;
+
+use App\Enum\Status;
+use App\Livewire\Admin\Support\InteractsWithAddress;
+use App\Models\PartnerEntity;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+
+#[Layout('components.layouts.admin')]
+#[Title('Entidades Parceiras')]
+class Index extends Component
+{
+    use InteractsWithAddress, WithFileUploads, WithPagination;
+
+    public string $search = '';
+
+    public bool $showModal = false;
+
+    public ?int $editingId = null;
+
+    public string $name = '';
+
+    public string $email = '';
+
+    public string $phone = '';
+
+    public string $activity_carried_out = '';
+
+    public $image = null;
+
+    public ?string $currentImage = null;
+
+    protected function rules(): array
+    {
+        return array_merge([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email'],
+            'phone' => ['required', 'string'],
+            'activity_carried_out' => ['required', 'string'],
+            'image' => [$this->editingId ? 'nullable' : 'required', 'image', 'max:4096'],
+        ], $this->addressRules());
+    }
+
+    public function updatingSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function create(): void
+    {
+        $this->reset(['editingId', 'name', 'email', 'phone', 'activity_carried_out', 'image', 'currentImage']);
+        $this->resetAddress();
+        $this->resetValidation();
+        $this->showModal = true;
+    }
+
+    public function edit(int $id): void
+    {
+        $entity = PartnerEntity::query()->with('address')->findOrFail($id);
+        $this->editingId = $entity->id;
+        $this->name = $entity->name;
+        $this->email = $entity->email;
+        $this->phone = $entity->phone;
+        $this->activity_carried_out = $entity->activity_carried_out;
+        $this->currentImage = $entity->path_image;
+        $this->image = null;
+        $this->fillAddressFrom($entity->address);
+        $this->resetValidation();
+        $this->showModal = true;
+    }
+
+    public function save(): void
+    {
+        $this->validate();
+
+        $address = $this->persistAddress();
+
+        $payload = [
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => preg_replace('/\D/', '', $this->phone),
+            'activity_carried_out' => $this->activity_carried_out,
+            'address_id' => $address->id,
+        ];
+
+        if ($this->image) {
+            $payload['path_image'] = $this->image->store('partners', 'public');
+        }
+
+        if (! $this->editingId) {
+            $payload['status'] = Status::ACTIVE;
+            $payload['user_id'] = auth()->id();
+        }
+
+        PartnerEntity::query()->updateOrCreate(['id' => $this->editingId], $payload);
+
+        $this->showModal = false;
+        session()->flash('status', $this->editingId ? 'Entidade atualizada.' : 'Entidade criada.');
+    }
+
+    public function toggleStatus(int $id): void
+    {
+        $entity = PartnerEntity::query()->findOrFail($id);
+        $entity->update(['status' => $entity->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
+    }
+
+    public function delete(int $id): void
+    {
+        PartnerEntity::query()->findOrFail($id)->delete();
+        session()->flash('status', 'Entidade excluída.');
+    }
+
+    public function render()
+    {
+        $entities = PartnerEntity::query()
+            ->with(['address.city:id,name', 'address.state:id,name'])
+            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%")->orWhere('email', 'like', "%{$this->search}%"))
+            ->orderByDesc('id')
+            ->paginate(10);
+
+        return view('livewire.admin.partner-entities.index', [
+            'entities' => $entities,
+            'states' => $this->statesOptions(),
+            'cities' => $this->citiesOptions(),
+        ]);
+    }
+}

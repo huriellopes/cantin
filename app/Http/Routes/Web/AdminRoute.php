@@ -5,12 +5,15 @@ namespace App\Http\Routes\Web;
 use App\Livewire\Admin\Categories\Index as CategoriesIndex;
 use App\Livewire\Admin\Comments\Index as CommentsIndex;
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\DeletedModels\Index as DeletedModelsIndex;
 use App\Livewire\Admin\ExternalLinks\Index as ExternalLinksIndex;
 use App\Livewire\Admin\Nations\Index as NationsIndex;
 use App\Livewire\Admin\Pages\Index as PagesIndex;
+use App\Livewire\Admin\PartnerEntities\Index as PartnerEntitiesIndex;
 use App\Livewire\Admin\Posts\Index as PostsIndex;
 use App\Livewire\Admin\StaticPages\Index as StaticPagesIndex;
 use App\Livewire\Admin\Terreiros\Index as TerreirosIndex;
+use App\Livewire\Admin\TransPeoples\Index as TransPeoplesIndex;
 use App\Livewire\Admin\TypeExternalLinks\Index as TypeExternalLinksIndex;
 use App\Livewire\Admin\TypePeoples\Index as TypePeoplesIndex;
 use App\Livewire\Admin\TypeTerreiros\Index as TypeTerreirosIndex;
@@ -37,13 +40,16 @@ class AdminRoute
                 Route::get('/type-peoples', TypePeoplesIndex::class)->name('type-peoples.index');
                 Route::get('/type-external-links', TypeExternalLinksIndex::class)->name('type-external-links.index');
                 Route::get('/external-links', ExternalLinksIndex::class)->name('external-links.index');
+                Route::get('/trans-peoples', TransPeoplesIndex::class)->name('trans-peoples.index');
+                Route::get('/partner-entities', PartnerEntitiesIndex::class)->name('partner-entities.index');
                 Route::get('/pages', PagesIndex::class)->name('pages.index');
                 Route::get('/static-pages', StaticPagesIndex::class)->name('static-pages.index');
 
                 // Apenas super-admin
-                Route::get('/users', UsersIndex::class)
-                    ->middleware('role:super-admin')
-                    ->name('users.index');
+                Route::middleware('role:super-admin')->group(function () {
+                    Route::get('/users', UsersIndex::class)->name('users.index');
+                    Route::get('/deleted-models', DeletedModelsIndex::class)->name('deleted-models.index');
+                });
 
                 Route::post('/logout', function () {
                     Auth::logout();

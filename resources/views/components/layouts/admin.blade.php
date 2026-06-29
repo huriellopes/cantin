@@ -28,8 +28,8 @@
                     ['Nações', route('admin.nations.index'), request()->routeIs('admin.nations.*')],
                     ['Tipos de Terreiro', route('admin.type-terreiros.index'), request()->routeIs('admin.type-terreiros.*')],
                     ['Gêneros', route('admin.type-peoples.index'), request()->routeIs('admin.type-peoples.*')],
-                    ['Pessoas Trans', '#', false],
-                    ['Entidades Parceiras', '#', false],
+                    ['Pessoas Trans', route('admin.trans-peoples.index'), request()->routeIs('admin.trans-peoples.*')],
+                    ['Entidades Parceiras', route('admin.partner-entities.index'), request()->routeIs('admin.partner-entities.*')],
                     ['Posts', route('admin.posts.index'), request()->routeIs('admin.posts.*')],
                     ['Categorias', route('admin.categories.index'), request()->routeIs('admin.categories.*')],
                     ['Comentários', route('admin.comments.index'), request()->routeIs('admin.comments.*')],
@@ -41,6 +41,7 @@
 
                 if (auth()->user()?->hasRole('super-admin')) {
                     $nav[] = ['Usuários', route('admin.users.index'), request()->routeIs('admin.users.*')];
+                    $nav[] = ['Modelos Excluídos', route('admin.deleted-models.index'), request()->routeIs('admin.deleted-models.*')];
                 }
             @endphp
             @foreach ($nav as [$label, $url, $active])
