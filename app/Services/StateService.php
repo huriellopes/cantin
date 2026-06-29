@@ -8,14 +8,9 @@ use Illuminate\Support\Facades\Cache;
 
 class StateService
 {
-    /**
-     * @return Collection
-     */
-    public function list() : Collection
+    public function list(): Collection
     {
-        return Cache::remember('states', 60 * 60 * 24, function () {
-            return State::query()
-                ->get();
-        });
+        return Cache::remember('states', 60 * 60 * 24, fn () => State::query()
+            ->get());
     }
 }

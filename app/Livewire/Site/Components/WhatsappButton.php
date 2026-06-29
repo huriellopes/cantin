@@ -11,6 +11,7 @@ class WhatsappButton extends Component
     public function openWhatsapp()
     {
         $url = "https://wa.me/{$this->phoneNumber}";
+
         return redirect($url);
     }
 

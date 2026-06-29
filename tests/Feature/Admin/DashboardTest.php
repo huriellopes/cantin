@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Admin\Dashboard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -19,5 +20,5 @@ it('renders the dashboard for an admin', function () {
         ->get('/admin')
         ->assertOk()
         ->assertSee('Painel')
-        ->assertSeeLivewire(App\Livewire\Admin\Dashboard::class);
+        ->assertSeeLivewire(Dashboard::class);
 });

@@ -34,7 +34,8 @@ class TerreiroQuestion extends Model
     /**
      * @return string[]
      */
-    protected function casts() : array
+    #[\Override]
+    protected function casts(): array
     {
         return [
             'created_at' => 'datetime',
@@ -42,18 +43,12 @@ class TerreiroQuestion extends Model
         ];
     }
 
-    /**
-     * @return HasOne
-     */
-    public function terreiro() : HasOne
+    public function terreiro(): HasOne
     {
         return $this->hasOne(Terreiro::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function typePeople() : BelongsTo
+    public function typePeople(): BelongsTo
     {
         return $this->belongsTo(TypePeople::class);
     }

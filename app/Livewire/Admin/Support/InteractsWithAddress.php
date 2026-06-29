@@ -53,14 +53,14 @@ trait InteractsWithAddress
             $this->city_id = $data->city ?? $this->city_id;
             $this->latitude = $data->latitude ?? null;
             $this->longitude = $data->longitude ?? null;
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             $this->addError('zipcode', 'Não foi possível buscar o CEP.');
         }
     }
 
     protected function fillAddressFrom(?Address $address): void
     {
-        if (! $address) {
+        if (! $address instanceof Address) {
             return;
         }
 

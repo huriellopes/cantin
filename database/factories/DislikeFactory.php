@@ -8,7 +8,7 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Dislike> */
+/** @extends Factory<Dislike> */
 class DislikeFactory extends Factory
 {
     protected $model = Dislike::class;

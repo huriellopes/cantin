@@ -26,6 +26,7 @@ class Address extends Model
         'longitude',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [

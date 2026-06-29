@@ -13,11 +13,11 @@ class RedirectIfAuthenticated
     /**
      * Handle an incoming request.
      *
-     * @param Closure(Request):Response $next
+     * @param  Closure(Request):Response  $next
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        $guards = empty($guards) ? [null] : $guards;
+        $guards = $guards === [] ? [null] : $guards;
         dd($guards);
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {

@@ -3,15 +3,15 @@
 namespace App\Livewire\Site\Pages;
 
 use App\Enum\Status;
+use App\Models\StaticPage as StaticPageModel;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
-use App\Models\StaticPage as StaticPageModel;
 
 class StaticPage extends Component
 {
     public function render()
     {
-        $page = Cache::remember('cantin-page-static-' . request()->route('staticPage'), 60 * 60 * 24, function () {
+        $page = Cache::remember('cantin-page-static-'.request()->route('staticPage'), 60 * 60 * 24, function () {
             return StaticPageModel::query()
                 ->where('slug', '=', request()->route('staticPage'))
                 ->where('status', '=', Status::ACTIVE)

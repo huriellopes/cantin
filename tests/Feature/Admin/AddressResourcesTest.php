@@ -1,6 +1,7 @@
 <?php
 
 use App\Enum\Status;
+use App\Livewire\Admin\TransPeoples\Index;
 use App\Models\City;
 use App\Models\PartnerEntity;
 use App\Models\State;
@@ -21,7 +22,7 @@ it('creates a trans person with address', function () {
     [$state, $city] = addressPair();
 
     Livewire::actingAs(userWithRole('admin'))
-        ->test(App\Livewire\Admin\TransPeoples\Index::class)
+        ->test(Index::class)
         ->call('create')
         ->set('name', 'Alex')
         ->set('email', 'alex@example.com')

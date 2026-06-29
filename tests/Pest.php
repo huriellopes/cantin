@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -45,9 +47,9 @@ expect()->extend('toBeOne', function () {
 /**
  * Cria um usuário com a role indicada (criando a role se necessário).
  */
-function userWithRole(string $slug): \App\Models\User
+function userWithRole(string $slug): User
 {
-    $role = \App\Models\Role::query()->firstOrCreate(['slug' => $slug], ['name' => ucfirst($slug)]);
+    $role = Role::query()->firstOrCreate(['slug' => $slug], ['name' => ucfirst($slug)]);
 
-    return \App\Models\User::factory()->create(['role_id' => $role->id]);
+    return User::factory()->create(['role_id' => $role->id]);
 }

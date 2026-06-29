@@ -4,17 +4,15 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class CheckRoleMiddleware
 {
-    public function handle(Request $request, Closure $next, string ...$roles) : Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         // Verifica se o usuário está autenticado
-        if (!Auth::check()) {
-            abort(403, 'Acesso não autorizado.');
-        }
+        abort_unless(Auth::check(), 403, 'Acesso não autorizado.');
 
         $user = Auth::user();
 

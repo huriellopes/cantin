@@ -8,29 +8,40 @@ use App\Models\City;
 use App\Models\PartnerEntity;
 use App\Models\State;
 use App\Traits\Utils;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Exception;
 use Throwable;
 
 class PartnersEntities extends Component
 {
     public string $name = '';
+
     public string $email = '';
+
     public string $phone = '';
+
     public string $zipcode = '';
+
     public string $street = '';
+
     public string $complement;
+
     public string $neighborhood = '';
+
     public ?int $state_id = null;
+
     public ?int $city_id = null;
+
     public $latitude;
+
     public $longitude;
 
     public string $activity_carried_out = '';
 
     public $states;
+
     public $cities;
 
     public function mount(): void
@@ -51,7 +62,7 @@ class PartnersEntities extends Component
 
     protected function loadCities(int $stateId): void
     {
-        $cacheKey = 'cities_of_state_' . $stateId;
+        $cacheKey = 'cities_of_state_'.$stateId;
 
         $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
             return City::query()
@@ -88,15 +99,17 @@ class PartnersEntities extends Component
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
+
                 return;
             }
 
             $cleanedZipCode = str($this->zipcode)->replace('-', '');
 
-            if (!preg_match('/^\d{8}$/', $cleanedZipCode)) {
+            if (! preg_match('/^\d{8}$/', $cleanedZipCode)) {
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
+
                 return;
             }
 
@@ -139,7 +152,7 @@ class PartnersEntities extends Component
 
             Log::error($e->getMessage(), [
                 'line' => $e->getLine(),
-                'file' => $e->getFile()
+                'file' => $e->getFile(),
             ]);
 
             toastr()
@@ -148,7 +161,7 @@ class PartnersEntities extends Component
         }
     }
 
-    protected function rules() : array
+    protected function rules(): array
     {
         return [
             'name' => 'required|string',
@@ -160,11 +173,11 @@ class PartnersEntities extends Component
             'neighborhood' => 'required|string',
             'state_id' => 'required|integer',
             'city_id' => 'required|integer',
-            'activity_carried_out' => 'required|string'
+            'activity_carried_out' => 'required|string',
         ];
     }
 
-    protected function messages() : array
+    protected function messages(): array
     {
         return [
             'name.required' => __('The name field is required.'),
@@ -199,7 +212,7 @@ class PartnersEntities extends Component
             ->where('zipcode', '=', $clearZipCode)
             ->first();
 
-        if (!$address) {
+        if (! $address) {
             $address = Address::create([
                 'zipcode' => $clearZipCode,
                 'address' => $this->street,
@@ -218,9 +231,9 @@ class PartnersEntities extends Component
             toastr()
                 ->timeOut(2000)
                 ->warning(__('Partner entity already registered!'));
+
             return;
         }
-
 
         PartnerEntity::create([
             'name' => $this->name,

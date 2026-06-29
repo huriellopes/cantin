@@ -8,10 +8,6 @@ use Illuminate\View\Component;
 
 class MenuSiteComponent extends Component
 {
-
-    /**
-     * @param object $params
-     */
     public function __construct(
         public object $params,
     ) {}

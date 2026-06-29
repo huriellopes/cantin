@@ -11,7 +11,7 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 class PartnerEntity extends Model
 {
     /* @use HasFactory<\Database\Factories\PartnerEntityFactory> */
-    use KeepsDeletedModels, HasFactory;
+    use HasFactory, KeepsDeletedModels;
 
     protected $table = 'partners_entities';
 
@@ -26,13 +26,14 @@ class PartnerEntity extends Model
         'address_id',
         'path_image',
         'user_id',
-        'status'
+        'status',
     ];
 
     /**
      * @return string[]
      */
-    public function casts() : array
+    #[\Override]
+    public function casts(): array
     {
         return [
             'status' => Status::class,
@@ -41,12 +42,12 @@ class PartnerEntity extends Model
         ];
     }
 
-    public function address() : BelongsTo
+    public function address(): BelongsTo
     {
         return $this->belongsTo(Address::class);
     }
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

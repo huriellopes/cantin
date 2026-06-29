@@ -5,7 +5,9 @@ namespace App\Livewire\Admin\Posts;
 use App\Enum\StatusPost;
 use App\Models\Category;
 use App\Models\Post;
-use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
@@ -36,7 +38,7 @@ class Index extends Component
 
     public string $content = '';
 
-    public $image = null;
+    public $image;
 
     public ?string $currentImage = null;
 
@@ -84,7 +86,7 @@ class Index extends Component
     {
         $this->validate();
 
-        $publishedAt = Carbon::parse($this->published_at);
+        $publishedAt = Date::parse($this->published_at);
 
         $payload = [
             'title' => $this->titleField,
@@ -92,7 +94,7 @@ class Index extends Component
             'category_id' => $this->category_id,
             'published_at' => $publishedAt,
             'content' => $this->content,
-            'status' => $publishedAt->startOfDay()->lte(now()->startOfDay()) ? StatusPost::PUBLISHED : StatusPost::PENDING,
+            'status' => $publishedAt->startOfDay()->lte(today()) ? StatusPost::PUBLISHED : StatusPost::PENDING,
         ];
 
         if ($this->image) {
@@ -113,7 +115,7 @@ class Index extends Component
     {
         $post = Post::query()->findOrFail($id);
 
-        if ($post->published_at?->startOfDay()->gt(now()->startOfDay())) {
+        if ($post->published_at?->startOfDay()->gt(today())) {
             session()->flash('status', 'A data de publicação ainda é futura.');
 
             return;
@@ -133,7 +135,7 @@ class Index extends Component
         session()->flash('status', 'Post excluído.');
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         $posts = Post::query()
             ->withCount('likes')

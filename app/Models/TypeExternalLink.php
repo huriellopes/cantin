@@ -14,6 +14,7 @@ class TypeExternalLink extends Model
         'status',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -23,10 +24,7 @@ class TypeExternalLink extends Model
         ];
     }
 
-    /**
-     * @return HasMany
-     */
-    public function links() : HasMany
+    public function links(): HasMany
     {
         return $this->hasMany(ExternalLink::class);
     }

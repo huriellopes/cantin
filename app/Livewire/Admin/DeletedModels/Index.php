@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\DeletedModels;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -35,7 +37,7 @@ class Index extends Component
         try {
             $record->model::restore($record->key);
             session()->flash('status', 'Registro restaurado com sucesso.');
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             session()->flash('status', 'Não foi possível restaurar o registro.');
         }
     }
@@ -46,7 +48,7 @@ class Index extends Component
         session()->flash('status', 'Registro removido permanentemente.');
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         $records = DeletedModel::query()
             ->when($this->search, fn ($q) => $q->where('model', 'like', "%{$this->search}%"))

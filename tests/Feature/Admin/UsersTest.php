@@ -2,6 +2,7 @@
 
 use App\Enum\Status;
 use App\Livewire\Admin\Users\Index;
+use App\Models\Role;
 use App\Models\User;
 use Livewire\Livewire;
 
@@ -20,7 +21,7 @@ it('lets a super-admin open the users page', function () {
 
 it('creates a user through the component', function () {
     $this->actingAs(userWithRole('super-admin'));
-    $roleId = App\Models\Role::query()->firstOrCreate(['slug' => 'user'], ['name' => 'User'])->id;
+    $roleId = Role::query()->firstOrCreate(['slug' => 'user'], ['name' => 'User'])->id;
 
     Livewire::test(Index::class)
         ->call('create')

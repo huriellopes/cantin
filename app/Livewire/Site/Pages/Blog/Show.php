@@ -10,6 +10,7 @@ class Show extends Component
     public Post $post;
 
     public $userLiked;
+
     public $userDisliked;
 
     public $postUrl;
@@ -45,14 +46,14 @@ class Show extends Component
                     'user_id' => auth()->id(),
                     'comment_id' => null,
                     'ip_address' => request()->ip(),
-                    'post_id' => $this->post->id
+                    'post_id' => $this->post->id,
                 ];
             } else {
                 $data = [
                     'user_id' => null,
                     'comment_id' => null,
                     'ip_address' => request()->ip(),
-                    'post_id' => $this->post->id
+                    'post_id' => $this->post->id,
                 ];
             }
 
@@ -80,14 +81,14 @@ class Show extends Component
                     'user_id' => auth()->id(),
                     'comment_id' => null,
                     'ip_address' => request()->ip(),
-                    'post_id' => $this->post->id
+                    'post_id' => $this->post->id,
                 ];
             } else {
                 $data = [
                     'user_id' => null,
                     'comment_id' => null,
                     'ip_address' => request()->ip(),
-                    'post_id' => $this->post->id
+                    'post_id' => $this->post->id,
                 ];
             }
 
@@ -100,6 +101,7 @@ class Show extends Component
     public function render()
     {
         $this->post->increment('views');
+
         return view('livewire.site.pages.blog.show');
     }
 }

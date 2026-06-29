@@ -10,18 +10,14 @@ use Illuminate\Support\Str;
 
 class RegisterService
 {
-    /**
-     * @param RegisterRequest $request
-     * @return User
-     */
-    public function store(RegisterRequest $request) : User
+    public function store(RegisterRequest $request): User
     {
-        return User::create([
+        return User::query()->create([
             ...$request->validated(),
             'username' => Str::slug($request->get('name')),
             'slug' => Str::slug($request->get('name')),
             'role_id' => Role::USER,
-            'status' => Status::ACTIVE
+            'status' => Status::ACTIVE,
         ]);
     }
 }

@@ -7,11 +7,7 @@ use Illuminate\Support\Collection;
 
 final class GetCityOfStateAction
 {
-    /**
-     * @param int $stateId
-     * @return Collection
-     */
-    public static function handle(int $stateId) : Collection
+    public static function handle(int $stateId): Collection
     {
         return City::query()
             ->where('state_id', '=', $stateId)

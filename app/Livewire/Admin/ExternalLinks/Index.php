@@ -5,6 +5,9 @@ namespace App\Livewire\Admin\ExternalLinks;
 use App\Enum\Status;
 use App\Models\ExternalLink;
 use App\Models\TypeExternalLink;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -75,7 +78,7 @@ class Index extends Component
 
         $payload = [
             'title' => $this->title,
-            'slug' => \Illuminate\Support\Str::slug($this->slug ?: $this->title),
+            'slug' => Str::slug($this->slug ?: $this->title),
             'type_external_link_id' => $this->type_external_link_id,
             'url' => $this->url,
             'description' => $this->description,
@@ -104,7 +107,7 @@ class Index extends Component
         session()->flash('status', 'Link excluído.');
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         $links = ExternalLink::query()
             ->with('type:id,name')

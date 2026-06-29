@@ -21,11 +21,11 @@ return new class extends Migration
             $table->integer('number_of_children_of_saint'); // Quantidade de filhos de santo
             $table->integer('number_of_children_of_saint_trans'); // Quantidade de filhos de santo são trans
             $table->string('trans_men_and_women'); // As pessoas trans do terreiro usam roupas segundo o gênero que se identificam? Ex. mulheres trans usam saia? Homens trans usam calça?
-            $table->string("name_gender"); // As pessoas trans do terreiro são chamadas pelo nome e gênero que desejam?
-            $table->string("fully_welcomes"); //A família espiritual acolhe integralmente as pessoas trans do terreiro ou a liderança ainda precisa mediar as relações?
-            $table->string("respect_for_trans_people"); // O terreiro fez alguma ação de conscientização da necessidade de acolhimento respeitoso de pessoas trans em suas dependências?
+            $table->string('name_gender'); // As pessoas trans do terreiro são chamadas pelo nome e gênero que desejam?
+            $table->string('fully_welcomes'); // A família espiritual acolhe integralmente as pessoas trans do terreiro ou a liderança ainda precisa mediar as relações?
+            $table->string('respect_for_trans_people'); // O terreiro fez alguma ação de conscientização da necessidade de acolhimento respeitoso de pessoas trans em suas dependências?
             $table->string('suffered_aggregation'); // A liderança e as pessoas trans do terreiro foram hostilizadas quando os demais terreiros souberam que essas pessoas são respeitadas na casa?
-            $table->string("inclusion_of_the_name_of_the_land"); // Podemos incluir o nome e o contato do seu terreiro na lista de indicações de casas trans-inclusivas para ORÍentar
+            $table->string('inclusion_of_the_name_of_the_land'); // Podemos incluir o nome e o contato do seu terreiro na lista de indicações de casas trans-inclusivas para ORÍentar
             $table->foreignId('suggestion_id')
                 ->index()
                 ->nullable()

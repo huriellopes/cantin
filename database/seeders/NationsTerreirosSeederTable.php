@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\NationsTerreiro;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class NationsTerreirosSeederTable extends Seeder
 {

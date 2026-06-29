@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\TypeExternalLinks;
 
 use App\Livewire\Admin\Support\ResourceComponent;
@@ -32,11 +34,13 @@ class Index extends ResourceComponent
         return 'Tipo de Link';
     }
 
+    #[\Override]
     protected function searchable(): array
     {
         return ['name', 'slug'];
     }
 
+    #[\Override]
     protected function hasStatus(): bool
     {
         return true;

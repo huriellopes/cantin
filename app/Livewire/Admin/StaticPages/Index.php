@@ -33,16 +33,19 @@ class Index extends ResourceComponent
         return 'Página Estática';
     }
 
+    #[\Override]
     protected function searchable(): array
     {
         return ['name', 'slug'];
     }
 
+    #[\Override]
     protected function hasStatus(): bool
     {
         return true;
     }
 
+    #[\Override]
     protected function onCreate(): array
     {
         return ['user_id' => auth()->id()];

@@ -14,6 +14,7 @@ class CheckImpersonateMiddleware
             Auth::onceUsingId(['id' => $id]);
             session()->regenerate();
         }
+
         return $next($request);
     }
 }

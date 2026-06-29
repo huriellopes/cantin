@@ -4,6 +4,8 @@ namespace App\Livewire\Admin\Comments;
 
 use App\Enum\Status;
 use App\Models\Comment;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -74,7 +76,7 @@ class Index extends Component
         ]);
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         $comments = Comment::query()
             ->whereNull('parent_id')

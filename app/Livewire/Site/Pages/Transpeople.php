@@ -8,28 +8,39 @@ use App\Models\City;
 use App\Models\State;
 use App\Models\TransPeople as Trans;
 use App\Traits\Utils;
-use Devrabiul\ToastMagic\Facades\ToastMagic;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Exception;
 use Throwable;
 
 class Transpeople extends Component
 {
     public string $name = '';
+
     public string $email = '';
+
     public string $phone = '';
+
     public string $zipcode = '';
+
     public string $street = '';
+
     public string $complement = '';
+
     public string $neighborhood = '';
+
     public ?int $state_id = null;
+
     public $latitude;
+
     public $longitude;
+
     public $states;
+
     public ?int $city_id = null;
+
     public $cities;
 
     public function mount(): void
@@ -60,10 +71,6 @@ class Transpeople extends Component
         }
     }
 
-    /**
-     * @param $property
-     * @return void
-     */
     public function updated($property): void
     {
         if ($property !== 'state_id') {
@@ -73,7 +80,7 @@ class Transpeople extends Component
 
     protected function loadCities(int $stateId): void
     {
-        $cacheKey = 'cities_of_state_' . $stateId;
+        $cacheKey = 'cities_of_state_'.$stateId;
 
         $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
             return City::query()
@@ -91,15 +98,17 @@ class Transpeople extends Component
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
+
                 return;
             }
 
             $cleanedZipCode = str($this->zipcode)->replace('-', '');
 
-            if (!preg_match('/^\d{8}$/', $cleanedZipCode)) {
+            if (! preg_match('/^\d{8}$/', $cleanedZipCode)) {
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
+
                 return;
             }
 
@@ -142,7 +151,7 @@ class Transpeople extends Component
 
             Log::error($e->getMessage(), [
                 'line' => $e->getLine(),
-                'file' => $e->getFile()
+                'file' => $e->getFile(),
             ]);
 
             toastr()
@@ -169,10 +178,7 @@ class Transpeople extends Component
         ];
     }
 
-    /**
-     * @return array
-     */
-    protected function messages() : array
+    protected function messages(): array
     {
         return [
             'name.required' => __('The name field is required.'),
@@ -200,57 +206,58 @@ class Transpeople extends Component
     {
         try {
             DB::beginTransaction();
-                $this->validate();
+            $this->validate();
 
-                $clearZipCode = str($this->zipcode)->replace('-', '');
+            $clearZipCode = str($this->zipcode)->replace('-', '');
 
-                $address = Address::query()
-                    ->where('zipcode', '=', $clearZipCode)
-                    ->first();
+            $address = Address::query()
+                ->where('zipcode', '=', $clearZipCode)
+                ->first();
 
-                if (!$address) {
-                    $address = Address::create([
-                        'zipcode' => $clearZipCode,
-                        'address' => $this->street,
-                        'complement' => $this->complement,
-                        'neighborhood' => $this->neighborhood,
-                        'state_id' => $this->state_id,
-                        'city_id' => $this->city_id,
-                        'latitude' => $this->latitude,
-                        'longitude' => $this->longitude,
-                    ]);
-                }
-
-                $transExist = Trans::query()->where('email', '=', $this->email)->first();
-
-                if ($transExist) {
-                    toastr()
-                        ->timeOut(2000)
-                        ->error(__('Trans people already registered!'));
-                    return;
-                }
-
-                Trans::create([
-                    'name' => $this->name,
-                    'email' => $this->email,
-                    'phone' => Utils::clearMask($this->phone),
-                    'address_id' => $address->id,
+            if (! $address) {
+                $address = Address::create([
+                    'zipcode' => $clearZipCode,
+                    'address' => $this->street,
+                    'complement' => $this->complement,
+                    'neighborhood' => $this->neighborhood,
+                    'state_id' => $this->state_id,
+                    'city_id' => $this->city_id,
+                    'latitude' => $this->latitude,
+                    'longitude' => $this->longitude,
                 ]);
+            }
 
-                $this->reset([
-                    'name',
-                    'email',
-                    'phone',
-                    'zipcode',
-                    'street',
-                    'number',
-                    'complement',
-                    'neighborhood',
-                    'state_id',
-                    'city_id',
-                    'latitude',
-                    'longitude',
-                ]);
+            $transExist = Trans::query()->where('email', '=', $this->email)->first();
+
+            if ($transExist) {
+                toastr()
+                    ->timeOut(2000)
+                    ->error(__('Trans people already registered!'));
+
+                return;
+            }
+
+            Trans::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone' => Utils::clearMask($this->phone),
+                'address_id' => $address->id,
+            ]);
+
+            $this->reset([
+                'name',
+                'email',
+                'phone',
+                'zipcode',
+                'street',
+                'number',
+                'complement',
+                'neighborhood',
+                'state_id',
+                'city_id',
+                'latitude',
+                'longitude',
+            ]);
             DB::commit();
 
             toastr()

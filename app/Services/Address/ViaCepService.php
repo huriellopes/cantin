@@ -4,23 +4,19 @@ namespace App\Services\Address;
 
 use App\Contracts\Address\IAddressService;
 use App\Http\DTO\Address\AddressResultDTO;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
-use Exception;
 
 class ViaCepService implements IAddressService
 {
-    /**
-     * @param string $zipcode
-     * @return AddressResultDTO
-     */
     public function getAddressInfoFromZipCode(string $zipcode): AddressResultDTO
     {
-        return Cache::remember('viacep-'.$zipcode, 60 * 60 * 24, function () use ($zipcode) {
+        return Cache::remember('viacep-'.$zipcode, 60 * 60 * 24, function () use ($zipcode): ?\App\Http\DTO\Address\AddressResultDTO {
             $response = Http::timeout(3000)
                 ->withHeaders([
-                    'Content-Type' => 'application/json'
+                    'Content-Type' => 'application/json',
                 ])->get(config('services.viacep.endpoint').'/'.$zipcode.'/json');
 
             if ($response->failed()) {

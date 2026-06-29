@@ -18,6 +18,7 @@ class Dislike extends Model
         'post_id',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [

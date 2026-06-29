@@ -18,39 +18,35 @@ class LoginController extends Controller
     {
         try {
             if (empty($request->email) || empty($request->password)) {
-                return redirect()
-                    ->back()
+                return back()
                     ->withInput()
                     ->withErrors(['message' => 'Preencha todos os campos!']);
             }
 
-            $user = app(LoginService::class)->HasLogin($request);
+            $user = resolve(LoginService::class)->HasLogin($request);
 
             if (! $user) {
-                return redirect()
-                    ->back()
+                return back()
                     ->withInput()
                     ->withErrors(['message' => 'Usuário não encontrado!']);
             }
 
             if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
                 if (auth()->user()->hasRole('admin', 'super-admin')) {
-                    return redirect()->route('admin.dashboard');
+                    return to_route('admin.dashboard');
                 }
 
-                return redirect()->route('site.home');
+                return to_route('site.home');
             }
 
-            return redirect()
-                ->back()
+            return back()
                 ->withInput()
                 ->withErrors(['message' => 'Credenciais inválidas!']);
         } catch (Exception $e) {
-            self::botCantinbr($e, null);
+            self::botCantinbr($e);
             Log::error('Erro durante o login: '.$e->getMessage());
 
-            return redirect()
-                ->back()
+            return back()
                 ->withInput()
                 ->withErrors(['message' => 'Erro ao tentar fazer login!']);
         }

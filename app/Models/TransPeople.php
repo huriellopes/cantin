@@ -11,7 +11,7 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 class TransPeople extends Model
 {
     /* @use HasFactory<\Database\Factories\TransPeopleFactory> */
-    use KeepsDeletedModels, HasFactory;
+    use HasFactory, KeepsDeletedModels;
 
     protected $table = 'trans_peoples';
 
@@ -29,7 +29,8 @@ class TransPeople extends Model
     /**
      * @return string[]
      */
-    protected function casts() : array
+    #[\Override]
+    protected function casts(): array
     {
         return [
             'status' => Status::class,
@@ -38,10 +39,7 @@ class TransPeople extends Model
         ];
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function address() : BelongsTo
+    public function address(): BelongsTo
     {
         return $this->belongsTo(Address::class);
     }

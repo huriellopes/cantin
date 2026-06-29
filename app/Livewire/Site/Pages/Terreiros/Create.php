@@ -13,11 +13,11 @@ use App\Models\Terreiro;
 use App\Models\TerreiroQuestion;
 use App\Models\TypePeople;
 use App\Traits\Utils;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Exception;
 use Throwable;
 
 class Create extends Component
@@ -25,35 +25,61 @@ class Create extends Component
     public int $currentStep = 1;
 
     public string $name;
+
     public int $nation_terreiro_id;
+
     public string $phone;
+
     public $leadership_orunko;
+
     public string $color_of_leadership;
+
     public string $zipcode = '';
+
     public string $street = '';
+
     public string $complement = '';
+
     public ?int $state_id = null;
+
     public ?int $city_id = null;
+
     public string $neighborhood = '';
+
     public $latitude;
+
     public $longitude;
 
     public $type_people_id;
+
     public $number_of_children_of_saint;
+
     public $number_of_children_of_saint_trans;
+
     public $trans_men_and_women;
+
     public $name_gender;
+
     public $fully_welcomes;
+
     public $respect_for_trans_people;
+
     public $suffered_aggregation;
+
     public $inclusion_of_the_name_of_the_land;
+
     public $suggestion_id;
+
     public $suggestion_text;
 
     public $nations;
+
     public $states;
+
     public $cities;
+
     public $typePeoples;
+
     public $suggestions;
 
     public bool $showField = false;
@@ -92,10 +118,6 @@ class Create extends Component
         });
     }
 
-    /**
-     * @param int|null $value
-     * @return void
-     */
     public function updatedStateId(?int $value): void
     {
         $this->validateOnly('state_id');
@@ -108,28 +130,18 @@ class Create extends Component
         }
     }
 
-    /**
-     * @param $property
-     * @return void
-     */
-    public function updated($property) : void
+    public function updated($property): void
     {
         if ($property !== 'state_id') {
             $this->validateOnly($property);
         }
     }
 
-    /**
-     * @return void
-     */
     public function nextStep(): void
     {
         $this->currentStep++;
     }
 
-    /**
-     * @return void
-     */
     public function previousStep(): void
     {
         $this->currentStep--;
@@ -143,7 +155,7 @@ class Create extends Component
 
     protected function loadCities(int $stateId): void
     {
-        $cacheKey = 'cities_of_state_' . $stateId;
+        $cacheKey = 'cities_of_state_'.$stateId;
 
         $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
             return City::query()
@@ -161,15 +173,17 @@ class Create extends Component
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
+
                 return;
             }
 
             $cleanedZipCode = str($this->zipcode)->replace('-', '');
 
-            if (!preg_match('/^\d{8}$/', $cleanedZipCode)) {
+            if (! preg_match('/^\d{8}$/', $cleanedZipCode)) {
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
+
                 return;
             }
 
@@ -212,7 +226,7 @@ class Create extends Component
 
             Log::error($e->getMessage(), [
                 'line' => $e->getLine(),
-                'file' => $e->getFile()
+                'file' => $e->getFile(),
             ]);
 
             toastr()
@@ -224,7 +238,7 @@ class Create extends Component
     /**
      * @return string[]
      */
-    protected function rules() : array
+    protected function rules(): array
     {
         return [
             'name' => 'required|string',
@@ -252,10 +266,7 @@ class Create extends Component
         ];
     }
 
-    /**
-     * @return array
-     */
-    protected function messages() : array
+    protected function messages(): array
     {
         return [
             'name.required' => __('The name field is required.'),
@@ -305,52 +316,52 @@ class Create extends Component
         ];
     }
 
-    public function store() : void
+    public function store(): void
     {
         try {
             DB::beginTransaction();
-                $this->validate();
+            $this->validate();
 
-                $clearZipCode = str($this->zipcode)->replace('-', '');
+            $clearZipCode = str($this->zipcode)->replace('-', '');
 
-                $address = Address::query()
-                    ->where('zipcode', '=', $clearZipCode)
-                    ->first();
+            $address = Address::query()
+                ->where('zipcode', '=', $clearZipCode)
+                ->first();
 
-                if (!$address) {
-                    $address = Address::create([
-                        'zipcode' => $clearZipCode,
-                        'address' => $this->street,
-                        'complement' => $this->complement,
-                        'neighborhood' => $this->neighborhood,
-                        'state_id' => $this->state_id,
-                        'city_id' => $this->city_id,
-                    ]);
-                }
-
-                $terreiro = Terreiro::create([
-                    'name' => $this->name,
-                    'nation_terreiro_id' => $this->nation_terreiro_id,
-                    'phone' => Utils::clearMask($this->phone),
-                    'leadership_orunko' => $this->leadership_orunko,
-                    'color_of_leadership' => $this->color_of_leadership,
-                    'address_id' => $address->id,
+            if (! $address) {
+                $address = Address::create([
+                    'zipcode' => $clearZipCode,
+                    'address' => $this->street,
+                    'complement' => $this->complement,
+                    'neighborhood' => $this->neighborhood,
+                    'state_id' => $this->state_id,
+                    'city_id' => $this->city_id,
                 ]);
+            }
 
-                TerreiroQuestion::create([
-                    'terreiro_id' => $terreiro->id,
-                    'type_people_id' => $this->type_people_id,
-                    'number_of_children_of_saint' => $this->number_of_children_of_saint,
-                    'number_of_children_of_saint_trans' => $this->number_of_children_of_saint_trans,
-                    'trans_men_and_women' => $this->trans_men_and_women,
-                    'name_gender' => $this->name_gender,
-                    'fully_welcomes' => $this->fully_welcomes,
-                    'respect_for_trans_people' => $this->respect_for_trans_people,
-                    'suffered_aggregation' => $this->suffered_aggregation,
-                    'inclusion_of_the_name_of_the_land' => $this->inclusion_of_the_name_of_the_land,
-                    'suggestion_id' => $this->suggestion_id,
-                    'suggestion_text' => $this->suggestion_text,
-                ]);
+            $terreiro = Terreiro::create([
+                'name' => $this->name,
+                'nation_terreiro_id' => $this->nation_terreiro_id,
+                'phone' => Utils::clearMask($this->phone),
+                'leadership_orunko' => $this->leadership_orunko,
+                'color_of_leadership' => $this->color_of_leadership,
+                'address_id' => $address->id,
+            ]);
+
+            TerreiroQuestion::create([
+                'terreiro_id' => $terreiro->id,
+                'type_people_id' => $this->type_people_id,
+                'number_of_children_of_saint' => $this->number_of_children_of_saint,
+                'number_of_children_of_saint_trans' => $this->number_of_children_of_saint_trans,
+                'trans_men_and_women' => $this->trans_men_and_women,
+                'name_gender' => $this->name_gender,
+                'fully_welcomes' => $this->fully_welcomes,
+                'respect_for_trans_people' => $this->respect_for_trans_people,
+                'suffered_aggregation' => $this->suffered_aggregation,
+                'inclusion_of_the_name_of_the_land' => $this->inclusion_of_the_name_of_the_land,
+                'suggestion_id' => $this->suggestion_id,
+                'suggestion_text' => $this->suggestion_text,
+            ]);
             DB::commit();
 
             sleep(3);
@@ -365,7 +376,7 @@ class Create extends Component
             Utils::webhook('error', $e, 'Error when creating terreiro', null);
             Log::error($e->getMessage(), [
                 'line' => $e->getLine(),
-                'file' => $e->getFile()
+                'file' => $e->getFile(),
             ]);
 
             toastr()

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\Status;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,9 +23,9 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
             $table->string('leadership_orunko'); // Orukó da liderança
-            $table->string("color_of_leadership"); // Qual a cor da pele da liderança do terreiro?
+            $table->string('color_of_leadership'); // Qual a cor da pele da liderança do terreiro?
             $table->smallInteger('status')
-                ->default(\App\Enum\Status::ACTIVE);
+                ->default(Status::ACTIVE);
             $table->timestamps();
         });
     }

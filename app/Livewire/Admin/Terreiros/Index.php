@@ -9,6 +9,8 @@ use App\Models\NationsTerreiro;
 use App\Models\State;
 use App\Models\Terreiro;
 use App\Models\TypePeople;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -121,7 +123,7 @@ class Index extends Component
             $this->city_id = $data->city ?? $this->city_id;
             $this->latitude = $data->latitude ?? null;
             $this->longitude = $data->longitude ?? null;
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             $this->addError('zipcode', 'Não foi possível buscar o CEP.');
         }
     }
@@ -162,7 +164,7 @@ class Index extends Component
     {
         $this->validate();
 
-        DB::transaction(function () {
+        DB::transaction(function (): void {
             $address = Address::query()->updateOrCreate(
                 ['zipcode' => $this->zipcode],
                 [
@@ -210,12 +212,12 @@ class Index extends Component
     {
         $filename = 'terreiros-'.now()->format('Ymd_His').'.csv';
 
-        return response()->streamDownload(function () {
+        return response()->streamDownload(function (): void {
             $out = fopen('php://output', 'w');
             fputcsv($out, ['ID', 'Nome', 'Telefone', 'Nação', 'CEP', 'Endereço', 'Liderança', 'Cor da liderança', 'Criado em']);
 
             Terreiro::query()->with(['nation', 'address'])->orderBy('id')
-                ->chunk(200, function ($terreiros) use ($out) {
+                ->chunk(200, function ($terreiros) use ($out): void {
                     foreach ($terreiros as $terreiro) {
                         fputcsv($out, [
                             $terreiro->id,
@@ -261,7 +263,7 @@ class Index extends Component
         ], $this->questionFields());
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         $terreiros = Terreiro::query()
             ->with(['nation:id,name', 'address.state:id,name', 'address.city:id,name'])

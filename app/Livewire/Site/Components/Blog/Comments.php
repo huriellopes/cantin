@@ -13,14 +13,21 @@ use Livewire\Component;
 class Comments extends Component
 {
     public Post $post;
+
     public string $name = '';
+
     public string $email = '';
+
     public string $newComment = '';
+
     public int $replyingTo = 0;
+
     public array $replies = [];
+
     public array $showReplyForm = [];
 
     public $userLiked;
+
     public $userDisliked;
 
     public function mount(): void
@@ -48,14 +55,14 @@ class Comments extends Component
         ];
     }
 
-    protected function messages() : array
+    protected function messages(): array
     {
         return [
             'newComment.required' => 'O campos comentário é obrigatório.',
         ];
     }
 
-    public function store() : void
+    public function store(): void
     {
         $post = Post::query()
             ->where('slug', '=', $this->post->slug)
@@ -89,8 +96,8 @@ class Comments extends Component
     public function postReply(Comment $parentComment)
     {
         try {
-            $this->validateOnly('replies.' . $parentComment->id, [
-                'replies.' . $parentComment->id => 'required|string|max:1000',
+            $this->validateOnly('replies.'.$parentComment->id, [
+                'replies.'.$parentComment->id => 'required|string|max:1000',
             ]);
         } catch (ValidationException $e) {
             throw $e;
@@ -105,17 +112,17 @@ class Comments extends Component
                 ]);
 
                 $parentComment->update([
-                    'parent_id' => $reply->id
+                    'parent_id' => $reply->id,
                 ]);
 
-                Log::info('User ' . auth()->user()->id . ' replied to comment ' . $parentComment->id . ' successfully.');
+                Log::info('User '.auth()->user()->id.' replied to comment '.$parentComment->id.' successfully.');
                 session()->flash('success', 'Sua resposta foi enviada com sucesso!');
             } else {
-                Log::error('User ' . auth()->user()->id . ' tried to reply to comment ' . $parentComment->id . ' without admin or super-user role.');
+                Log::error('User '.auth()->user()->id.' tried to reply to comment '.$parentComment->id.' without admin or super-user role.');
                 session()->flash('error', 'Você não tem permissão para responder a este comentário.');
             }
         } else {
-            Log::error('User tried to reply to comment ' . $parentComment->id . ' without being logged in.');
+            Log::error('User tried to reply to comment '.$parentComment->id.' without being logged in.');
             session()->flash('error', 'É necessário estar logado como administrador para responder a este comentário.');
         }
 
@@ -126,7 +133,7 @@ class Comments extends Component
 
     public function toggleReplyForm(int $commentId)
     {
-        $this->showReplyForm[$commentId] = !($this->showReplyForm[$commentId] ?? false);
+        $this->showReplyForm[$commentId] = ! ($this->showReplyForm[$commentId] ?? false);
     }
 
     public function likeComment(Comment $comment)

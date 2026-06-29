@@ -17,6 +17,7 @@ class Category extends Model
         'status',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -26,18 +27,13 @@ class Category extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getRouteKeyName() : string
+    #[\Override]
+    public function getRouteKeyName(): string
     {
         return 'slug';
     }
 
-    /**
-     * @return HasMany
-     */
-    public function posts() : HasMany
+    public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }

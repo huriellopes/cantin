@@ -3,13 +3,14 @@
 namespace App\Traits;
 
 use App\Models\User;
-use Carbon\Carbon;
 use DateTime;
+use Dompdf\Dompdf;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -59,16 +60,16 @@ trait Utils
         $matches = [];
 
         if ($type !== 'cel') {
-            preg_match('/^([0-9]{2})([0-9]{4,5})([0-9]{4})$/', $formatedPhone, $matches);
+            preg_match('/^(\d{2})(\d{4,5})(\d{4})$/', (string) $formatedPhone, $matches);
 
-            if ($matches) {
+            if ($matches !== []) {
                 return '('.$matches[1].') '.$matches[2].'-'.$matches[3];
             }
         }
 
-        preg_match('/^([0-9]{2})([0-9]{4,5})([0-9]{4})$/', $formatedPhone, $matches);
+        preg_match('/^(\d{2})(\d{4,5})(\d{4})$/', (string) $formatedPhone, $matches);
 
-        if ($matches) {
+        if ($matches !== []) {
             return '('.$matches[1].') 9 '.$matches[2].'-'.$matches[3];
         }
 
@@ -77,11 +78,7 @@ trait Utils
 
     public function validateInt($param): bool
     {
-        if (is_int($param)) {
-            return false;
-        }
-
-        return true;
+        return ! is_int($param);
     }
 
     /**
@@ -91,17 +88,17 @@ trait Utils
     {
         $response['success'] = $success;
         $response['status'] = $status;
-        $total ? $response['total'] = $total : '';
-        ! empty($data) ? $response['data'] = $data : $response['message'] = $message;
+        if ($total) {
+            $response['total'] = $total;
+        }
+        empty($data) ? $response['message'] = $message : $response['data'] = $data;
 
-        if ($exception) {
-            if (config('app.debug')) {
-                $response['line'] = $exception->getLine();
-                $response['file'] = $exception->getFile();
-                $response['trace'] = $exception->getTrace();
-                $response['msg'] = $exception->getMessage();
-                $response['code'] = $exception->getCode();
-            }
+        if ($exception instanceof Throwable && config('app.debug')) {
+            $response['line'] = $exception->getLine();
+            $response['file'] = $exception->getFile();
+            $response['trace'] = $exception->getTrace();
+            $response['msg'] = $exception->getMessage();
+            $response['code'] = $exception->getCode();
         }
 
         return response()->json($response, $status);
@@ -142,14 +139,14 @@ trait Utils
         $response['Type'] = $type;
         $response['data'] = $data;
 
-        if (auth()->user() & ($type === 'info' || $type === 'error')) {
+        if ((auth()->user() & ($type === 'info' || $type === 'error')) !== 0) {
             $response['user'] = 'User: '.auth()->user()->id;
         }
 
         if ($type === 'info') {
             Log::channel($channel)
                 ->info(response()->json([$response,
-                    'DateTime' => Carbon::now()->format('Y-m-d H:i:s')]).PHP_EOL);
+                    'DateTime' => Date::now()->format('Y-m-d H:i:s')]).PHP_EOL);
         }
 
         if ($exception && $type === 'error') {
@@ -159,7 +156,7 @@ trait Utils
                 $response['trace'] = $exception->getTrace();
                 $response['msg'] = $exception->getMessage();
                 $response['code'] = $exception->getCode();
-                $response['dateTime'] = Carbon::now()->format('Y-m-d H:i:s');
+                $response['dateTime'] = Date::now()->format('Y-m-d H:i:s');
             }
 
             Log::channel($channel)->error(response()->json($response).PHP_EOL);
@@ -168,7 +165,7 @@ trait Utils
 
     public function generateHash(int $length = 10, ?string $NumberOrString = null): string
     {
-        if (empty($NumberOrString)) {
+        if (in_array($NumberOrString, [null, '', '0'], true)) {
             $string = implode('', range('A', 'Z')); // ABCDEFGHIJKLMNOPQRSTUVWXYZ
             $nums = implode('', range(0, 9)); // 0123456789
 
@@ -188,7 +185,7 @@ trait Utils
         $pass = '';
 
         for ($i = 0; $i < $length; $i++) {
-            $pass .= $password[rand(0, strlen($password) - 1)];
+            $pass .= $password[random_int(0, strlen($password) - 1)];
         }
 
         return $pass; // ex: q02TAq3
@@ -217,13 +214,13 @@ trait Utils
                 $content['trace'] = $exception->getTrace();
                 $content['msg'] = $exception->getMessage();
                 $content['code'] = $exception->getCode();
-                $content['dateTime'] = Carbon::now()->format('Y-m-d H:i:s');
+                $content['dateTime'] = Date::now()->format('Y-m-d H:i:s');
             }
 
             $content['msg'] = $exception->getMessage();
             $content['code'] = $exception->getCode();
             $content['file'] = $exception->getFile();
-            $content['dateTime'] = Carbon::now()->format('Y-m-d H:i:s');
+            $content['dateTime'] = Date::now()->format('Y-m-d H:i:s');
         }
 
         return DB::table('logs')->insert([
@@ -232,8 +229,8 @@ trait Utils
             'type' => $type,
             'content' => json_encode($content),
             'user_id' => auth()->check() ? auth()->user()->id : null,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'created_at' => Date::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Date::now()->format('Y-m-d H:i:s'),
         ]);
     }
 
@@ -243,7 +240,7 @@ trait Utils
     }
 
     /**
-     * @return \Barryvdh\DomPDF\PDF|\Dompdf\Dompdf
+     * @return \Barryvdh\DomPDF\PDF|Dompdf
      */
     public function PDFGenerate(string $view, object|array $data)
     {
@@ -304,7 +301,7 @@ trait Utils
         $message .= 'Caminho: '.request()->fullUrl()."\n";
         $message .= 'Mensagem: '.$e->getMessage()."\n";
         $message .= 'Usuário logado: '.(auth()->check() ? auth()->user()->id.'-'.auth()->user()->name : 'Não foi usuário logado')."\n";
-        $message .= 'Data e hora: '.Carbon::now()->format('Y-m-d H:i:s')."\n";
+        $message .= 'Data e hora: '.Date::now()->format('Y-m-d H:i:s')."\n";
         $message .= 'Dados: '.json_encode($data, JSON_THROW_ON_ERROR)."\n";
         $message .= 'Arquivo: '.$e->getFile().' (Linha: '.$e->getLine().")\n";
 

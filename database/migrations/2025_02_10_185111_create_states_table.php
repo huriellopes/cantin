@@ -25,7 +25,7 @@ return new class extends Migration
         });
 
         if (app()->isProduction()) {
-            DB::unprepared(file_get_contents(__DIR__ . '/sql/StateSeeder.sql'));
+            DB::unprepared(file_get_contents(__DIR__.'/sql/StateSeeder.sql'));
         }
     }
 

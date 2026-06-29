@@ -7,9 +7,8 @@ use App\Models\ExternalLink;
 use App\Models\TypeExternalLink;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
-/** @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ExternalLink> */
+/** @extends Factory<ExternalLink> */
 class ExternalLinkFactory extends Factory
 {
     protected $model = ExternalLink::class;

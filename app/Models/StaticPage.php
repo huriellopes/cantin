@@ -21,6 +21,7 @@ class StaticPage extends Model
         'user_id',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -28,9 +29,7 @@ class StaticPage extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
+    #[\Override]
     public function getRouteKeyName(): string
     {
         return 'slug';

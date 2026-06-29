@@ -23,7 +23,8 @@ class TypePeople extends Model
     /**
      * @return string[]
      */
-    protected function casts() : array
+    #[\Override]
+    protected function casts(): array
     {
         return [
             'created_at' => 'datetime',
@@ -31,18 +32,12 @@ class TypePeople extends Model
         ];
     }
 
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @return HasOne
-     */
-    public function terreiro() : HasOne
+    public function terreiro(): HasOne
     {
         return $this->hasOne(Terreiro::class, 'type_people_id', 'id');
     }

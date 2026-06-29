@@ -1,32 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\BotWebhook;
 
 use App\Contracts\BotWebhook\IBotService;
-use NotificationChannels\Telegram\TelegramUpdates;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramService implements IBotService
 {
-    public function handle()
+    public function handle(): never
     {
         $response = Telegram::bot('cantinbr_bot')->getMe();
 
         dd($response);
-    }
-
-    private function chatTelegram()
-    {
-        $chatID = '';
-
-        $updates = TelegramUpdates::create()
-            ->latest()
-            ->get();
-
-        if ($updates['ok']) {
-            $chatID = $updates['result'][0]['message']['chat']['id'];
-        }
-
-        return $chatID;
     }
 }

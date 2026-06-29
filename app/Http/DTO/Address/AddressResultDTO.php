@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\DTO\Address;
 
 class AddressResultDTO
@@ -11,5 +13,5 @@ class AddressResultDTO
         public string $complement,
         public string $city,
         public string $state,
-    ){}
+    ) {}
 }

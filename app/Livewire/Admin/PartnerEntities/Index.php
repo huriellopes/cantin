@@ -5,6 +5,8 @@ namespace App\Livewire\Admin\PartnerEntities;
 use App\Enum\Status;
 use App\Livewire\Admin\Support\InteractsWithAddress;
 use App\Models\PartnerEntity;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -31,7 +33,7 @@ class Index extends Component
 
     public string $activity_carried_out = '';
 
-    public $image = null;
+    public $image;
 
     public ?string $currentImage = null;
 
@@ -115,7 +117,7 @@ class Index extends Component
         session()->flash('status', 'Entidade excluída.');
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         $entities = PartnerEntity::query()
             ->with(['address.city:id,name', 'address.state:id,name'])

@@ -105,7 +105,7 @@ abstract class ResourceComponent extends Component
         $record = $this->model()::query()->findOrFail($id);
         $this->editingId = $record->id;
         $this->form = collect(array_keys($this->fields()))
-            ->mapWithKeys(fn ($field) => [$field => $record->{$field}])
+            ->mapWithKeys(fn ($field): array => [$field => $record->{$field}])
             ->all();
         $this->resetValidation();
         $this->showModal = true;
@@ -156,8 +156,8 @@ abstract class ResourceComponent extends Component
     {
         $query = $this->model()::query();
 
-        if ($this->search) {
-            $query->where(function ($q) {
+        if ($this->search !== '' && $this->search !== '0') {
+            $query->where(function ($q): void {
                 foreach ($this->searchable() as $col) {
                     $q->orWhere($col, 'like', "%{$this->search}%");
                 }

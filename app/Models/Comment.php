@@ -28,6 +28,7 @@ class Comment extends Model
     /**
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -49,7 +50,7 @@ class Comment extends Model
 
     public function replies(): HasMany
     {
-        return $this->hasMany(Comment::class, 'parent_id')->orderBy('created_at', 'asc');
+        return $this->hasMany(Comment::class, 'parent_id')->oldest();
     }
 
     public function parent(): BelongsTo

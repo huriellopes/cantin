@@ -47,6 +47,7 @@ class Post extends Model
     /**
      * @return string[]
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -58,6 +59,7 @@ class Post extends Model
         ];
     }
 
+    #[\Override]
     public function getRouteKeyName(): string
     {
         return 'slug';
@@ -68,15 +70,15 @@ class Post extends Model
         return $this->where('status', '=', StatusPost::PUBLISHED);
     }
 
-    public function scopeSearch($query, ?string $search = null): void
+    protected function scopeSearch($query, ?string $search = null): void
     {
-        if (! empty($search)) {
+        if (! in_array($search, [null, '', '0'], true)) {
             collect(explode(' ', $search))
                 ->filter()
-                ->each(function ($term) use ($query) {
-                    $term = $term.'%';
+                ->each(function (string $term) use ($query): void {
+                    $term .= '%';
 
-                    $query->where(function ($query) use ($term) {
+                    $query->where(function ($query) use ($term): void {
                         $query->where('title', 'like', $term)
                             ->orWhere('content', 'like', $term)
                             ->orWhereIn('category_id', Category::query()
@@ -100,8 +102,7 @@ class Post extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class)
-            ->whereNull('parent_id')
-            ->orderBy('created_at', 'desc');
+            ->whereNull('parent_id')->latest();
     }
 
     public function likes(): HasMany

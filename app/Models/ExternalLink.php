@@ -23,6 +23,7 @@ class ExternalLink extends Model
         'type_external_link_id',
     ];
 
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -30,11 +31,12 @@ class ExternalLink extends Model
         ];
     }
 
+    #[\Override]
     protected static function boot(): void
     {
         parent::boot();
 
-        static::creating(function ($model) {
+        static::creating(function ($model): void {
             if (! app()->runningInConsole()) {
                 $model->user_id = auth()->user()->id;
             }

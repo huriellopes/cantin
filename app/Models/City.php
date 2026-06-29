@@ -12,13 +12,14 @@ class City extends Model
      */
     protected $fillable = [
         'name',
-        'state_id'
+        'state_id',
     ];
 
     /**
      * @return string[]
      */
-    public function casts() : array
+    #[\Override]
+    public function casts(): array
     {
         return [
             'created_at' => 'datetime',
@@ -26,7 +27,7 @@ class City extends Model
         ];
     }
 
-    public function state() : BelongsTo
+    public function state(): BelongsTo
     {
         return $this->belongsTo(State::class);
     }

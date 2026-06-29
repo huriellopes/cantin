@@ -1,6 +1,7 @@
 <?php
 
 use App\Enum\Status;
+use App\Livewire\Admin\Categories\Index;
 use App\Models\Category;
 use App\Models\NationsTerreiro;
 use App\Models\StaticPage;
@@ -20,7 +21,7 @@ it('opens each simple resource page', function (string $path) {
 
 it('creates a category with auto slug and active status', function () {
     Livewire::actingAs(userWithRole('admin'))
-        ->test(App\Livewire\Admin\Categories\Index::class)
+        ->test(Index::class)
         ->call('create')
         ->set('form.name', 'Notícias')
         ->set('form.slug', '')
@@ -48,7 +49,7 @@ it('toggles a category status', function () {
     $category = Category::query()->create(['name' => 'X', 'slug' => 'x', 'status' => Status::ACTIVE]);
 
     Livewire::actingAs(userWithRole('admin'))
-        ->test(App\Livewire\Admin\Categories\Index::class)
+        ->test(Index::class)
         ->call('toggleStatus', $category->id);
 
     expect($category->fresh()->status)->toBe(Status::INACTIVE);

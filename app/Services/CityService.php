@@ -9,17 +9,11 @@ use Illuminate\Support\Facades\Cache;
 
 class CityService
 {
-    /**
-     * @param CityRequest $request
-     * @return Collection
-     */
-    public function list(CityRequest $request) : Collection
+    public function list(CityRequest $request): Collection
     {
-        return Cache::remember('cities_' . $request->get('state'), 60 * 60 * 24, function () use ($request) {
-            return City::query()
-                ->when(!empty($request->get('state')), function ($query) use ($request) {
-                    $query->where('state_id', '=', $request->get('state'));
-                })->get();
-        });
+        return Cache::remember('cities_'.$request->get('state'), 60 * 60 * 24, fn () => City::query()
+            ->unless(empty($request->get('state')), function ($query) use ($request): void {
+                $query->where('state_id', '=', $request->get('state'));
+            })->get());
     }
 }

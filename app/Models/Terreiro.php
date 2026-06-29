@@ -10,7 +10,7 @@ class Terreiro extends Model
 {
     use KeepsDeletedModels;
 
-    protected $table = "terreiros";
+    protected $table = 'terreiros';
 
     protected $fillable = [
         'name',
@@ -24,7 +24,8 @@ class Terreiro extends Model
     /**
      * @return string[]
      */
-    public function casts() : array
+    #[\Override]
+    public function casts(): array
     {
         return [
             'created_at' => 'datetime',
@@ -32,18 +33,12 @@ class Terreiro extends Model
         ];
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function nation() : BelongsTo
+    public function nation(): BelongsTo
     {
         return $this->belongsTo(NationsTerreiro::class, 'nation_terreiro_id', 'id');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function address() : BelongsTo
+    public function address(): BelongsTo
     {
         return $this->belongsTo(Address::class);
     }

@@ -8,7 +8,6 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 /**
  * Class CommonQuestion
- * @package App\Models
  *
  * @property $id
  * @property $question
@@ -25,13 +24,14 @@ class CommonQuestion extends Model
     protected $fillable = [
         'question',
         'answer',
-        'status'
+        'status',
     ];
 
     /**
      * @return string[]
      */
-    protected function casts() : array
+    #[\Override]
+    protected function casts(): array
     {
         return [
             'status' => Status::class,

@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Enum\Role as RoleEnum;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Auth;
 
 class UsersPolicy
 {
@@ -13,7 +13,7 @@ class UsersPolicy
 
     public function __construct(
         protected User $user,
-    ){}
+    ) {}
 
     /**
      * Determine whether the user can view any models.
@@ -28,7 +28,11 @@ class UsersPolicy
      */
     public function view(User $user): bool
     {
-        return $user->hasRole('super-admin') || $user->hasRole('admin');
+        if ($user->hasRole('super-admin')) {
+            return true;
+        }
+
+        return $user->hasRole('admin');
     }
 
     /**
@@ -36,7 +40,11 @@ class UsersPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole('super-admin') || $user->hasRole('admin');
+        if ($user->hasRole('super-admin')) {
+            return true;
+        }
+
+        return $user->hasRole('admin');
     }
 
     /**
@@ -44,7 +52,11 @@ class UsersPolicy
      */
     public function update(User $user): bool
     {
-        return $user->hasRole('super-admin') || $user->hasRole('admin');
+        if ($user->hasRole('super-admin')) {
+            return true;
+        }
+
+        return $user->hasRole('admin');
     }
 
     /**
@@ -52,7 +64,11 @@ class UsersPolicy
      */
     public function delete(User $user): bool
     {
-        return $user->hasRole('super-admin') || $user->hasRole('admin');
+        if ($user->hasRole('super-admin')) {
+            return true;
+        }
+
+        return $user->hasRole('admin');
     }
 
     /**
@@ -60,7 +76,11 @@ class UsersPolicy
      */
     public function restore(User $user): bool
     {
-        return $user->hasRole('super-admin') || $user->hasRole('admin');
+        if ($user->hasRole('super-admin')) {
+            return true;
+        }
+
+        return $user->hasRole('admin');
     }
 
     /**

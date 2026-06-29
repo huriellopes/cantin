@@ -21,7 +21,7 @@ class TypeExternalLinkSeeder extends Seeder
             [
                 'name' => 'E-books',
                 'slug' => 'e-books',
-            ]
+            ],
         ]);
     }
 }

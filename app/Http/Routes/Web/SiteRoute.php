@@ -3,25 +3,22 @@
 namespace App\Http\Routes\Web;
 
 use App\Http\Controllers\Web\Auth\LoginController;
-use App\Livewire\Site\Pages\PartnersEntities;
-use App\Livewire\Site\Pages\StaticPage;
-use App\Livewire\Site\Pages\Terreiros\Create;
-use App\Livewire\Site\Pages\Transpeople;
 use App\Livewire\Site\Pages\About;
 use App\Livewire\Site\Pages\Auth\Login;
 use App\Livewire\Site\Pages\Blog\Posts;
 use App\Livewire\Site\Pages\Blog\Show;
 use App\Livewire\Site\Pages\ExternalLinks;
 use App\Livewire\Site\Pages\Home;
+use App\Livewire\Site\Pages\PartnersEntities;
+use App\Livewire\Site\Pages\StaticPage;
+use App\Livewire\Site\Pages\Terreiros\Create;
 use App\Livewire\Site\Pages\Terreiros\Search;
+use App\Livewire\Site\Pages\Transpeople;
 use Illuminate\Support\Facades\Route;
 
 class SiteRoute
 {
-    /**
-     * @return void
-     */
-    public static function web() : void
+    public static function web(): void
     {
         Route::name('site.')
             ->middleware('visit_register')

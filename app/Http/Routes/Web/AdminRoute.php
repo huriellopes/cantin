@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Routes\Web;
 
 use App\Livewire\Admin\Categories\Index as CategoriesIndex;
@@ -28,7 +30,7 @@ class AdminRoute
         Route::name('admin.')
             ->prefix('admin')
             ->middleware(['auth', 'role:admin,super-admin'])
-            ->group(function () {
+            ->group(function (): void {
                 Route::get('/', Dashboard::class)->name('dashboard');
 
                 Route::get('/terreiros', TerreirosIndex::class)->name('terreiros.index');
@@ -46,7 +48,7 @@ class AdminRoute
                 Route::get('/static-pages', StaticPagesIndex::class)->name('static-pages.index');
 
                 // Apenas super-admin
-                Route::middleware('role:super-admin')->group(function () {
+                Route::middleware('role:super-admin')->group(function (): void {
                     Route::get('/users', UsersIndex::class)->name('users.index');
                     Route::get('/deleted-models', DeletedModelsIndex::class)->name('deleted-models.index');
                 });
@@ -56,7 +58,7 @@ class AdminRoute
                     request()->session()->invalidate();
                     request()->session()->regenerateToken();
 
-                    return redirect()->route('site.home');
+                    return to_route('site.home');
                 })->name('logout');
             });
     }

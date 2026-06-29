@@ -5,6 +5,8 @@ namespace App\Livewire\Admin\Users;
 use App\Enum\Status;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -117,12 +119,12 @@ class Index extends Component
     {
         $filename = 'usuarios-'.now()->format('Ymd_His').'.csv';
 
-        return response()->streamDownload(function () {
+        return response()->streamDownload(function (): void {
             $out = fopen('php://output', 'w');
             fputcsv($out, ['ID', 'Nome', 'E-mail', 'Perfil', 'Status', 'Criado em']);
 
             User::query()->where('id', '<>', auth()->id())->with('role')->orderBy('id')
-                ->chunk(200, function ($users) use ($out) {
+                ->chunk(200, function ($users) use ($out): void {
                     foreach ($users as $user) {
                         fputcsv($out, [
                             $user->id,
@@ -139,7 +141,7 @@ class Index extends Component
         }, $filename, ['Content-Type' => 'text/csv']);
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         $users = User::query()
             ->where('id', '<>', auth()->id())
