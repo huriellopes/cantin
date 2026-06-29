@@ -61,7 +61,7 @@
             ['Tipos de Link', route('admin.type-external-links.index'), request()->routeIs('admin.type-external-links.*'), $i['link']],
             ['Links Externos', route('admin.external-links.index'), request()->routeIs('admin.external-links.*'), $i['link']],
         ];
-        if (auth()->user()?->hasRole('super-admin')) {
+        if (auth()->user()?->isSuperAdmin()) {
             $nav[] = ['Usuários', route('admin.users.index'), request()->routeIs('admin.users.*'), $i['users']];
             $nav[] = ['Modelos Excluídos', route('admin.deleted-models.index'), request()->routeIs('admin.deleted-models.*'), $i['trash']];
         }

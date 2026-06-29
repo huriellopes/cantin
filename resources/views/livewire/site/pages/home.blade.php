@@ -2,9 +2,8 @@
     {{-- Hero --}}
     <section class="relative flex min-h-[100svh] items-center justify-center overflow-hidden">
         <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('{{ $image }}')"></div>
-        {{-- Overlay leve: imagem de fundo visível, mantendo contraste do texto --}}
-        <div class="absolute inset-0 bg-gradient-to-br from-violet-900/55 via-violet-800/40 to-pink-700/45"></div>
-        <div class="absolute inset-0 bg-black/20"></div>
+        {{-- Overlay bem leve: a imagem fica em destaque, com leve tint para legibilidade --}}
+        <div class="absolute inset-0 bg-gradient-to-br from-violet-900/40 via-violet-900/25 to-pink-800/30"></div>
 
         <div class="relative mx-auto max-w-4xl px-6 text-center">
             <span class="inline-block rounded-full bg-white/15 px-4 py-1 text-sm font-medium text-white ring-1 ring-white/30 backdrop-blur">

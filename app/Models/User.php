@@ -73,4 +73,17 @@ class User extends Authenticatable
     {
         return in_array($this->role?->slug, $roles, true);
     }
+
+    /**
+     * Verificação robusta via enum (não depende da tabela roles/slug).
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role_id === RoleEnum::SUPER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array($this->role_id, [RoleEnum::SUPER, RoleEnum::ADMIN], true);
+    }
 }
