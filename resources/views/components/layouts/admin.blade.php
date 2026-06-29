@@ -61,24 +61,21 @@
         class="fixed inset-y-0 left-0 z-40 flex w-64 transform flex-col bg-slate-900 text-slate-300 transition-all duration-200 lg:translate-x-0"
         :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': ! sidebarOpen, 'lg:w-16': collapsed, 'lg:w-64': ! collapsed }"
     >
-        {{-- Logo (sempre visível) --}}
-        <div class="flex h-16 shrink-0 items-center px-4" :class="collapsed && 'lg:justify-center lg:px-0'">
+        {{-- Logo + chevron (ambos sempre visíveis, lado a lado) --}}
+        <div class="flex h-16 shrink-0 items-center gap-2 px-3" :class="collapsed && 'lg:justify-center lg:gap-1 lg:px-1'">
             <a href="{{ route('admin.dashboard') }}" class="text-xl font-extrabold tracking-tight text-white">
                 <span :class="collapsed && 'lg:hidden'">Ca<span class="text-violet-400">NTI</span>n</span>
                 <span class="hidden" :class="collapsed ? 'lg:inline' : 'lg:hidden'">Ca<span class="text-violet-400">N</span></span>
             </a>
-        </div>
-
-        <nav class="flex-1 space-y-1 overflow-y-auto overflow-x-hidden px-3 py-2 text-sm">
-            {{-- Toggle recolher/expandir (com tooltip quando recolhido) --}}
             <button type="button" @click="toggleCollapse()"
                     @mouseenter="showTip($el, collapsed ? 'Expandir menu' : 'Recolher menu')" @mouseleave="tip.show = false"
-                    class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-                    :class="collapsed && 'lg:justify-center lg:px-0'">
-                <svg class="h-5 w-5 shrink-0 transition-transform" :class="collapsed && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
-                <span :class="collapsed && 'lg:hidden'">Recolher menu</span>
+                    class="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                    :class="! collapsed && 'lg:ml-auto'" aria-label="Recolher/expandir menu">
+                <svg class="h-5 w-5 transition-transform" :class="collapsed && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
             </button>
+        </div>
 
+        <nav class="scrollbar-dark flex-1 space-y-1 overflow-y-auto overflow-x-hidden px-3 py-2 text-sm">
             @foreach ($nav as [$label, $url, $active, $icon])
                 <a href="{{ $url }}"
                    @mouseenter="showTip($el, @js($label))" @mouseleave="tip.show = false"
@@ -139,6 +136,19 @@
         </header>
 
         <main class="p-4 lg:p-8">
+            @if (\Diglactic\Breadcrumbs\Breadcrumbs::exists())
+                <nav aria-label="breadcrumb" class="mb-6 flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+                    @foreach (\Diglactic\Breadcrumbs\Breadcrumbs::generate() as $crumb)
+                        @if (! $loop->last && $crumb->url)
+                            <a href="{{ $crumb->url }}" class="transition hover:text-violet-600">{{ $crumb->title }}</a>
+                            <svg class="h-4 w-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
+                        @else
+                            <span class="font-semibold text-slate-700" aria-current="page">{{ $crumb->title }}</span>
+                        @endif
+                    @endforeach
+                </nav>
+            @endif
+
             {{ $slot }}
         </main>
     </div>

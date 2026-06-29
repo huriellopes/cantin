@@ -8,6 +8,7 @@
         "php": "^8.4",
         "ashallendesign/short-url": "^8.3",
         "devrabiul/laravel-toaster-magic": "^2.0",
+        "diglactic/laravel-breadcrumbs": "^10.1",
         "geocoder-php/nominatim-provider": "^5.8",
         "guzzlehttp/guzzle": "^7.9",
         "irazasyed/telegram-bot-sdk": "^3.15",
