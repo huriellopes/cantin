@@ -113,6 +113,32 @@ class Index extends Component
         $this->generatedPassword = $newPassword;
     }
 
+    public function exportCsv()
+    {
+        $filename = 'usuarios-'.now()->format('Ymd_His').'.csv';
+
+        return response()->streamDownload(function () {
+            $out = fopen('php://output', 'w');
+            fputcsv($out, ['ID', 'Nome', 'E-mail', 'Perfil', 'Status', 'Criado em']);
+
+            User::query()->where('id', '<>', auth()->id())->with('role')->orderBy('id')
+                ->chunk(200, function ($users) use ($out) {
+                    foreach ($users as $user) {
+                        fputcsv($out, [
+                            $user->id,
+                            $user->name,
+                            $user->email,
+                            $user->role_id?->label(),
+                            $user->status?->label(),
+                            $user->created_at?->format('d/m/Y H:i'),
+                        ]);
+                    }
+                });
+
+            fclose($out);
+        }, $filename, ['Content-Type' => 'text/csv']);
+    }
+
     public function render()
     {
         $users = User::query()

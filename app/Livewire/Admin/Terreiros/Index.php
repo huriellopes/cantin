@@ -206,6 +206,35 @@ class Index extends Component
         session()->flash('status', 'Terreiro excluído.');
     }
 
+    public function exportCsv()
+    {
+        $filename = 'terreiros-'.now()->format('Ymd_His').'.csv';
+
+        return response()->streamDownload(function () {
+            $out = fopen('php://output', 'w');
+            fputcsv($out, ['ID', 'Nome', 'Telefone', 'Nação', 'CEP', 'Endereço', 'Liderança', 'Cor da liderança', 'Criado em']);
+
+            Terreiro::query()->with(['nation', 'address'])->orderBy('id')
+                ->chunk(200, function ($terreiros) use ($out) {
+                    foreach ($terreiros as $terreiro) {
+                        fputcsv($out, [
+                            $terreiro->id,
+                            $terreiro->name,
+                            $terreiro->phone,
+                            $terreiro->nation?->name,
+                            $terreiro->address?->zipcode,
+                            $terreiro->address?->address,
+                            $terreiro->leadership_orunko,
+                            $terreiro->color_of_leadership,
+                            $terreiro->created_at?->format('d/m/Y H:i'),
+                        ]);
+                    }
+                });
+
+            fclose($out);
+        }, $filename, ['Content-Type' => 'text/csv']);
+    }
+
     private function questionFields(): array
     {
         return [

@@ -38,6 +38,34 @@
         @endforeach
     </div>
 
+    {{-- Gráficos 30 dias --}}
+    @php
+        $barColors = ['sky' => 'bg-sky-500', 'violet' => 'bg-violet-500', 'amber' => 'bg-amber-500'];
+    @endphp
+    <div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        @foreach ($charts as $chart)
+            @php $max = max(1, $chart['series']->max('value')); @endphp
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="mb-4 flex items-baseline justify-between">
+                    <h3 class="text-sm font-semibold text-slate-700">{{ $chart['title'] }}</h3>
+                    <span class="text-xs text-slate-400">total {{ $chart['series']->sum('value') }}</span>
+                </div>
+                <div class="flex h-28 items-end gap-px">
+                    @foreach ($chart['series'] as $point)
+                        <div class="group relative flex-1" title="{{ $point['label'] }}: {{ $point['value'] }}">
+                            <div class="{{ $barColors[$chart['color']] ?? 'bg-slate-400' }} rounded-t transition-all hover:opacity-80"
+                                 style="height: {{ max(2, (int) round($point['value'] / $max * 100)) }}%"></div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="mt-2 flex justify-between text-[10px] text-slate-400">
+                    <span>{{ $chart['series']->first()['label'] }}</span>
+                    <span>{{ $chart['series']->last()['label'] }}</span>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
     {{-- Terreiros recentes --}}
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 px-6 py-4">
