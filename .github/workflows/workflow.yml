@@ -38,6 +38,9 @@ jobs:
       - name: Verificar formatação (Pint)
         run: ./vendor/bin/pint --test
 
+      - name: Análise estática (PHPStan)
+        run: ./vendor/bin/phpstan analyse --memory-limit=1G --no-progress
+
       - name: Rodar testes (Pest)
         run: ./vendor/bin/pest --ci
 
