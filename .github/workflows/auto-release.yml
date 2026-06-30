@@ -1,0 +1,61 @@
+name: Auto Release & Deploy
+
+# Quando o CI passa em um push na main (ex.: após mesclar um PR), cria
+# automaticamente uma nova release (bump de patch a partir da última tag) e
+# dispara o deploy de produção.
+#
+# Para um bump de minor/major, use o workflow "Release" manualmente.
+on:
+  workflow_run:
+    workflows: ['Continuous Integration']
+    types: [completed]
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  release-and-deploy:
+    name: Release automática + deploy
+    runs-on: ubuntu-latest
+    # Só roda quando o CI passou e o evento veio da main.
+    if: >-
+      ${{ github.event.workflow_run.conclusion == 'success' &&
+          github.event.workflow_run.head_branch == 'main' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Calcular próxima versão (bump de patch)
+        id: bump
+        run: |
+          set -euo pipefail
+          git fetch --tags --force
+          LATEST=$(git tag --list 'v*' --sort=-v:refname | head -n1)
+          LATEST=${LATEST:-v0.0.0}
+          BASE=${LATEST#v}
+          MAJOR=$(echo "$BASE" | cut -d. -f1)
+          MINOR=$(echo "$BASE" | cut -d. -f2)
+          PATCH=$(echo "$BASE" | cut -d. -f3)
+          NEXT="v${MAJOR}.${MINOR}.$((PATCH + 1))"
+          echo "Última tag: $LATEST -> nova: $NEXT"
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+
+      - name: Criar tag e GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEXT: ${{ steps.bump.outputs.next }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$NEXT" -m "Release $NEXT"
+          git push origin "$NEXT"
+          gh release create "$NEXT" --title "$NEXT" --generate-notes
+
+      - name: Disparar deploy de produção
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
