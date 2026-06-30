@@ -3,10 +3,17 @@
         <div>
             <h2 class="text-xl font-bold text-slate-800">{{ $heading }}</h2>
         </div>
-        <button wire:click="create" class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
-            @svg('lucide-plus', 'h-4 w-4')
-            {{ __('crud_resource.new') }} {{ $singular }}
-        </button>
+        @if ($usesPageEditor && $createRoute)
+            <a href="{{ route($createRoute) }}" wire:navigate class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
+                @svg('lucide-plus', 'h-4 w-4')
+                {{ __('crud_resource.new') }} {{ $singular }}
+            </a>
+        @else
+            <button wire:click="create" class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
+                @svg('lucide-plus', 'h-4 w-4')
+                {{ __('crud_resource.new') }} {{ $singular }}
+            </button>
+        @endif
     </div>
 
     <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -41,7 +48,13 @@
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-1">
                                     <x-admin.action icon="view" color="sky" label="{{ __('common.view') }}" wire:click="view({{ $record->id }})" />
-                                    <x-admin.action icon="edit" color="violet" label="{{ __('common.edit') }}" wire:click="edit({{ $record->id }})" />
+                                    @if ($usesPageEditor && $editRoute)
+                                        <a href="{{ route($editRoute, $record) }}" wire:navigate title="{{ __('common.edit') }}" aria-label="{{ __('common.edit') }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-violet-600 transition hover:bg-violet-50">
+                                            @svg('lucide-pencil', 'h-[18px] w-[18px]')
+                                        </a>
+                                    @else
+                                        <x-admin.action icon="edit" color="violet" label="{{ __('common.edit') }}" wire:click="edit({{ $record->id }})" />
+                                    @endif
                                     @if ($hasStatus)
                                         <x-admin.action icon="toggle"
                                             :color="$record->status === \App\Enum\Status::ACTIVE ? 'amber' : 'emerald'"
@@ -62,26 +75,28 @@
         <div class="border-t border-slate-100 p-4">{{ $records->links() }}</div>
     </div>
 
-    <x-admin.modal title="{{ $editingId ? __('crud_resource.edit_title', ['singular' => $singular]) : __('crud_resource.new_title', ['singular' => $singular]) }}">
-        <form wire:submit="save" class="space-y-4">
-            @foreach ($fields as $name => $cfg)
-                <div class="space-y-1">
-                    <label for="{{ $name }}" class="block text-sm font-medium text-slate-700">{{ $cfg['label'] ?? \Illuminate\Support\Str::headline($name) }}</label>
-                    @if (($cfg['type'] ?? 'text') === 'textarea')
-                        <textarea id="{{ $name }}" wire:model="form.{{ $name }}" rows="5" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500"></textarea>
-                    @else
-                        <input type="{{ $cfg['type'] ?? 'text' }}" id="{{ $name }}" wire:model="form.{{ $name }}" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
-                    @endif
-                    @error("form.{$name}") <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
-                </div>
-            @endforeach
+    @unless ($usesPageEditor)
+        <x-admin.modal title="{{ $editingId ? __('crud_resource.edit_title', ['singular' => $singular]) : __('crud_resource.new_title', ['singular' => $singular]) }}">
+            <form wire:submit="save" class="space-y-4">
+                @foreach ($fields as $name => $cfg)
+                    <div class="space-y-1">
+                        <label for="{{ $name }}" class="block text-sm font-medium text-slate-700">{{ $cfg['label'] ?? \Illuminate\Support\Str::headline($name) }}</label>
+                        @if (($cfg['type'] ?? 'text') === 'textarea')
+                            <textarea id="{{ $name }}" wire:model="form.{{ $name }}" rows="5" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500"></textarea>
+                        @else
+                            <input type="{{ $cfg['type'] ?? 'text' }}" id="{{ $name }}" wire:model="form.{{ $name }}" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
+                        @endif
+                        @error("form.{$name}") <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                    </div>
+                @endforeach
 
-            <div class="flex justify-end gap-2 pt-2">
-                <button type="button" @click="$wire.showModal = false" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">{{ __('common.cancel') }}</button>
-                <button type="submit" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-700">{{ __('common.save') }}</button>
-            </div>
-        </form>
-    </x-admin.modal>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" @click="$wire.showModal = false" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">{{ __('common.cancel') }}</button>
+                    <button type="submit" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-700">{{ __('common.save') }}</button>
+                </div>
+            </form>
+        </x-admin.modal>
+    @endunless
 
     <x-admin.view :show="$showView" :title="$viewTitle" :data="$viewData" />
     <x-admin.confirm :confirm="$confirm" />

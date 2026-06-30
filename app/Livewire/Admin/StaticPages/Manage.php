@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\Livewire\Admin\StaticPages;
 
-use App\Livewire\Admin\Support\ResourceComponent;
+use App\Livewire\Admin\Support\ResourceManageComponent;
 use App\Models\StaticPage;
 use Livewire\Attributes\Title;
 use Override;
 
-#[Title('Páginas Estáticas')]
-class Index extends ResourceComponent
+#[Title('Página estática')]
+class Manage extends ResourceManageComponent
 {
+    public function mount(?StaticPage $staticPage = null): void
+    {
+        $this->initRecord($staticPage);
+    }
+
     protected function model(): string
     {
         return StaticPage::class;
@@ -22,13 +27,8 @@ class Index extends ResourceComponent
         return [
             'name' => ['label' => __('msg_static_pages.label_name')],
             'slug' => ['label' => __('msg_static_pages.label_slug'), 'unique' => true],
-            'content' => ['label' => __('msg_static_pages.label_content'), 'type' => 'textarea', 'rules' => ['required', 'string']],
+            'content' => ['label' => __('msg_static_pages.label_content'), 'type' => 'richtext', 'rules' => ['required', 'string']],
         ];
-    }
-
-    protected function heading(): string
-    {
-        return __('msg_static_pages.heading');
     }
 
     protected function singular(): string
@@ -36,10 +36,9 @@ class Index extends ResourceComponent
         return __('msg_static_pages.singular');
     }
 
-    #[Override]
-    protected function searchable(): array
+    protected function indexRoute(): string
     {
-        return ['name', 'slug'];
+        return 'admin.static-pages.index';
     }
 
     #[Override]
@@ -52,23 +51,5 @@ class Index extends ResourceComponent
     protected function onCreate(): array
     {
         return ['user_id' => auth()->id()];
-    }
-
-    #[Override]
-    protected function usesPageEditor(): bool
-    {
-        return true;
-    }
-
-    #[Override]
-    protected function createRoute(): ?string
-    {
-        return 'admin.static-pages.create';
-    }
-
-    #[Override]
-    protected function editRoute(): ?string
-    {
-        return 'admin.static-pages.edit';
     }
 }

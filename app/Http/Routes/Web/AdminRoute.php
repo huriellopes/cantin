@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Routes\Web;
 
+use App\Http\Controllers\Web\EditorAttachmentController;
 use App\Http\Controllers\Web\ExportDownloadController;
 use App\Livewire\Admin\Categories\Index as CategoriesIndex;
 use App\Livewire\Admin\Comments\Index as CommentsIndex;
@@ -13,10 +14,13 @@ use App\Livewire\Admin\ExternalLinks\Index as ExternalLinksIndex;
 use App\Livewire\Admin\ImpersonationLogs\Index as ImpersonationLogsIndex;
 use App\Livewire\Admin\Nations\Index as NationsIndex;
 use App\Livewire\Admin\Pages\Index as PagesIndex;
+use App\Livewire\Admin\Pages\Manage as PagesManage;
 use App\Livewire\Admin\PartnerEntities\Index as PartnerEntitiesIndex;
 use App\Livewire\Admin\Posts\Index as PostsIndex;
+use App\Livewire\Admin\Posts\Manage as PostsManage;
 use App\Livewire\Admin\Profile\Index as ProfileIndex;
 use App\Livewire\Admin\StaticPages\Index as StaticPagesIndex;
+use App\Livewire\Admin\StaticPages\Manage as StaticPagesManage;
 use App\Livewire\Admin\Terreiros\Index as TerreirosIndex;
 use App\Livewire\Admin\TransPeoples\Index as TransPeoplesIndex;
 use App\Livewire\Admin\TypeExternalLinks\Index as TypeExternalLinksIndex;
@@ -40,8 +44,13 @@ class AdminRoute
 
                 Route::get('/exports/{export}/download', [ExportDownloadController::class, 'download'])->name('exports.download');
 
+                // Upload de mídia do editor rico (Quill).
+                Route::post('/editor/attachments', EditorAttachmentController::class)->name('editor.attachments.store');
+
                 Route::get('/terreiros', TerreirosIndex::class)->name('terreiros.index');
                 Route::get('/comments', CommentsIndex::class)->name('comments.index');
+                Route::get('/posts/create', PostsManage::class)->name('posts.create');
+                Route::get('/posts/{post}/edit', PostsManage::class)->name('posts.edit');
                 Route::get('/posts', PostsIndex::class)->name('posts.index');
                 Route::get('/categories', CategoriesIndex::class)->name('categories.index');
                 Route::get('/nations', NationsIndex::class)->name('nations.index');
@@ -51,7 +60,11 @@ class AdminRoute
                 Route::get('/external-links', ExternalLinksIndex::class)->name('external-links.index');
                 Route::get('/trans-peoples', TransPeoplesIndex::class)->name('trans-peoples.index');
                 Route::get('/partner-entities', PartnerEntitiesIndex::class)->name('partner-entities.index');
+                Route::get('/pages/create', PagesManage::class)->name('pages.create');
+                Route::get('/pages/{page}/edit', PagesManage::class)->name('pages.edit');
                 Route::get('/pages', PagesIndex::class)->name('pages.index');
+                Route::get('/static-pages/create', StaticPagesManage::class)->name('static-pages.create');
+                Route::get('/static-pages/{staticPage}/edit', StaticPagesManage::class)->name('static-pages.edit');
                 Route::get('/static-pages', StaticPagesIndex::class)->name('static-pages.index');
 
                 // Apenas super-admin
