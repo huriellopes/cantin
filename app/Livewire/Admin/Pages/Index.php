@@ -47,4 +47,22 @@ class Index extends ResourceComponent
     {
         return true;
     }
+
+    #[Override]
+    protected function usesPageEditor(): bool
+    {
+        return true;
+    }
+
+    #[Override]
+    protected function createRoute(): ?string
+    {
+        return 'admin.pages.create';
+    }
+
+    #[Override]
+    protected function editRoute(): ?string
+    {
+        return 'admin.pages.edit';
+    }
 }

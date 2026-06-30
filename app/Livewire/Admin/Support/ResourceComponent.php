@@ -126,7 +126,30 @@ abstract class ResourceComponent extends Component
             'heading' => $this->heading(),
             'singular' => $this->singular(),
             'hasStatus' => $this->hasStatus(),
+            'usesPageEditor' => $this->usesPageEditor(),
+            'createRoute' => $this->createRoute(),
+            'editRoute' => $this->editRoute(),
         ]);
+    }
+
+    /**
+     * Quando true, a criação/edição acontece em PÁGINA dedicada (links), e o
+     * modal não é renderizado. Subclasses que usam página sobrescrevem isto e
+     * informam as rotas (createRoute/editRoute). Padrão: modal.
+     */
+    protected function usesPageEditor(): bool
+    {
+        return false;
+    }
+
+    protected function createRoute(): ?string
+    {
+        return null;
+    }
+
+    protected function editRoute(): ?string
+    {
+        return null;
     }
 
     /** @return class-string<Model> */

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enum\Status;
 use App\Enum\StatusPost;
 use App\Livewire\Admin\Posts\Index;
+use App\Livewire\Admin\Posts\Manage;
 use App\Models\Category;
 use App\Models\Post;
 use Livewire\Livewire;
@@ -25,28 +26,28 @@ it('creates a post and publishes it when the date is today', function (): void {
     $admin = userWithRole('admin');
     $category = aCategory();
 
-    Livewire::actingAs($admin)->test(Index::class)
-        ->call('create')
+    Livewire::actingAs($admin)->test(Manage::class)
         ->set('titleField', 'Meu primeiro post')
         ->set('slug', '')
         ->set('category_id', $category->id)
         ->set('published_at', now()->format('Y-m-d'))
-        ->set('content', 'Conteúdo do post.')
+        ->set('content', '<p>Conteúdo do post.</p>')
         ->call('save')
-        ->assertHasNoErrors();
+        ->assertHasNoErrors()
+        ->assertRedirect(route('admin.posts.index'));
 
     $post = Post::query()->where('slug', 'meu-primeiro-post')->first();
     expect($post)->not->toBeNull()
         ->and($post->status)->toBe(StatusPost::PUBLISHED)
-        ->and($post->user_id)->toBe($admin->id);
+        ->and($post->user_id)->toBe($admin->id)
+        ->and($post->content)->toBe('<p>Conteúdo do post.</p>');
 });
 
 it('keeps a future post pending', function (): void {
     $admin = userWithRole('admin');
     $category = aCategory();
 
-    Livewire::actingAs($admin)->test(Index::class)
-        ->call('create')
+    Livewire::actingAs($admin)->test(Manage::class)
         ->set('titleField', 'Post futuro')
         ->set('category_id', $category->id)
         ->set('published_at', now()->addWeek()->format('Y-m-d'))
@@ -55,6 +56,23 @@ it('keeps a future post pending', function (): void {
         ->assertHasNoErrors();
 
     expect(Post::query()->where('slug', 'post-futuro')->value('status'))->toBe(StatusPost::PENDING);
+});
+
+it('edits an existing post through the manage page', function (): void {
+    $admin = userWithRole('admin');
+    $post = Post::factory()->create(['title' => 'Antigo', 'content' => '<p>velho</p>', 'category_id' => aCategory()->id]);
+
+    Livewire::actingAs($admin)->test(Manage::class, ['post' => $post])
+        ->assertSet('titleField', 'Antigo')
+        ->set('titleField', 'Atualizado')
+        ->set('content', '<p>novo</p>')
+        ->call('save')
+        ->assertHasNoErrors()
+        ->assertRedirect(route('admin.posts.index'));
+
+    expect($post->fresh())
+        ->title->toBe('Atualizado')
+        ->content->toBe('<p>novo</p>');
 });
 
 it('publishes and unpublishes a post', function (): void {
@@ -69,8 +87,7 @@ it('publishes and unpublishes a post', function (): void {
 });
 
 it('validates required post fields', function (): void {
-    Livewire::actingAs(userWithRole('admin'))->test(Index::class)
-        ->call('create')
+    Livewire::actingAs(userWithRole('admin'))->test(Manage::class)
         ->set('titleField', '')
         ->set('category_id')
         ->set('content', '')
