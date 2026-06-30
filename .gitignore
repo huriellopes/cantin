@@ -30,3 +30,5 @@ yarn-error.log
 
 # Versão gravada no deploy (a partir da tag git)
 /VERSION
+
+.env.dusk.local
