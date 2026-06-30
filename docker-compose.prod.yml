@@ -40,7 +40,10 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD no .env}
     restart: always
     volumes:
-      - cantin-db:/var/lib/postgresql/data
+      # Bind-mount dos dados do Postgres — preserva a base de produção já
+      # existente em ./.docker/database (não usar volume nomeado, sob risco
+      # de subir o banco vazio e orfanizar os dados atuais).
+      - ./.docker/database:/var/lib/postgresql/data
     # Porta não exposta ao host em produção; acesso apenas pela rede interna.
     networks:
       - cantin
@@ -48,6 +51,3 @@ services:
 networks:
   cantin:
     driver: bridge
-
-volumes:
-  cantin-db:
