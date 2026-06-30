@@ -7,7 +7,9 @@
     <meta name="google-site-verification" content="YE-utvBYDHJCzV1g7jBT6a79BatD-F31NOT849JDLyM" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ asset('/assets/images/cantin.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="shortcut icon" href="{{ asset('assets/images/cantin.ico') }}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{{ asset('assets/images/CANTIn.png') }}">
     <title>{{ $title ?? config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -20,9 +22,8 @@
          class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
          :class="solid ? 'bg-white/95 shadow-sm backdrop-blur' : 'bg-transparent'">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-            <a href="{{ route('site.home') }}" wire:navigate class="text-2xl font-extrabold tracking-tight"
-               :class="solid ? 'text-slate-900' : 'text-white drop-shadow'">
-                Ca<span class="bg-gradient-to-r from-violet-500 to-pink-500 bg-clip-text text-transparent">NTI</span>n
+            <a href="{{ route('site.home') }}" wire:navigate class="flex items-center">
+                <img src="{{ asset('assets/images/CANTIn.png') }}" alt="CaNTIn" class="h-11 w-auto" />
             </a>
 
             @php
@@ -84,14 +85,8 @@
         <livewire:site.components.footer />
     @endif
 
-    {{-- Google Analytics --}}
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4VSY21XL8V"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-4VSY21XL8V');
-    </script>
+    {{-- Banner de cookies + Analytics/Ads carregados apenas com consentimento --}}
+    <x-cookie-consent />
 
     @livewireScripts
     {!! ToastMagic::scripts() !!}

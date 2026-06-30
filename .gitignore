@@ -21,3 +21,6 @@ yarn-error.log
 
 # Certificados Let's Encrypt (não versionar chaves/certs)
 .docker/certbot/
+
+# Versão gravada no deploy (a partir da tag git)
+/VERSION

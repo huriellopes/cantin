@@ -33,7 +33,7 @@ class LoginController extends Controller
                     ->withErrors(['message' => 'Usuário não encontrado!']);
             }
 
-            if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
+            if (auth()->attempt(['email' => $request->email, 'password' => $request->password], $request->boolean('remember'))) {
                 if (auth()->user()->hasRole('admin', 'super-admin')) {
                     return to_route('admin.dashboard');
                 }

@@ -14,6 +14,8 @@ it('serves public pages', function (string $path) {
     '/links',
     '/terreiros/cadastro',
     '/login',
+    '/politica-de-privacidade',
+    '/diretrizes',
 ]);
 
 it('serves every admin page for a super-admin', function (string $route) {
@@ -22,6 +24,7 @@ it('serves every admin page for a super-admin', function (string $route) {
         ->assertOk();
 })->with([
     'admin.dashboard',
+    'admin.profile',
     'admin.terreiros.index',
     'admin.nations.index',
     'admin.type-terreiros.index',

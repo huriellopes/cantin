@@ -11,6 +11,8 @@ use App\Livewire\Site\Pages\Blog\Posts;
 use App\Livewire\Site\Pages\Blog\Show;
 use App\Livewire\Site\Pages\ExternalLinks;
 use App\Livewire\Site\Pages\Home;
+use App\Livewire\Site\Pages\Legal\Guidelines;
+use App\Livewire\Site\Pages\Legal\Privacy;
 use App\Livewire\Site\Pages\PartnersEntities;
 use App\Livewire\Site\Pages\StaticPage;
 use App\Livewire\Site\Pages\Terreiros\Create;
@@ -34,6 +36,10 @@ class SiteRoute
                     ->name('partners-entities');
                 Route::get('/pessoas-trans', Transpeople::class)
                     ->name('trans-people');
+                Route::get('/politica-de-privacidade', Privacy::class)
+                    ->name('privacy');
+                Route::get('/diretrizes', Guidelines::class)
+                    ->name('guidelines');
 
                 // Terreiro Route
                 Route::name('terreiros.')
