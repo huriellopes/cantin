@@ -37,6 +37,10 @@ return [
         'endpoint' => env('API_VIACEP', 'https://viacep.com.br/ws'),
     ],
 
+    'ibge' => [
+        'endpoint' => env('API_IBGE', 'https://servicodados.ibge.gov.br/api/v1/localidades'),
+    ],
+
     'brasilapi' => [
         'cep_endpoint' => env('API_BRASILAPI_CEP', 'https://brasilapi.com.br/api/cep/v1'),
     ],
