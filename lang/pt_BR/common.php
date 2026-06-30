@@ -22,6 +22,8 @@ return [
     'back' => 'Voltar',
     'close' => 'Fechar',
     'export' => 'Exportar',
+    'all' => 'Todos',
+    'per_page' => 'Por página',
     // Estados de carregamento (anti duplo-clique)
     'processing' => 'Processando...',
     'saving' => 'Salvando...',

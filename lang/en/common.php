@@ -22,6 +22,8 @@ return [
     'back' => 'Back',
     'close' => 'Close',
     'export' => 'Export',
+    'all' => 'All',
+    'per_page' => 'Per page',
     // Loading states (prevents double-click)
     'processing' => 'Processing...',
     'saving' => 'Saving...',

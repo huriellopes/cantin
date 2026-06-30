@@ -19,9 +19,7 @@ use Livewire\WithPagination;
 #[Layout('components.layouts.admin')]
 abstract class ResourceComponent extends Component
 {
-    use HasAdminActions, WithPagination;
-
-    public string $search = '';
+    use HasAdminActions, WithDataTable, WithPagination;
 
     public bool $showModal = false;
 
@@ -120,18 +118,10 @@ abstract class ResourceComponent extends Component
 
     public function render()
     {
-        $query = $this->model()::query();
-
-        if ($this->search !== '' && $this->search !== '0') {
-            $query->where(function ($q): void {
-                foreach ($this->searchable() as $col) {
-                    $q->orWhere($col, 'like', "%{$this->search}%");
-                }
-            });
-        }
+        $records = $this->applyTable($this->model()::query(), $this->searchable());
 
         return view('livewire.admin.resource', [
-            'records' => $query->orderByDesc('id')->paginate(10),
+            'records' => $records,
             'fields' => $this->fields(),
             'heading' => $this->heading(),
             'singular' => $this->singular(),
@@ -157,6 +147,18 @@ abstract class ResourceComponent extends Component
     protected function searchable(): array
     {
         return ['name'];
+    }
+
+    /** @return array<int, string> */
+    protected function sortableColumns(): array
+    {
+        $columns = array_merge(['id'], array_keys($this->fields()));
+
+        if ($this->hasStatus()) {
+            $columns[] = 'status';
+        }
+
+        return $columns;
     }
 
     protected function hasStatus(): bool
