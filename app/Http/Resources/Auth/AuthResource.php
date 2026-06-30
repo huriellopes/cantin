@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Auth;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Date;
+use Override;
 
 class AuthResource extends JsonResource
 {
@@ -13,6 +16,7 @@ class AuthResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+    #[Override]
     public function toArray(Request $request): array
     {
         return [
@@ -21,7 +25,7 @@ class AuthResource extends JsonResource
             'email' => $this->email,
             'role' => $this->role->name,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'token' => explode('|', $this->createToken(Carbon::now())->plainTextToken)[1]
+            'token' => explode('|', (string) $this->createToken(Date::now())->plainTextToken)[1],
         ];
     }
 }

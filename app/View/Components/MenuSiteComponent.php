@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components;
 
 use Closure;
@@ -8,10 +10,6 @@ use Illuminate\View\Component;
 
 class MenuSiteComponent extends Component
 {
-
-    /**
-     * @param object $params
-     */
     public function __construct(
         public object $params,
     ) {}

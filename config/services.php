@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -35,8 +37,12 @@ return [
         'endpoint' => env('API_VIACEP', 'https://viacep.com.br/ws'),
     ],
 
+    'brasilapi' => [
+        'cep_endpoint' => env('API_BRASILAPI_CEP', 'https://brasilapi.com.br/api/cep/v1'),
+    ],
+
     'telegram_bot_api' => [
-        'token' => env('TELEGRAM_BOT_TOKEN', '7176783659:AAFeICdrguB-6Wsn4H9fA8D7YQ2waW9_CZs'),
-        'chat_id' => env('TELEGRAM_BOT_CHAT_ID', '-4637060450'),
+        'token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat_id' => env('TELEGRAM_CHAT_ID'),
     ],
 ];

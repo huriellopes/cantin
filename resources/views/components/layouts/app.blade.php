@@ -1,67 +1,99 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="author" content="Huriel Lopes">
     <meta name="description" content="CaNTIn - Cadastro Nacional de Terreiros Inclusivos" />
     <meta name="google-site-verification" content="YE-utvBYDHJCzV1g7jBT6a79BatD-F31NOT849JDLyM" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ asset('/assets/images/cantin.ico') }}" type="image/x-icon">
     <title>{{ $title ?? config('app.name') }}</title>
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="{{ asset('/assets/css/all.min.css') }}" />
-    @if (app()->isProduction())
-        <link rel="stylesheet" type="application/json" href="{{ asset('/build/manifest.json') }}"/>
-    @else
-        @vite(['resources/js/app.js'])
-    @endif
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     {!! ToastMagic::styles() !!}
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg bg-dark fixed-top" data-bs-theme="dark" wire:navigate>
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('site.home') }}" wire:navigate>
-                {{ config('app.name', 'Laravel') }}
+<body class="min-h-screen bg-white text-slate-800 antialiased">
+    @php $transparentNav = request()->routeIs('site.home'); @endphp
+    <nav x-data="{ open: false, scrolled: false, get solid() { return {{ $transparentNav ? 'false' : 'true' }} || this.scrolled || this.open } }"
+         @scroll.window="scrolled = window.scrollY > 10"
+         class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
+         :class="solid ? 'bg-white/95 shadow-sm backdrop-blur' : 'bg-transparent'">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
+            <a href="{{ route('site.home') }}" wire:navigate class="text-2xl font-extrabold tracking-tight"
+               :class="solid ? 'text-slate-900' : 'text-white drop-shadow'">
+                Ca<span class="bg-gradient-to-r from-violet-500 to-pink-500 bg-clip-text text-transparent">NTI</span>n
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+
+            @php
+                $links = [
+                    ['site.home', 'Início'],
+                    ['site.about', 'Sobre'],
+                    ['site.terreiros.search', 'Terreiros'],
+                    ['site.partners-entities', 'Entidades'],
+                    ['site.trans-people', 'Pessoas Trans'],
+                    ['site.blog.posts', 'Blog'],
+                    ['site.links.external', 'Links'],
+                ];
+            @endphp
+
+            <div class="hidden items-center gap-6 lg:flex">
+                @foreach ($links as [$route, $label])
+                    <a href="{{ route($route) }}" wire:navigate
+                       class="text-sm font-medium transition hover:opacity-70 {{ request()->routeIs($route) ? 'text-violet-600' : '' }}"
+                       :class="solid ? '{{ request()->routeIs($route) ? 'text-violet-600' : 'text-slate-700' }}' : 'text-white drop-shadow'">
+                        {{ $label }}
+                    </a>
+                @endforeach
+                @auth
+                    @if (auth()->user()->hasRole('admin', 'super-admin'))
+                        <a href="{{ route('admin.dashboard') }}" class="text-sm font-medium text-violet-600 hover:opacity-70">Painel</a>
+                    @endif
+                @endauth
+                <a href="{{ route('site.terreiros.create') }}" wire:navigate
+                   class="rounded-full bg-gradient-to-r from-violet-600 to-pink-500 px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:shadow-lg hover:brightness-110">
+                    Cadastrar terreiro
+                </a>
+            </div>
+
+            <button @click="open = !open" class="lg:hidden" aria-label="Menu"
+                    :class="solid ? 'text-slate-800' : 'text-white'">
+                <span x-show="!open">@svg('lucide-menu', 'h-7 w-7')</span>
+                <span x-show="open" x-cloak>@svg('lucide-x', 'h-7 w-7')</span>
             </button>
-            <x-layouts.partials.menu />
+        </div>
+
+        {{-- Menu mobile --}}
+        <div x-show="open" x-cloak x-transition class="border-t border-slate-100 bg-white px-4 py-4 lg:hidden">
+            <div class="flex flex-col gap-1">
+                @foreach ($links as [$route, $label])
+                    <a href="{{ route($route) }}" wire:navigate class="rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs($route) ? 'bg-violet-50 text-violet-700' : 'text-slate-700 hover:bg-slate-50' }}">{{ $label }}</a>
+                @endforeach
+                <a href="{{ route('site.terreiros.create') }}" wire:navigate class="mt-2 rounded-full bg-gradient-to-r from-violet-600 to-pink-500 px-5 py-2 text-center text-sm font-semibold text-white">Cadastrar terreiro</a>
+            </div>
         </div>
     </nav>
 
-    {{ $slot }}
+    <main class="{{ request()->routeIs('site.home') ? '' : 'pt-16' }}">
+        {{ $slot }}
+    </main>
 
     <livewire:site.components.whatsapp-button />
 
-    @if (!request()->routeIs('site.auth.login') && !request()->routeIs('site.terreiros.search'))
+    @if (! request()->routeIs('site.auth.login') && ! request()->routeIs('site.terreiros.search'))
         <livewire:site.components.footer />
     @endif
 
-    <script src="{{ asset('assets/js/jquery.js') }}"></script>
-    <script src="{{ asset('assets/js/popper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/js/all.min.js') }}"></script>
-
-    <!-- Google tag (gtag.js) -->
+    {{-- Google Analytics --}}
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4VSY21XL8V"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-
         function gtag(){dataLayer.push(arguments);}
-
         gtag('js', new Date());
-
         gtag('config', 'G-4VSY21XL8V');
     </script>
 
     @livewireScripts
     {!! ToastMagic::scripts() !!}
-    @yield('scripts')
 </body>
 </html>

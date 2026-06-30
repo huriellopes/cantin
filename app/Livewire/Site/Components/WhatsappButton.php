@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Components;
 
 use Livewire\Component;
@@ -11,6 +13,7 @@ class WhatsappButton extends Component
     public function openWhatsapp()
     {
         $url = "https://wa.me/{$this->phoneNumber}";
+
         return redirect($url);
     }
 

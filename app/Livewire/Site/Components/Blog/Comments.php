@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Components\Blog;
 
 use App\Enum\StatusPost;
@@ -13,14 +15,21 @@ use Livewire\Component;
 class Comments extends Component
 {
     public Post $post;
+
     public string $name = '';
+
     public string $email = '';
+
     public string $newComment = '';
+
     public int $replyingTo = 0;
+
     public array $replies = [];
+
     public array $showReplyForm = [];
 
     public $userLiked;
+
     public $userDisliked;
 
     public function mount(): void
@@ -38,24 +47,7 @@ class Comments extends Component
         $this->userDisliked = $this->post->dislikes()->where('user_id', '=', auth()->id())->exists();
     }
 
-    protected function rules(): array
-    {
-        return [
-            'name' => Auth::check() ? 'nullable' : 'required|min:3',
-            'email' => Auth::check() ? 'nullable' : 'required|email',
-            'newComment' => 'required|min:3',
-            'replies.*' => 'required|min:3',
-        ];
-    }
-
-    protected function messages() : array
-    {
-        return [
-            'newComment.required' => 'O campos comentário é obrigatório.',
-        ];
-    }
-
-    public function store() : void
+    public function store(): void
     {
         $post = Post::query()
             ->where('slug', '=', $this->post->slug)
@@ -105,7 +97,7 @@ class Comments extends Component
                 ]);
 
                 $parentComment->update([
-                    'parent_id' => $reply->id
+                    'parent_id' => $reply->id,
                 ]);
 
                 Log::info('User ' . auth()->user()->id . ' replied to comment ' . $parentComment->id . ' successfully.');
@@ -199,5 +191,22 @@ class Comments extends Component
         return view('livewire.site.components.blog.comments', [
             'comments' => $comments,
         ]);
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'name' => Auth::check() ? 'nullable' : 'required|min:3',
+            'email' => Auth::check() ? 'nullable' : 'required|email',
+            'newComment' => 'required|min:3',
+            'replies.*' => 'required|min:3',
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'newComment.required' => 'O campos comentário é obrigatório.',
+        ];
     }
 }

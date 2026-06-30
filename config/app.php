@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Providers\AppServiceProvider;
+use App\Providers\AuthServiceProvider;
+use App\Providers\EventServiceProvider;
+use App\Providers\RouteServiceProvider;
+use Geocoder\Laravel\Providers\GeocoderService;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -165,14 +172,12 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
+        AppServiceProvider::class,
+        AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\Filament\AdminPanelProvider::class,
-        App\Providers\Filament\UserCommonPanelProvider::class,
-        App\Providers\RouteServiceProvider::class,
-        Geocoder\Laravel\Providers\GeocoderService::class,
+        EventServiceProvider::class,
+        RouteServiceProvider::class,
+        GeocoderService::class,
     ])->toArray(),
 
     /*

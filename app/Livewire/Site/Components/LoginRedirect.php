@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Components;
 
 use Illuminate\Http\RedirectResponse;
@@ -7,9 +9,9 @@ use Livewire\Component;
 
 class LoginRedirect extends Component
 {
-    public function redirectToLogin() : RedirectResponse
+    public function redirectToLogin(): RedirectResponse
     {
-        return redirect()->route('filament.auth.login');
+        return redirect()->route('site.auth.login');
     }
 
     public function render()

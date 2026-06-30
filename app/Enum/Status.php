@@ -1,20 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enum;
 
 use BackedEnum;
-use Filament\Support\Contracts\HasColor;
-use Filament\Support\Contracts\HasIcon;
 
-enum Status: int implements HasColor, HasIcon
+enum Status: int
 {
-    case ACTIVE = 1;
-    case INACTIVE = 0;
-
-    /**
-     * @return string
-     */
-    public function label() : string
+    public function label(): string
     {
         return match ($this) {
             self::ACTIVE => 'Ativo',
@@ -22,9 +16,6 @@ enum Status: int implements HasColor, HasIcon
         };
     }
 
-    /**
-     * @return string|array|null
-     */
     public function getColor(): string|array|null
     {
         return match ($this) {
@@ -40,4 +31,6 @@ enum Status: int implements HasColor, HasIcon
             self::INACTIVE => 'heroicon-o-x-circle',
         };
     }
+    case ACTIVE = 1;
+    case INACTIVE = 0;
 }

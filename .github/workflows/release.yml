@@ -1,0 +1,45 @@
+name: Release
+
+# Cria uma tag e um GitHub Release a partir de uma versão informada manualmente.
+# Uso: aba Actions -> Release -> Run workflow -> informe a versão (ex.: 1.2.0).
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versão semântica, sem o prefixo "v" (ex.: 1.2.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Criar tag e release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Criar tag e GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          TAG="v${VERSION}"
+
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "::error::A tag $TAG já existe."
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin "$TAG"
+
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --generate-notes

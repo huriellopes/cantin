@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enum\Status as StatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Enum\Role as RoleEnum;
-use Carbon\Carbon;
 
-return new class extends Migration
+return new class() extends Migration
 {
     /**
      * Run the migrations.
@@ -37,32 +37,8 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        if (app()->isProduction()) {
-            DB::table('users')->insert([
-                [
-                    'name' => 'Huriel Lopes',
-                    'email' => 'huriellopes1996@gmail.com',
-                    'slug' => 'huriellopes',
-                    'email_verified_at' => Carbon::now(),
-                    'password' => bcrypt('Hpr#899629'),
-                    'role_id' => RoleEnum::SUPER,
-                    'status' => StatusEnum::ACTIVE,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ],
-                [
-                    'name' => 'Jorge Alan Baloni',
-                    'slug' => 'alanbaloni',
-                    'email' => 'seggvg@gmail.com',
-                    'email_verified_at' => Carbon::now(),
-                    'password' => bcrypt('Cantin#2025'),
-                    'role_id' => RoleEnum::ADMIN,
-                    'status' => StatusEnum::ACTIVE,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ],
-            ]);
-        }
+        // A criação de usuários administradores foi movida para o UserSeederTable,
+        // com credenciais lidas de variáveis de ambiente (sem segredos no código).
     }
 
     /**

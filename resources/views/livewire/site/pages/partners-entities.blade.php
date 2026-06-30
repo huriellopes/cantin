@@ -1,38 +1,25 @@
-<div class="container mt-4">
-    <div class="row mt-5">
-        <div class="col mt-2">
-            <h1 class="text-center">{{ __('Registration of Partner Entity') }}</h1>
+<div class="mx-auto max-w-3xl px-6 py-16">
+    <header class="text-center">
+        <h1 class="text-3xl font-extrabold text-slate-800 sm:text-4xl">{{ __('Registration of Partner Entity') }}</h1>
+        <p class="mt-2 text-slate-500">Cadastre sua organização e amplie o alcance da rede inclusiva.</p>
+    </header>
+
+    <form wire:submit.prevent="store" class="mt-10 space-y-5">
+        @include('components.partials.creates.address-phone')
+
+        <div>
+            <label for="activity_carried_out" class="mb-1 block text-sm font-medium text-slate-700">Atividade desenvolvida</label>
+            <textarea id="activity_carried_out" rows="5" wire:model.live="activity_carried_out"
+                      class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500"></textarea>
+            @error('activity_carried_out') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
         </div>
-    </div>
 
-    <div class="row mt-3 mb-4">
-        <div class="col">
-            <form wire:submit.prevent="store" class="needs-validation">
-                <div class="form-group">
-                    @include('components.partials.creates.address-phone')
-
-                    <div class="row">
-                        <div class="col-12 col-md-12">
-                            <label for="activity_carried_out" class="form-label">Atividade Desenvolvida</label>
-                            <textarea name="activity_carried_out" id="activity_carried_out" cols="30" rows="10" class="form-control @error('activity_carried_out') border-danger @enderror" autocomplete="off" wire:model.live="activity_carried_out"></textarea>
-                            @error('activity_carried_out') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="row mt-4">
-                        <div class="col">
-                            <button type="submit" class="btn btn-outline-primary" wire:loading.attr="disabled" wire:target="store">
-                                {{ __('Register') }}
-                                <span wire:loading wire:target="store" class="spinner-border spinner-border-sm" role="status">
-                                    <span class="visually-hidden">{{ __('Loading...') }}</span>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+        <div class="flex justify-end">
+            <button type="submit" wire:loading.attr="disabled" wire:target="store"
+                    class="rounded-full bg-gradient-to-r from-violet-600 to-pink-500 px-7 py-3 font-semibold text-white shadow-md transition hover:brightness-110 disabled:opacity-60">
+                <span wire:loading.remove wire:target="store">{{ __('Register') }}</span>
+                <span wire:loading wire:target="store">{{ __('Loading...') }}</span>
+            </button>
         </div>
-    </div>
+    </form>
 </div>

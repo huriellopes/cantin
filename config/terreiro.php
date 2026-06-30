@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'color_of_leadership' => [
         'amarela' => 'Amarela',
@@ -31,11 +33,11 @@ return [
     ],
     'suffered_aggregation' => [
         'sim' => 'Sim',
-        'não' => 'Não'
+        'não' => 'Não',
     ],
     'inclusion_of_the_name_of_the_land' => [
         'sim, eu autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos' => 'Sim, eu autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos',
-        'não, eu não autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos' => 'Não, eu não autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos'
+        'não, eu não autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos' => 'Não, eu não autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos',
     ],
     'suggestion_id' => [
         1 => 'Criticas',

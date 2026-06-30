@@ -1,32 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Traits;
 
-use DateTime;
-use Illuminate\Http\Client\ConnectionException;
-use JsonException;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
+use DateTime;
+use Dompdf\Dompdf;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use JsonException;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Throwable;
-use Exception;
 
 trait Utils
 {
-
     /**
      * Functions to clear scripts
      *
-     * @param string $variavel
      * @return string|string[]|null
      */
     public function clear_tags(string $variavel): array|string|null
@@ -34,30 +34,22 @@ trait Utils
         return preg_replace('(<(/?[^\>]+)>)', '', $variavel);
     }
 
-    /**
-     * @param string $variable
-     * @return array|string|null
-     */
     public static function clearMask(string $variable): array|string|null
     {
         return preg_replace('/[^0-9]/', '', $variable);
     }
 
     /**
-     * @param string $start_date
-     * @param string $end_date
-     * @param string $format
-     * @param string $slep
-     * @return array
      * @throws Exception
      */
-    public function intervalDate (string $start_date, string $end_date, string $format = 'Y-m-d', string $slep = '+1day'): array
+    public function intervalDate(string $start_date, string $end_date, string $format = 'Y-m-d', string $slep = '+1day'): array
     {
         $dateStart = new DateTime($start_date);
         $dateEnd = new DateTime($end_date);
 
         $rangeDate = [];
-        while($dateStart <= $dateEnd){
+
+        while ($dateStart <= $dateEnd) {
             $rangeDate[] = $dateStart->format($format);
             $dateStart = $dateStart->modify($slep);
         }
@@ -65,82 +57,65 @@ trait Utils
         return $rangeDate;
     }
 
-    public function maskPhone(string $phone, $type = "cel"): array|string
+    public function maskPhone(string $phone, $type = 'cel'): array|string
     {
         $formatedPhone = preg_replace('/[^0-9]/', '', $phone);
         $matches = [];
 
-        if ($type !== "cel") {
-            preg_match('/^([0-9]{2})([0-9]{4,5})([0-9]{4})$/', $formatedPhone, $matches);
+        if ($type !== 'cel') {
+            preg_match('/^(\d{2})(\d{4,5})(\d{4})$/', (string) $formatedPhone, $matches);
 
-            if ($matches) {
-                return '('.$matches[1].') '.$matches[2].'-'.$matches[3];
+            if ($matches !== []) {
+                return '(' . $matches[1] . ') ' . $matches[2] . '-' . $matches[3];
             }
         }
 
-        preg_match('/^([0-9]{2})([0-9]{4,5})([0-9]{4})$/', $formatedPhone, $matches);
+        preg_match('/^(\d{2})(\d{4,5})(\d{4})$/', (string) $formatedPhone, $matches);
 
-        if ($matches) {
-            return '('.$matches[1].') 9 '.$matches[2].'-'.$matches[3];
+        if ($matches !== []) {
+            return '(' . $matches[1] . ') 9 ' . $matches[2] . '-' . $matches[3];
         }
 
         return $phone;
     }
 
-    /**
-     * @param $param
-     * @return bool
-     */
     public function validateInt($param): bool
     {
-        if (is_int($param)) {
-            return false;
-        }
-
-        return true;
+        return !is_int($param);
     }
 
     /**
      * Api Return Pattern
-     *
-     * @param bool $success
-     * @param string|null $message
-     * @param array|object|null $data
-     * @param int $status
-     * @param Throwable|null $exception
-     * @param int|null $total
-     * @return JsonResponse
      */
-    public function returnResponse(bool $success, ?string $message, array|object|null $data, int $status, Throwable $exception = null, int $total = null) : JsonResponse
+    public function returnResponse(bool $success, ?string $message, array|object|null $data, int $status, ?Throwable $exception = null, ?int $total = null): JsonResponse
     {
         $response['success'] = $success;
         $response['status'] = $status;
-        $total ? $response['total'] = $total : "";
-        !empty($data) ? $response['data'] = $data : $response['message'] = $message;
 
-        if ($exception) {
-            if (config('app.debug')) {
-                $response['line'] = $exception->getLine();
-                $response['file'] = $exception->getFile();
-                $response['trace'] = $exception->getTrace();
-                $response['msg'] = $exception->getMessage();
-                $response['code'] = $exception->getCode();
-            }
+        if ($total) {
+            $response['total'] = $total;
+        }
+        empty($data) ? $response['message'] = $message : $response['data'] = $data;
+
+        if ($exception instanceof Throwable && config('app.debug')) {
+            $response['line'] = $exception->getLine();
+            $response['file'] = $exception->getFile();
+            $response['trace'] = $exception->getTrace();
+            $response['msg'] = $exception->getMessage();
+            $response['code'] = $exception->getCode();
         }
 
         return response()->json($response, $status);
     }
 
     /**
-     * @param string $email
-     * @return bool
      * @throws ValidationException
      */
-    public function validateEmail(string $email) : bool
+    public function validateEmail(string $email): bool
     {
         $user = new User();
 
-        $pattern = "/^[0-9a-z]([-_.]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,3}$/";
+        $pattern = '/^[0-9a-z]([-_.]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,3}$/';
 
         $getUserName = $this->getOFModel($user, 'username', '=', $email)->first();
         $getUserEmail = $this->getOFModel($user, 'email', '=', $email)->first();
@@ -154,42 +129,28 @@ trait Utils
         return true;
     }
 
-    /**
-     * @param Model $model
-     * @param string $field
-     * @param string $conditional
-     * @param string $param
-     * @return Collection
-     */
-    public function getOFModel(Model $model, string $field, string $conditional, string $param) : Collection
+    public function getOFModel(Model $model, string $field, string $conditional, string $param): Collection
     {
         return $model->where($field, $conditional, $param)->get();
     }
 
     /**
      * Logging in file
-     *
-     * @param string $channel
-     * @param string $message
-     * @param string $type
-     * @param array|object|NULL $data
-     * @param $exception
-     * @return void
      */
-    public function logSystem(string $channel, string $message, string $type = 'info', array|object $data = NULL, $exception = NULL): void
+    public function logSystem(string $channel, string $message, string $type = 'info', array|object|null $data = null, $exception = null): void
     {
         $response['Message'] = $message;
         $response['Type'] = $type;
         $response['data'] = $data;
 
-        if (auth()->user() & ($type === 'info' || $type === 'error')) {
-            $response['user'] = "User: ". auth()->user()->id;
+        if ((auth()->user() & ($type === 'info' || $type === 'error')) !== 0) {
+            $response['user'] = 'User: ' . auth()->user()->id;
         }
 
         if ($type === 'info') {
             Log::channel($channel)
                 ->info(response()->json([$response,
-                        'DateTime' => Carbon::now()->format('Y-m-d H:i:s')]).PHP_EOL);
+                    'DateTime' => Date::now()->format('Y-m-d H:i:s')]) . PHP_EOL);
         }
 
         if ($exception && $type === 'error') {
@@ -199,42 +160,36 @@ trait Utils
                 $response['trace'] = $exception->getTrace();
                 $response['msg'] = $exception->getMessage();
                 $response['code'] = $exception->getCode();
-                $response['dateTime'] = Carbon::now()->format('Y-m-d H:i:s');
+                $response['dateTime'] = Date::now()->format('Y-m-d H:i:s');
             }
 
-            Log::channel($channel)->error(response()->json($response).PHP_EOL);
+            Log::channel($channel)->error(response()->json($response) . PHP_EOL);
         }
     }
 
-    /**
-     * @param int $length
-     * @param string|null $NumberOrString
-     * @return string
-     */
-    public function generateHash(int $length = 10, string $NumberOrString = null): string
+    public function generateHash(int $length = 10, ?string $NumberOrString = null): string
     {
-        if (empty($NumberOrString)) {
+        if (in_array($NumberOrString, [null, '', '0'], true)) {
             $string = implode('', range('A', 'Z')); // ABCDEFGHIJKLMNOPQRSTUVWXYZ
             $nums = implode('', range(0, 9)); // 0123456789
 
-            $password = $string.$nums.$string.$nums; // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
+            $password = $string . $nums . $string . $nums; // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
         }
 
-        if ($NumberOrString === "string") {
+        if ($NumberOrString === 'string') {
             $string = implode('', range('A', 'Z'));
 
             $password = $string;
-        } else if ($NumberOrString === "integer") {
+        } elseif ($NumberOrString === 'integer') {
             $nums = implode('', range(0, 9));
 
             $password = $nums;
         }
 
-
         $pass = '';
 
-        for($i = 0; $i < $length; $i++) {
-            $pass .= $password[rand(0, strlen($password) - 1)];
+        for ($i = 0; $i < $length; $i++) {
+            $pass .= $password[random_int(0, mb_strlen($password) - 1)];
         }
 
         return $pass; // ex: q02TAq3
@@ -242,25 +197,16 @@ trait Utils
 
     /**
      * Function to set username
-     *
-     * @param string $name
-     * @return JsonResponse|string
      */
-    public function setUserNameUser (string $name): JsonResponse|string
+    public function setUserNameUser(string $name): JsonResponse|string
     {
         $parts = explode(' ', $name);
         $firstName = array_shift($parts);
         $lastName = array_pop($parts);
 
-        return strtolower($firstName.' '.$lastName); // ex.: fulanosilva
+        return mb_strtolower($firstName . ' ' . $lastName); // ex.: fulanosilva
     }
 
-    /**
-     * @param string $action
-     * @param string $type
-     * @param $exception
-     * @return bool
-     */
     public function loggingDatabase(string $action, string $type, $exception = null): bool
     {
         $content = null;
@@ -272,13 +218,13 @@ trait Utils
                 $content['trace'] = $exception->getTrace();
                 $content['msg'] = $exception->getMessage();
                 $content['code'] = $exception->getCode();
-                $content['dateTime'] = Carbon::now()->format('Y-m-d H:i:s');
+                $content['dateTime'] = Date::now()->format('Y-m-d H:i:s');
             }
 
             $content['msg'] = $exception->getMessage();
             $content['code'] = $exception->getCode();
             $content['file'] = $exception->getFile();
-            $content['dateTime'] = Carbon::now()->format('Y-m-d H:i:s');
+            $content['dateTime'] = Date::now()->format('Y-m-d H:i:s');
         }
 
         return DB::table('logs')->insert([
@@ -287,24 +233,18 @@ trait Utils
             'type' => $type,
             'content' => json_encode($content),
             'user_id' => auth()->check() ? auth()->user()->id : null,
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            'created_at' => Date::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Date::now()->format('Y-m-d H:i:s'),
         ]);
     }
 
-    /**
-     * @param string $data
-     * @return false|int
-     */
     public function verifyDate(string $data): false|int
     {
         return preg_match('/(^\d{4}-\d{2}-\d{2}$)/', $data);
     }
 
     /**
-     * @param string $view
-     * @param object|array $data
-     * @return \Barryvdh\DomPDF\PDF|\Dompdf\Dompdf
+     * @return \Barryvdh\DomPDF\PDF|Dompdf
      */
     public function PDFGenerate(string $view, object|array $data)
     {
@@ -316,34 +256,27 @@ trait Utils
     }
 
     /**
-     * @param string $endpoint
-     * @param string $params
-     * @param array|null $data
-     * @param string $method
      * @return array|mixed
+     *
      * @throws ConnectionException
      */
-    public function consultAPI(string $endpoint, string $params, array $data = null, string $method = 'GET'): mixed
+    public function consultAPI(string $endpoint, string $params, ?array $data = null, string $method = 'GET'): mixed
     {
         if ($method === 'GET') {
             return Http::acceptJson()->withHeaders([
                 'Content-Type' => 'application/json',
-            ])->get($endpoint.$params)->json();
+            ])->get($endpoint . $params)->json();
         }
 
         return Http::acceptJson()->withHeaders([
             'Content-Type' => 'application/json',
-        ])->post($endpoint.$params, $data)->json();
+        ])->post($endpoint . $params, $data)->json();
     }
 
     /**
-     * @param string $type
-     * @param Exception|Throwable|null $e
-     * @param string $message
-     * @param array|null $data
-     * @return void
+     * @param  Exception|Throwable|null  $e
      */
-    public static function webhook(string $type = "error", Exception|Throwable $e = null, string $message, array $data = null): void
+    public static function webhook(string $type, Throwable $e, string $message, ?array $data = null): void
     {
         if ($type === 'error') {
             DiscordAlert::message("Error: $message \nMensagem: {$e->getMessage()}\nArquivo: {$e->getFile()}\nLinha: {$e->getLine()}!", [
@@ -356,7 +289,7 @@ trait Utils
                         'name' => 'Cantin',
                     ],
                     'data' => json_encode($data),
-                ]
+                ],
             ]);
         }
     }
@@ -364,28 +297,28 @@ trait Utils
     /**
      * @throws JsonException
      */
-    public static function botCantinbr(Throwable|Exception $e, array $data = null): void
+    public static function botCantinbr(Throwable $e, ?array $data = null): void
     {
         $chatId = config('telegram.bots.cantinbrBot.chatID');
 
         $message = "🚨 **Erro na Aplicação Laravel** 🚨\n\n";
-        $message .= "Caminho: " . request()->fullUrl() . "\n";
-        $message .= "Mensagem: " . $e->getMessage() . "\n";
-        $message .= "Usuário logado: " . auth()->check() ? auth()->user()->id.'-'.auth()->user()->name : 'Não foi usuário logado' . "\n";
-        $message .= "Data e hora: " . Carbon::now()->format('Y-m-d H:i:s') . "\n";
-        $message .= "Dados: " . json_encode($data, JSON_THROW_ON_ERROR) . "\n";
-        $message .= "Arquivo: " . $e->getFile() . " (Linha: " . $e->getLine() . ")\n";
+        $message .= 'Caminho: ' . request()->fullUrl() . "\n";
+        $message .= 'Mensagem: ' . $e->getMessage() . "\n";
+        $message .= 'Usuário logado: ' . (auth()->check() ? auth()->user()->id . '-' . auth()->user()->name : 'Não foi usuário logado') . "\n";
+        $message .= 'Data e hora: ' . Date::now()->format('Y-m-d H:i:s') . "\n";
+        $message .= 'Dados: ' . json_encode($data, JSON_THROW_ON_ERROR) . "\n";
+        $message .= 'Arquivo: ' . $e->getFile() . ' (Linha: ' . $e->getLine() . ")\n";
 
         try {
             Telegram::sendMessage([
                 'chat_id' => $chatId,
                 'text' => $message,
-                'parse_mode' => 'Markdown'
+                'parse_mode' => 'Markdown',
             ]);
         } catch (Exception $e) {
             Log::channel('telegram')->error('Erro ao enviar mensagem para o Telegram:', [
                 'message' => $message,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }

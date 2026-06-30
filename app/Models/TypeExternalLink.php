@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enum\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 class TypeExternalLink extends Model
 {
@@ -14,6 +17,12 @@ class TypeExternalLink extends Model
         'status',
     ];
 
+    public function links(): HasMany
+    {
+        return $this->hasMany(ExternalLink::class);
+    }
+
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -21,13 +30,5 @@ class TypeExternalLink extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function links() : HasMany
-    {
-        return $this->hasMany(ExternalLink::class);
     }
 }

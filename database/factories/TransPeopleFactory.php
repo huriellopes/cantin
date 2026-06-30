@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Address;
 use App\Models\TransPeople;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
-/** @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TransPeople> */
+/** @extends Factory<TransPeople> */
 class TransPeopleFactory extends Factory
 {
     protected $model = TransPeople::class;

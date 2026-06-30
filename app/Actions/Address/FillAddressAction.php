@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Address;
 
-use RuntimeException;
 use App\Models\City;
 use App\Models\State;
 use App\Services\Address\ViaCepService;
 use App\Traits\Utils;
+use Exception;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
+use stdClass;
 use Symfony\Component\HttpFoundation\Response;
-use Exception;
 use Throwable;
 
 final class FillAddressAction
@@ -18,14 +21,12 @@ final class FillAddressAction
     use Utils;
 
     /**
-     * @param string $zipcode
-     * @return object
      * @throws Exception
      */
-    public static function exec(string $zipcode) : object
+    public static function exec(string $zipcode): stdClass
     {
         try {
-            if (empty($zipcode)) {
+            if ($zipcode === '' || $zipcode === '0') {
                 throw new RuntimeException(__('Invalid zipcode!'), Response::HTTP_BAD_REQUEST);
             }
 
@@ -43,13 +44,22 @@ final class FillAddressAction
                 ->pluck('id')
                 ->first();
 
-            $street = $address->address.','.str($address->zipcode)->replace('-', '').','.$address->neighborhood.','.$address->state .', Brasil';
-            $result = Geocoder::geocode($street)->get();
+            // Geocoding é best-effort: se o provedor (Google Maps) falhar ou não
+            // estiver configurado, o endereço ainda é preenchido (lat/long ficam nulos).
+            $latitude = null;
+            $longitude = null;
 
-            if ($result->isNotEmpty()) {
-                $firstResult = $result->first();
-                $latitude = $firstResult->getCoordinates()->getLatitude();
-                $longitude = $firstResult->getCoordinates()->getLongitude();
+            try {
+                $street = $address->address . ',' . str($address->zipcode)->replace('-', '') . ',' . $address->neighborhood . ',' . $address->state . ', Brasil';
+                $result = Geocoder::geocode($street)->get();
+
+                if ($result->isNotEmpty()) {
+                    $coordinates = $result->first()->getCoordinates();
+                    $latitude = $coordinates->getLatitude();
+                    $longitude = $coordinates->getLongitude();
+                }
+            } catch (Exception|Throwable $e) {
+                Log::warning('Geocoding indisponível; lat/long não preenchidos.', ['error' => $e->getMessage()]);
             }
 
             $data = [
@@ -64,18 +74,18 @@ final class FillAddressAction
 
             return (object) $data;
         } catch (Exception|Throwable $e) {
-            self::webhook('error', $e, 'Cep not found', null);
+            self::webhook('error', $e, 'Cep not found');
 
             Log::error($e->getMessage(), [
                 'line' => $e->getLine(),
-                'file' => $e->getFile()
+                'file' => $e->getFile(),
             ]);
 
             toastr()
                 ->timeOut(2000)
                 ->error(__('Error when searching for zip code!'));
 
-            throw new Exception(__('Error when searching for zip code!'), Response::HTTP_BAD_REQUEST);
+            throw new Exception(__('Error when searching for zip code!'), Response::HTTP_BAD_REQUEST, $e);
         }
     }
 }

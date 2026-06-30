@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Override;
 
 class Visit extends Model
 {
@@ -21,12 +24,13 @@ class Visit extends Model
     /**
      * @return string[]
      */
-    protected function casts() : array
+    #[Override]
+    protected function casts(): array
     {
         return [
             'visited_at' => 'datetime',
             'created_at' => 'datetime',
-            'updated_at' => 'datetime'
+            'updated_at' => 'datetime',
         ];
     }
 }

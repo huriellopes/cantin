@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Pages\Blog;
 
 use App\Enum\Status;
@@ -62,7 +64,7 @@ class Posts extends Component
             'posts' => Post::query()
                 ->with(['category:id,name', 'user:id,name'])
                 ->published()
-                ->when($this->selectedCategory, function($query) {
+                ->when($this->selectedCategory, function ($query) {
                     return $query->whereHas('category', function ($query) {
                         $query->where('slug', $this->selectedCategory);
                     });

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Enum\StatusPost;
 use App\Models\Post;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Date;
 
 class CheckPostPublishFuture extends Command
 {
@@ -26,15 +28,15 @@ class CheckPostPublishFuture extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $posts = Post::query()
-            ->where('published_at', '<=', Carbon::now())
+            ->where('published_at', '<=', Date::now())
             ->where('status', '=', StatusPost::PENDING)
             ->get();
 
         foreach ($posts as $post) {
-            if ($post->published_at->format('Y-m-d') === Carbon::now()->format('Y-m-d')) {
+            if ($post->published_at->format('Y-m-d') === Date::now()->format('Y-m-d')) {
                 dump('teste');
             }
         }

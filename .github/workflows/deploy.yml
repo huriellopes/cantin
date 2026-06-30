@@ -1,0 +1,60 @@
+name: Deploy
+
+# Deploy automático para o servidor (Contabo) via SSH.
+# Dispara quando um Release é publicado, ou manualmente.
+#
+# Secrets necessários (Settings -> Secrets and variables -> Actions):
+#   SSH_HOST       -> IP/host do servidor (ex.: 217.76.60.113)
+#   SSH_USER       -> usuário SSH
+#   SSH_KEY        -> chave privada SSH (conteúdo do arquivo)
+#   SSH_PORT       -> porta SSH (ex.: 22)
+#   DEPLOY_PATH    -> caminho do projeto no servidor (ex.: /var/www/cantin)
+#   DEPLOY_BRANCH  -> branch a publicar (opcional; padrão: main)
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy (Contabo)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -euo pipefail
+            cd "${{ secrets.DEPLOY_PATH }}"
+
+            BRANCH="${{ secrets.DEPLOY_BRANCH || 'main' }}"
+            COMPOSE="docker compose -f docker-compose.prod.yml"
+
+            echo "==> Atualizando código ($BRANCH)"
+            git fetch --all --prune
+            git reset --hard "origin/${BRANCH}"
+
+            echo "==> Subindo containers (build da imagem app)"
+            $COMPOSE build app
+            $COMPOSE up -d
+
+            echo "==> Dependências de produção"
+            $COMPOSE exec -T app composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+            echo "==> Assets"
+            $COMPOSE exec -T app npm ci
+            $COMPOSE exec -T app npm run build
+
+            echo "==> Migrações e otimização"
+            $COMPOSE exec -T app php artisan migrate --force
+            $COMPOSE exec -T app php artisan optimize
+
+            echo "==> Deploy concluído"

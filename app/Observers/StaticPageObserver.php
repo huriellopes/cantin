@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
 use App\Models\StaticPage;
@@ -12,7 +14,7 @@ class StaticPageObserver
      */
     public function created(StaticPage $staticPage): void
     {
-        Cache::forget('cantin-page-static-'.$staticPage->slug);
+        Cache::forget('cantin-page-static-' . $staticPage->slug);
     }
 
     /**
@@ -20,7 +22,7 @@ class StaticPageObserver
      */
     public function updated(StaticPage $staticPage): void
     {
-        Cache::forget('cantin-page-static-'.$staticPage->slug);
+        Cache::forget('cantin-page-static-' . $staticPage->slug);
     }
 
     /**
@@ -28,7 +30,7 @@ class StaticPageObserver
      */
     public function deleted(StaticPage $staticPage): void
     {
-        Cache::forget('cantin-page-static-'.$staticPage->slug);
+        Cache::forget('cantin-page-static-' . $staticPage->slug);
     }
 
     /**
@@ -36,7 +38,7 @@ class StaticPageObserver
      */
     public function restored(StaticPage $staticPage): void
     {
-        Cache::forget('cantin-page-static-'.$staticPage->slug);
+        Cache::forget('cantin-page-static-' . $staticPage->slug);
     }
 
     /**
@@ -44,6 +46,6 @@ class StaticPageObserver
      */
     public function forceDeleted(StaticPage $staticPage): void
     {
-        Cache::forget('cantin-page-static-'.$staticPage->slug);
+        Cache::forget('cantin-page-static-' . $staticPage->slug);
     }
 }

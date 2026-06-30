@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Pages\Auth;
 
 use Illuminate\Support\Facades\Cache;
@@ -26,7 +28,7 @@ class Login extends Component
     public function render()
     {
         if (auth()->check()) {
-            redirect()->route('filament.admin.pages.dashboard');
+            return redirect()->route('site.home');
         }
 
         return view('livewire.site.pages.auth.login');

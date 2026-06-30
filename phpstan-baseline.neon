@@ -1,0 +1,841 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined static method Geocoder\\Laravel\\Facades\\Geocoder\:\:geocode\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Actions/Address/FillAddressAction.php
+
+		-
+			message: '#^Call to static method loadView\(\) on an unknown class App\\Traits\\PDF\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Actions/Address/FillAddressAction.php
+
+		-
+			message: '#^Called ''first'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 2
+			path: app/Actions/Address/FillAddressAction.php
+
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 2
+			path: app/Actions/Address/FillAddressAction.php
+
+		-
+			message: '#^Method App\\Actions\\Address\\FillAddressAction\:\:PDFGenerate\(\) has invalid return type Barryvdh\\DomPDF\\PDF\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Actions/Address/FillAddressAction.php
+
+		-
+			message: '#^Method App\\Actions\\Address\\FillAddressAction\:\:PDFGenerate\(\) has invalid return type Dompdf\\Dompdf\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Actions/Address/FillAddressAction.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$e with type Throwable\|null is not subtype of native type Throwable\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Actions/Address/FillAddressAction.php
+
+		-
+			message: '#^Variable \$password might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: app/Actions/Address/FillAddressAction.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Actions/Address/GetCityOfStateAction.php
+
+		-
+			message: '#^Cannot call method format\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Console/Commands/CheckPostPublishFuture.php
+
+		-
+			message: '#^Match arm comparison between \$this\(App\\Enum\\Role\)&App\\Enum\\Role\:\:USER and App\\Enum\\Role\:\:USER is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: app/Enum/Role.php
+
+		-
+			message: '#^Method App\\Enum\\Role\:\:getColor\(\) never returns array\<string\> so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Enum/Role.php
+
+		-
+			message: '#^Method App\\Enum\\Role\:\:getColor\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Enum/Role.php
+
+		-
+			message: '#^Method App\\Enum\\Status\:\:getColor\(\) never returns array so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Enum/Status.php
+
+		-
+			message: '#^Method App\\Enum\\Status\:\:getColor\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Enum/Status.php
+
+		-
+			message: '#^Method App\\Enum\\Status\:\:getIcon\(\) never returns BackedEnum so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Enum/Status.php
+
+		-
+			message: '#^Method App\\Enum\\Status\:\:getIcon\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Enum/Status.php
+
+		-
+			message: '#^Method App\\Enum\\StatusPost\:\:getColor\(\) never returns array so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Enum/StatusPost.php
+
+		-
+			message: '#^Method App\\Enum\\StatusPost\:\:getColor\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Enum/StatusPost.php
+
+		-
+			message: '#^Call to an undefined method App\\Http\\Requests\\Auth\\LoginRequest\:\:authenticate\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/Auth/AuthenticatedSessionController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/AuthenticatedSessionController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$username\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Auth/ConfirmablePasswordController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/ConfirmablePasswordController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/EmailVerificationPromptController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/NewPasswordController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/PasswordResetLinkController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/RegisteredUserController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\Verified constructor expects Illuminate\\Contracts\\Auth\\MustVerifyEmail, App\\Models\\User\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/VerifyEmailController.php
+
+		-
+			message: '#^Call to static method loadView\(\) on an unknown class App\\Traits\\PDF\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Web/Auth/LoginController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Web\\Auth\\LoginController\:\:PDFGenerate\(\) has invalid return type Barryvdh\\DomPDF\\PDF\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Web/Auth/LoginController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Web\\Auth\\LoginController\:\:PDFGenerate\(\) has invalid return type Dompdf\\Dompdf\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Web/Auth/LoginController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$e with type Throwable\|null is not subtype of native type Throwable\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Web/Auth/LoginController.php
+
+		-
+			message: '#^Variable \$password might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: app/Http/Controllers/Web/Auth/LoginController.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Http/Middleware/RedirectIfAuthenticated.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\CityRequest\:\:rules\(\) should return array\<string\> but returns array\<string, array\<int, string\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Requests/CityRequest.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Auth\\AuthResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Auth/AuthResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Auth\\AuthResource\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Auth/AuthResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Auth\\AuthResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Auth/AuthResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Auth\\AuthResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Auth/AuthResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Auth\\AuthResource\:\:\$role\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Auth/AuthResource.php
+
+		-
+			message: '#^Call to an undefined method App\\Http\\Resources\\Auth\\AuthResource\:\:createToken\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Resources/Auth/AuthResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CityResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CityResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CityResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CityResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CityResource\:\:\$state_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CityResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommonResource\:\:\$answer\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommonResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommonResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommonResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\CommonResource\:\:\$question\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/CommonResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StateResource\:\:\$abbr\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StateResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StateResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StateResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StateResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StateResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StateResource\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StateResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int and App\\Enum\\Status\:\:ACTIVE will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/ExternalLinks/Index.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/ExternalLinks/Index.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int and App\\Enum\\Status\:\:ACTIVE will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Livewire/Admin/ExternalLinks/Index.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/ExternalLinks/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$city\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$state\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Parameter \#1 \$address of method App\\Livewire\\Admin\\PartnerEntities\\Index\:\:fillAddressFrom\(\) expects App\\Models\\Address\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int and App\\Enum\\Status\:\:ACTIVE will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>abbr" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Cannot call method format\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Livewire/Admin/Posts/Index.php
+
+		-
+			message: '#^Cannot call method startOfDay\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/Posts/Index.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type App\\Enum\\StatusPost\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Posts/Index.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 3
+			path: app/Livewire/Admin/Posts/Index.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Models\\Category\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Posts/Index.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Models\\User\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Posts/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/Support/ResourceComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/Support/ResourceComponent.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Terreiro\:\:\$question\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$city\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$state\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$zipcode\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Relation ''question'' is not found in App\\Models\\Terreiro model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>abbr" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>address" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$city\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$state\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Parameter \#1 \$address of method App\\Livewire\\Admin\\TransPeoples\\Index\:\:fillAddressFrom\(\) expects App\\Models\\Address\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int and App\\Enum\\Status\:\:ACTIVE will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>abbr" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Livewire/Admin/Users/Index.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\<0, max\>\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Livewire/Admin/Users/Index.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int and App\\Enum\\Status\:\:ACTIVE will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Livewire/Admin/Users/Index.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Livewire/Admin/Users/Index.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type int\<0, max\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Livewire/Admin/Users/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Livewire/Site/Components/Blog/Comments.php
+
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: app/Livewire/Site/Pages/Auth/Register.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type \$this\(App\\Livewire\\Site\\Pages\\ExternalLinks\)\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Site/Pages/ExternalLinks.php
+
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: app/Livewire/Site/Pages/PartnersEntities.php
+
+		-
+			message: '#^Parameter \#1 \$zipcode of static method App\\Actions\\Address\\FillAddressAction\:\:exec\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/PartnersEntities.php
+
+		-
+			message: '#^Parameter \#2 \$subject of function preg_match expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/PartnersEntities.php
+
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 2
+			path: app/Livewire/Site/Pages/Terreiros/Create.php
+
+		-
+			message: '#^Parameter \#1 \$zipcode of static method App\\Actions\\Address\\FillAddressAction\:\:exec\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/Terreiros/Create.php
+
+		-
+			message: '#^Parameter \#2 \$subject of function preg_match expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/Terreiros/Create.php
+
+		-
+			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 2
+			path: app/Livewire/Site/Pages/Transpeople.php
+
+		-
+			message: '#^Parameter \#1 \$zipcode of static method App\\Actions\\Address\\FillAddressAction\:\:exec\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/Transpeople.php
+
+		-
+			message: '#^Parameter \#2 \$subject of function preg_match expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/Transpeople.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\Address\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Address.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\City\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/City.php
+
+		-
+			message: '#^PHPDoc tag @property has invalid value \(\$answer\)\: Unexpected token "\$answer", expected type at offset 84 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Models/CommonQuestion.php
+
+		-
+			message: '#^PHPDoc tag @property has invalid value \(\$id\)\: Unexpected token "\$id", expected type at offset 44 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Models/CommonQuestion.php
+
+		-
+			message: '#^PHPDoc tag @property has invalid value \(\$question\)\: Unexpected token "\$question", expected type at offset 61 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Models/CommonQuestion.php
+
+		-
+			message: '#^PHPDoc tag @property has invalid value \(\$status\)\: Unexpected token "\$status", expected type at offset 105 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Models/CommonQuestion.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\CommonQuestion\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/CommonQuestion.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\NationsTerreiro\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/NationsTerreiro.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\PartnerEntity\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/PartnerEntity.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\Post\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\Role\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Role.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\State\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/State.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\Suggestion\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Suggestion.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\TerreiroQuestion\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/TerreiroQuestion.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\TransPeople\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/TransPeople.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\TypePeople\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/TypePeople.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\TypeTerreiro\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/TypeTerreiro.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Call to function in_array\(\) with arguments int\<0, max\>, array\{App\\Enum\\Role\:\:SUPER, App\\Enum\\Role\:\:ADMIN\} and true will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int\<0, max\> and App\\Enum\\Role\:\:SUPER will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\Visit\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Visit.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: app/Services/Auth/LoginService.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: app/Services/Auth/LoginService.php
+
+		-
+			message: '#^Trait App\\Traits\\Requests is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: app/Traits/Requests.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/View/Components/GuestLayout.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/View/Components/MenuSiteComponent.php

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Enum\Status;
@@ -7,9 +9,8 @@ use App\Models\Address;
 use App\Models\PartnerEntity;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
-/** @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PartnerEntity> */
+/** @extends Factory<PartnerEntity> */
 class PartnerEntityFactory extends Factory
 {
     protected $model = PartnerEntity::class;

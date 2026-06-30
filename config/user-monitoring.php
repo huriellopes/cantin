@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Archicture\Entities\Users\Models\User;
+
 return [
     /*
      * User properties.
@@ -10,7 +14,7 @@ return [
         /*
          * User model.
          */
-        'model' => \App\Archicture\Entities\Users\Models\User::class,
+        'model' => User::class,
 
         /*
          * Foreign Key column name.
@@ -51,7 +55,7 @@ return [
          */
         'expect_pages' => [
             'login',
-            'logout'
+            'logout',
         ],
 
         /*
@@ -74,12 +78,12 @@ return [
          *
          * You can set true/false for monitor actions like (store, update, and ...).
          */
-        'on_store'      => true,
-        'on_update'     => true,
-        'on_destroy'    => true,
-        'on_read'       => true,
-        'on_restore'    => false, // Release for next version :)
-        'on_replicate'  => false, // Release for next version :)
+        'on_store' => true,
+        'on_update' => true,
+        'on_destroy' => true,
+        'on_read' => true,
+        'on_restore' => false, // Release for next version :)
+        'on_replicate' => false, // Release for next version :)
     ],
 
     /*

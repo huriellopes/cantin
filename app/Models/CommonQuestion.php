@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enum\Status;
 use Illuminate\Database\Eloquent\Model;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 /**
  * Class CommonQuestion
- * @package App\Models
  *
  * @property $id
  * @property $question
@@ -25,23 +27,24 @@ class CommonQuestion extends Model
     protected $fillable = [
         'question',
         'answer',
-        'status'
+        'status',
     ];
+
+    public function scopeActive()
+    {
+        return $this->where('status', '=', Status::ACTIVE);
+    }
 
     /**
      * @return string[]
      */
-    protected function casts() : array
+    #[Override]
+    protected function casts(): array
     {
         return [
             'status' => Status::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-    }
-
-    public function scopeActive()
-    {
-        return $this->where('status', '=', Status::ACTIVE);
     }
 }

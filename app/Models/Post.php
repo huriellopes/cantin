@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enum\StatusPost;
@@ -8,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 /**
@@ -27,7 +30,7 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
  */
 class Post extends Model
 {
-    use KeepsDeletedModels, HasFactory;
+    use HasFactory, KeepsDeletedModels;
 
     /**
      * @var string[]
@@ -39,32 +42,12 @@ class Post extends Model
         'main_image',
         'published_at',
         'status',
-        'likes',
-        'dislikes',
         'views',
         'user_id',
         'category_id',
     ];
 
-    /**
-     * @return string[]
-     */
-    protected function casts(): array
-    {
-        return [
-            'status' => StatusPost::class,
-            'likes' => 'integer',
-            'dislikes' => 'integer',
-            'views' => 'integer',
-            'published_at' => 'datetime',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
-    }
-
-    /**
-     * @return string
-     */
+    #[Override]
     public function getRouteKeyName(): string
     {
         return 'slug';
@@ -75,54 +58,20 @@ class Post extends Model
         return $this->where('status', '=', StatusPost::PUBLISHED);
     }
 
-    /**
-     * @param $query
-     * @param string|null $search
-     * @return void
-     */
-    public function scopeSearch($query, ?string $search = null): void
-    {
-        if (!empty($search)) {
-            collect(explode(' ', $search))
-                ->filter()
-                ->each(function ($term) use ($query) {
-                    $term = $term."%";
-
-                    $query->where(function ($query) use ($term) {
-                        $query->where('title', 'like', $term)
-                            ->orWhere('content', 'like', $term)
-                            ->orWhereIn('category_id', Category::query()
-                                ->where('slug', 'like', $term)
-                                ->pluck('id'));
-                    });
-                });
-        }
-    }
-
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function comments() : HasMany
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class)
-            ->whereNull('parent_id')
-            ->orderBy('created_at', 'desc');
+            ->whereNull('parent_id')->latest();
     }
 
     public function likes(): HasMany
@@ -136,5 +85,39 @@ class Post extends Model
     public function dislikes(): HasMany
     {
         return $this->hasMany(Dislike::class); // Ou belongsToMany(User::class, 'dislikes');
+    }
+
+    /**
+     * @return string[]
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'status' => StatusPost::class,
+            'views' => 'integer',
+            'published_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
+
+    protected function scopeSearch($query, ?string $search = null): void
+    {
+        if (!in_array($search, [null, '', '0'], true)) {
+            collect(explode(' ', $search))
+                ->filter()
+                ->each(function (string $term) use ($query): void {
+                    $term .= '%';
+
+                    $query->where(function ($query) use ($term): void {
+                        $query->where('title', 'like', $term)
+                            ->orWhere('content', 'like', $term)
+                            ->orWhereIn('category_id', Category::query()
+                                ->where('slug', 'like', $term)
+                                ->pluck('id'));
+                    });
+                });
+        }
     }
 }

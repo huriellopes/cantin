@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Pages;
 
 use App\Enum\Status;
@@ -27,7 +29,7 @@ class Home extends Component
 
         $commons = Cache::remember('commons-questions-cantin', 60 * 60 * 24, function () {
             return CommonQuestion::query()
-                ->select('id', 'answer','question')
+                ->select('id', 'answer', 'question')
                 ->where('status', '=', Status::ACTIVE)
                 ->orderBy('id', 'asc')
                 ->get()

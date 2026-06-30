@@ -1,29 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Auth;
 
 use App\Enum\Role;
 use App\Enum\Status;
 use App\Http\DTO\Auth\RegisterDTO;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Auth\Events\Lockout;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Exception;
 
 class LoginService
 {
-    /**
-     * @param LoginRequest $request
-     * @return User|null
-     */
-    public function HasLogin(LoginRequest $request) : ?User
+    public function HasLogin(LoginRequest $request): ?User
     {
         $user = User::query()
             ->where('email', '=', $request->get('email'))
@@ -47,7 +42,7 @@ class LoginService
         return $user;
     }
 
-    public function HasRegister(RegisterDTO $params) : ?User
+    public function HasRegister(RegisterDTO $params): ?User
     {
         $userAlreadyExists = User::query()
             ->where('email', '=', $params->email)
@@ -60,21 +55,19 @@ class LoginService
             ]);
         }
 
-        $user = User::query()->create([
+        return User::query()->create([
             'name' => $params->name,
             'slug' => Str::slug($params->name),
             'email' => $params->email,
-            'email_verified_at' => Carbon::now(),
+            'email_verified_at' => Date::now(),
             'password' => Hash::make($params->password),
             'role_id' => Role::USER,
         ]);
-
-        return $user;
     }
 
-    private function ensureIsNotRateLimited($request): void
+    private function ensureIsNotRateLimited(LoginRequest $request): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -90,11 +83,8 @@ class LoginService
         ]);
     }
 
-    /**
-     * @return string
-     */
     private function throttleKey(): string
     {
-        return Str::transliterate(Str::lower(request()->email).'|'.request()->ip);
+        return Str::transliterate(Str::lower(request()->email) . '|' . request()->ip);
     }
 }

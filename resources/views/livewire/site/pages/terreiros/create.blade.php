@@ -1,328 +1,232 @@
-@assets
-<style>
-    .steps {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-        margin-top: 30px;
-    }
+@php
+    $field = 'block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500';
+    $label = 'mb-1 block text-sm font-medium text-slate-700';
+    $err = 'mt-1 text-xs text-rose-600';
+@endphp
 
-    .step {
-        display: flex;
-        align-items: center;
-        margin: 0 10px;
-    }
+<div class="mx-auto max-w-3xl px-6 py-16">
+    <header class="text-center">
+        <h1 class="text-3xl font-extrabold text-slate-800 sm:text-4xl">Cadastro de Terreiros Inclusivos</h1>
+    </header>
 
-    .step-number {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background-color: #ccc;
-        color: #fff;
-        margin-right: 5px;
-    }
-
-    .step.active .step-number {
-        background-color: #007bff;
-    }
-</style>
-
-@endassets
-<div class="container mt-5">
-    <div class="row mt-5">
-        <div class="col">
-            <div class="steps">
-                <div class="step @if ($currentStep >= 1) active @endif">
-                    <span class="step-number">1</span>
-                    <span class="step-text">Dados do Terreiro</span>
-                </div>
-                <div class="step @if ($currentStep >= 2) active @endif">
-                    <span class="step-number">2</span>
-                    <span class="step-text">Perguntas</span>
-                </div>
+    {{-- Steps --}}
+    <div class="mt-8 flex items-center justify-center gap-4">
+        @foreach (['Dados do Terreiro', 'Perguntas'] as $i => $stepLabel)
+            @php $n = $i + 1; @endphp
+            <div class="flex items-center gap-2">
+                <span class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold text-white {{ $currentStep >= $n ? 'bg-violet-600' : 'bg-slate-300' }}">{{ $n }}</span>
+                <span class="text-sm font-medium {{ $currentStep >= $n ? 'text-slate-800' : 'text-slate-400' }}">{{ $stepLabel }}</span>
             </div>
-        </div>
+            @if (! $loop->last)<span class="h-px w-10 bg-slate-300"></span>@endif
+        @endforeach
     </div>
 
-    <div class="row mt-2">
-        <div class="col text-center">
-            <h2>Cadastro de Terreiros inclusivos</h2>
-        </div>
-    </div>
-
-    <div class="row mt-3">
-        <form wire:submit.prevent="store" class="needs-validation">
-            @csrf
-            @if($currentStep === 1)
-                <fieldset class="form-group border p-3">
-                    <legend class="float-none w-auto px-1">Dados do Terreiro</legend>
-                    <div class="row">
-                        <div class="col-md-12 col-12">
-                            <label for="name">Nome do Terreiro</label>
-                            <input type="text" name="name" id="name" class="form-control @error('name') border-danger @enderror" wire:model.live="name" />
-                            @error('name') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+    <form wire:submit.prevent="store" class="mt-10 space-y-5">
+        @csrf
+        @if ($currentStep === 1)
+            <fieldset class="rounded-2xl border border-slate-200 p-5">
+                <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Dados do terreiro</legend>
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label for="name" class="{{ $label }}">Nome do Terreiro</label>
+                        <input type="text" id="name" wire:model.live="name" class="{{ $field }}" />
+                        @error('name') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <label for="nation_terreiro_id">{{ __('Nation') }}</label>
-                            <select name="nation_terreiro_id" id="nation_terreiro_id" class="form-control @error('nation_terreiro_id') border-danger @enderror" wire:model.live="nation_terreiro_id">
-                                <option selected value="">{{ __('Select the nation') }}</option>
-                                @foreach ($nations as $nation)
-                                    <option value="{{ $nation->id }}">{{ $nation->name }}</option>
-                                @endforeach
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                            <label for="nation_terreiro_id" class="{{ $label }}">{{ __('Nation') }}</label>
+                            <select id="nation_terreiro_id" wire:model.live="nation_terreiro_id" class="{{ $field }}">
+                                <option value="">{{ __('Select the nation') }}</option>
+                                @foreach ($nations as $nation)<option value="{{ $nation->id }}">{{ $nation->name }}</option>@endforeach
                             </select>
-                            @error('nation_terreiro_id') <div class="text-danger">{{ $message }}</div> @enderror
+                            @error('nation_terreiro_id') <p class="{{ $err }}">{{ $message }}</p> @enderror
                         </div>
-                        <div class="col-md-6 col-12">
-                            <label for="phone">Telefone</label>
-                            <input type="text" class="form-control @error('phone') border-danger @enderror" name="phone" id="phone" x-mask="(99) 9 9999-9999" wire:model.live="phone" />
-                            @error('phone') <div class="text-danger">{{ $message }}</div> @enderror
+                        <div>
+                            <label for="phone" class="{{ $label }}">Telefone</label>
+                            <input type="text" id="phone" x-mask="(99) 9 9999-9999" wire:model.live="phone" class="{{ $field }}" />
+                            @error('phone') <p class="{{ $err }}">{{ $message }}</p> @enderror
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <label for="leadership_orunko">Orukó ou nome da liderança</label>
-                            <input type="text" class="form-control @error('leadership_orunko') border-danger @enderror" name="leadership_orunko" id="leadership_orunko" wire:model.live="leadership_orunko" />
-                            @error('leadership_orunko') <div class="text-danger">{{ $message }}</div> @enderror
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                            <label for="leadership_orunko" class="{{ $label }}">Orukó ou nome da liderança</label>
+                            <input type="text" id="leadership_orunko" wire:model.live="leadership_orunko" class="{{ $field }}" />
+                            @error('leadership_orunko') <p class="{{ $err }}">{{ $message }}</p> @enderror
                         </div>
-                        <div class="col-md-6 col-12">
-                            <label for="color_of_leadership">Cor de pele da liderança</label>
-                            <select name="color_of_leadership" id="color_of_leadership" class="form-control @error('color_of_leadership') border-danger @enderror" wire:model.live="color_of_leadership">
-                                <option selected value="">Selecione a cor de pele</option>
-                                @foreach(config('color-leader.list') as $color => $name)
-                                    <option value="{{ $color }}">{{ $name }}</option>
-                                @endforeach
+                        <div>
+                            <label for="color_of_leadership" class="{{ $label }}">Cor de pele da liderança</label>
+                            <select id="color_of_leadership" wire:model.live="color_of_leadership" class="{{ $field }}">
+                                <option value="">Selecione a cor de pele</option>
+                                @foreach (config('color-leader.list') as $color => $name)<option value="{{ $color }}">{{ $name }}</option>@endforeach
                             </select>
-                            @error('color_of_leadership') <div class="text-danger">{{ $message }}</div> @enderror
+                            @error('color_of_leadership') <p class="{{ $err }}">{{ $message }}</p> @enderror
                         </div>
                     </div>
-                </fieldset>
+                </div>
+            </fieldset>
 
-                <fieldset class="form-group border p-3 mt-3">
-                    <legend class="float-none w-auto px-1">Endereço do Terreiro</legend>
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <label for="zipcode" class="form-label">{{ __('Zip Code') }}</label>
-                            <div class="input-group">
-                                <input type="text" name="zipcode" id="zipcode" class="form-control @error('zipcode') border-danger @enderror" maxlength="9" wire:model.live="zipcode" x-mask="99999-999" />
-                                <button class="btn btn-outline-secondary zipcode-search" type="button" id="button-addon2" wire:click="searchZipCode" wire:loading.attr="disabled">
-                                    <i class="fa-solid fa-magnifying-glass" id="zipcode-search"></i>
-                                    <span wire:loading wire:target="searchZipCode" class="spinner-border spinner-border-sm" role="status">
-                                        <span class="visually-hidden">{{ __('Loading...') }}</span>
-                                    </span>
-                                </button>
-                            </div>
-                            @error('zipcode') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 col-12 mt-2">
-                            <label for="address">{{ __('Address') }}</label>
-                            <input type="text" name="street" id="street" class="form-control @error('street') border-danger @enderror" wire:model.live="street" value="{{ $street }}" />
-                            @error('street') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <label for="complement">{{ __('Complement') }}</label>
-                            <input type="text" name="complement" id="complement" class="form-control @error('complement') border-danger @enderror" wire:model.live="complement" value="{{ $complement }}" />
-                            @error('complement') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <label for="neighborhood">{{ __('Neighborhood') }}</label>
-                            <input type="text" name="neighborhood" id="neighborhood" class="form-control @error('neighborhood') border-danger @enderror" wire:model.live="neighborhood" value="{{ $neighborhood }}" />
-                            @error('neighborhood') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <label for="state_id">{{ __('State') }}</label>
-                            <select name="state_id" id="state_id" class="form-control @error('state_id') border-danger @enderror" wire:model.live="state_id">
-                                <option selected value="">{{ __('Select the state') }}</option>
-                                @foreach($states as $state)
-                                    <option value="{{ $state->id }}" {{ $state_id === $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
-                                @endforeach
-                                @error('state_id') <div class="text-danger">{{ $message }}</div> @enderror
-                            </select>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <label for="city_id">{{ __('City') }}</label>
-                            <select name="city_id" id="city_id" class="form-control @error('city_id') border-danger @enderror" wire:model.live="city_id" wire:loading.attr="disabled" wire:target="state_id">
-                                <option selected value="">{{ __('Select the city') }}</option>
-                                @if (!empty($cities))
-                                    @foreach ($cities as $city)
-                                        <option value="{{ $city->id }}" {{ $city_id === $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                            @error('city_id') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <input type="hidden" class="form-control" wire:model="latitude" value="{{ $latitude }}" />
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <input type="hidden" class="form-control" wire:model="longitude" value="{{ $longitude }}" />
-                        </div>
-                    </div>
-                </fieldset>
-
-                <div class="form-group">
-                    <div class="row mt-4 mb-4">
-                        <div class="col">
-                            <button type="button" class="btn btn-outline-primary" wire:click="nextStep" wire:loading.attr="disabled">
-                                Próxima Etapa
-                                <span wire:loading wire:target="nextStep" class="spinner-border spinner-border-sm" role="status">
-                                    <span class="visually-hidden">{{ __('Loading...') }}</span>
-                                </span>
+            <fieldset class="rounded-2xl border border-slate-200 p-5">
+                <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Endereço do terreiro</legend>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label for="zipcode" class="{{ $label }}">{{ __('Zip Code') }}</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="zipcode" maxlength="9" x-mask="99999-999" wire:model.live="zipcode" class="{{ $field }}" />
+                            <button type="button" wire:click="searchZipCode" wire:loading.attr="disabled" wire:target="searchZipCode" class="shrink-0 rounded-lg bg-slate-100 px-3 text-sm font-medium text-slate-600 hover:bg-slate-200">
+                                <span wire:loading.remove wire:target="searchZipCode">Buscar</span><span wire:loading wire:target="searchZipCode">...</span>
                             </button>
                         </div>
+                        @error('zipcode') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="street" class="{{ $label }}">{{ __('Address') }}</label>
+                        <input type="text" id="street" wire:model.live="street" class="{{ $field }}" />
+                        @error('street') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="complement" class="{{ $label }}">{{ __('Complement') }}</label>
+                        <input type="text" id="complement" wire:model.live="complement" class="{{ $field }}" />
+                        @error('complement') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="neighborhood" class="{{ $label }}">{{ __('Neighborhood') }}</label>
+                        <input type="text" id="neighborhood" wire:model.live="neighborhood" class="{{ $field }}" />
+                        @error('neighborhood') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="state_id" class="{{ $label }}">{{ __('State') }}</label>
+                        <select id="state_id" wire:model.live="state_id" class="{{ $field }}">
+                            <option value="">{{ __('Select the state') }}</option>
+                            @foreach ($states as $state)<option value="{{ $state->id }}">{{ $state->name }}</option>@endforeach
+                        </select>
+                        @error('state_id') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="city_id" class="{{ $label }}">{{ __('City') }}</label>
+                        <select id="city_id" wire:model.live="city_id" wire:loading.attr="disabled" wire:target="state_id" class="{{ $field }}">
+                            <option value="">{{ __('Select the city') }}</option>
+                            @if (! empty($cities))@foreach ($cities as $city)<option value="{{ $city->id }}">{{ $city->name }}</option>@endforeach @endif
+                        </select>
+                        @error('city_id') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                 </div>
-            @elseif($currentStep === 2)
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <label for="type_people_id">Qual a identidade de gênero da liderança do terreiro?</label>
-                            <select name="type_people_id" id="type_people_id" class="form-control @error('type_people_id') border-danger @enderror" wire:model.live="type_people_id">
-                                <option selected value="">Selecione a identidade de gênero</option>
-                                @foreach($typePeoples as $typePeople)
-                                    <option value="{{ $typePeople->id }}">{{ $typePeople->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('type_people_id') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <label for="number_of_children_of_saint">Quantos membros ativos o terreiro tem?</label>
-                            <input type="number" class="form-control @error('number_of_children_of_saint') border-danger @enderror" name="number_of_children_of_saint" id="number_of_children_of_saint" wire:model.live="number_of_children_of_saint" />
-                            @error('number_of_children_of_saint') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                    </div>
+                <input type="hidden" wire:model="latitude" />
+                <input type="hidden" wire:model="longitude" />
+            </fieldset>
 
-                    <div class="row">
-                        <div class="col-md-6 col-12 mt-4">
-                            <label for="number_of_children_of_saint_trans">Quantas pessoas trans/travestis são integrantes desse terreiro?</label>
-                            <input type="number" class="form-control @error('number_of_children_of_saint_trans') border-danger @enderror" name="number_of_children_of_saint_trans" id="number_of_children_of_saint_trans" wire:model.live="number_of_children_of_saint_trans" />
-                            @error('number_of_children_of_saint_trans') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <label for="trans_men_and_women">As pessoas trans do terreiro usam roupas segundo o gênero que se identificam? Ex. mulheres trans usam saia? Homens trans usam calça?</label>
-                            <select name="trans_men_and_women" id="trans_men_and_women" class="form-control @error('trans_men_and_women') border-danger @enderror" wire:model.live="trans_men_and_women">
-                                <option selected value="">Selecione a opção</option>
-                                <option value="sim, usam sempre">sim, usam sempre</option>
-                                <option value="usam apenas nas funções internas">usam apenas nas funções internas</option>
-                                <option value="não">não</option>
-                            </select>
-                            @error('trans_men_and_women') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+            <div class="flex justify-end">
+                <button type="button" wire:click="nextStep" wire:loading.attr="disabled"
+                        class="rounded-full bg-gradient-to-r from-violet-600 to-pink-500 px-7 py-3 font-semibold text-white shadow-md transition hover:brightness-110">
+                    Próxima etapa →
+                </button>
+            </div>
+        @elseif ($currentStep === 2)
+            <fieldset class="rounded-2xl border border-slate-200 p-5">
+                <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Questionário de acolhimento</legend>
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    <div>
+                        <label for="type_people_id" class="{{ $label }}">Qual a identidade de gênero da liderança do terreiro?</label>
+                        <select id="type_people_id" wire:model.live="type_people_id" class="{{ $field }}">
+                            <option value="">Selecione a identidade de gênero</option>
+                            @foreach ($typePeoples as $typePeople)<option value="{{ $typePeople->id }}">{{ $typePeople->name }}</option>@endforeach
+                        </select>
+                        @error('type_people_id') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <label for="name_gender">As pessoas trans do terreiro são chamadas pelo nome e gênero que desejam?</label>
-                            <select name="name_gender" id="name_gender" class="form-control @error('name_gender') border-danger @enderror" wire:model.live="name_gender">
-                                <option selected value="">Selecione a opção</option>
-                                <option value="sim">sim</option>
-                                <option value="não">não</option>
-                            </select>
-                            @error('name_gender') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <label for="fully_welcomes">A família espiritual acolhe integralmente as pessoas trans do terreiro ou a liderança ainda precisa mediar as relações?</label>
-                            <select name="fully_welcomes" id="fully_welcomes" class="form-control @error('fully_welcomes') border-danger @enderror" wire:model.live="fully_welcomes">
-                                <option selected value="">Selecione a opção</option>
-                                <option value="acolhe plenamente">acolhe plenamente</option>
-                                <option value="acolhe parcialmente">acolhe parcialmente</option>
-                                <option value="não acolhe">não acolhe</option>
-                                <option value="rejeita totalmente">rejeita totalmente</option>
-                            </select>
-                            @error('fully_welcomes') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+                    <div>
+                        <label for="number_of_children_of_saint" class="{{ $label }}">Quantos membros ativos o terreiro tem?</label>
+                        <input type="number" id="number_of_children_of_saint" wire:model.live="number_of_children_of_saint" class="{{ $field }}" />
+                        @error('number_of_children_of_saint') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <label for="respect_for_trans_people">O terreiro fez alguma ação de conscientização da necessidade de acolhimento respeitoso de pessoas trans em suas dependências?</label>
-                            <select name="respect_for_trans_people" id="respect_for_trans_people" class="form-control @error('respect_for_trans_people') border-danger @enderror" wire:model.live="respect_for_trans_people">
-                                <option selected value="">Selecione a opção</option>
-                                <option value="sim, tem">sim, tem</option>
-                                <option value="sim, começou recentemente">sim, começou recentemente</option>
-                                <option value="não, não tem">não, não tem</option>
-                                <option value="não, mas precisamos de apoio para implementar">não, mas precisamos de apoio para implementar</option>
-                            </select>
-                            @error('respect_for_trans_people') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <label for="suffered_aggregation">A liderança e as pessoas trans do terreiro foram hostilizadas quando os demais terreiros souberam que essas pessoas são respeitadas na casa?</label>
-                            <select name="suffered_aggregation" id="suffered_aggregation" class="form-control @error('suffered_aggregation') border-danger @enderror" wire:model.live="suffered_aggregation">
-                                <option selected value="">Selecione a opção</option>
-                                <option value="sim">sim</option>
-                                <option value="não">não</option>
-                            </select>
-                            @error('suffered_aggregation') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+                    <div>
+                        <label for="number_of_children_of_saint_trans" class="{{ $label }}">Quantas pessoas trans/travestis integram o terreiro?</label>
+                        <input type="number" id="number_of_children_of_saint_trans" wire:model.live="number_of_children_of_saint_trans" class="{{ $field }}" />
+                        @error('number_of_children_of_saint_trans') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <label for="inclusion_of_the_name_of_the_land">Podemos incluir o nome e o contato do seu terreiro na lista de indicações de casas trans-inclusivas para Orientar</label>
-                            <select name="inclusion_of_the_name_of_the_land" id="inclusion_of_the_name_of_the_land" class="form-control @error('inclusion_of_the_name_of_the_land') border-danger @enderror" wire:model.live="inclusion_of_the_name_of_the_land">
-                                <option selected value="">Selecione a opção</option>
-                                <option value="Sim, eu autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos">Sim, eu autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos</option>
-                                <option value="não, eu não autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos">não, eu não autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos</option>
-                            </select>
-                            @error('inclusion_of_the_name_of_the_land') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <label for="sugestion_id">Sugestão</label>
-                            <select name="sugestion_id" id="sugestion_id" class="form-control mt-4 @error('sugestion_id') border-danger @enderror" wire:model.live="suggestion_id">
-                                <option selected value="">Selecione a sugestão</option>
-                                @foreach($suggestions as $suggestion)
-                                    <option value="{{ $suggestion->id }}">{{ $suggestion->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('suggestion_id') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+                    <div>
+                        <label for="trans_men_and_women" class="{{ $label }}">As pessoas trans usam roupas segundo o gênero com que se identificam?</label>
+                        <select id="trans_men_and_women" wire:model.live="trans_men_and_women" class="{{ $field }}">
+                            <option value="">Selecione a opção</option>
+                            <option value="sim, usam sempre">sim, usam sempre</option>
+                            <option value="usam apenas nas funções internas">usam apenas nas funções internas</option>
+                            <option value="não">não</option>
+                        </select>
+                        @error('trans_men_and_women') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
-
+                    <div>
+                        <label for="name_gender" class="{{ $label }}">As pessoas trans são chamadas pelo nome e gênero que desejam?</label>
+                        <select id="name_gender" wire:model.live="name_gender" class="{{ $field }}">
+                            <option value="">Selecione a opção</option>
+                            <option value="sim">sim</option>
+                            <option value="não">não</option>
+                        </select>
+                        @error('name_gender') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="fully_welcomes" class="{{ $label }}">A família espiritual acolhe integralmente as pessoas trans?</label>
+                        <select id="fully_welcomes" wire:model.live="fully_welcomes" class="{{ $field }}">
+                            <option value="">Selecione a opção</option>
+                            <option value="acolhe plenamente">acolhe plenamente</option>
+                            <option value="acolhe parcialmente">acolhe parcialmente</option>
+                            <option value="não acolhe">não acolhe</option>
+                            <option value="rejeita totalmente">rejeita totalmente</option>
+                        </select>
+                        @error('fully_welcomes') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="respect_for_trans_people" class="{{ $label }}">O terreiro fez ações de conscientização sobre acolhimento de pessoas trans?</label>
+                        <select id="respect_for_trans_people" wire:model.live="respect_for_trans_people" class="{{ $field }}">
+                            <option value="">Selecione a opção</option>
+                            <option value="sim, tem">sim, tem</option>
+                            <option value="sim, começou recentemente">sim, começou recentemente</option>
+                            <option value="não, não tem">não, não tem</option>
+                            <option value="não, mas precisamos de apoio para implementar">não, mas precisamos de apoio para implementar</option>
+                        </select>
+                        @error('respect_for_trans_people') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label for="suffered_aggregation" class="{{ $label }}">A liderança/pessoas trans foram hostilizadas por serem respeitadas na casa?</label>
+                        <select id="suffered_aggregation" wire:model.live="suffered_aggregation" class="{{ $field }}">
+                            <option value="">Selecione a opção</option>
+                            <option value="sim">sim</option>
+                            <option value="não">não</option>
+                        </select>
+                        @error('suffered_aggregation') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="inclusion_of_the_name_of_the_land" class="{{ $label }}">Podemos incluir seu terreiro na lista de casas trans-inclusivas?</label>
+                        <select id="inclusion_of_the_name_of_the_land" wire:model.live="inclusion_of_the_name_of_the_land" class="{{ $field }}">
+                            <option value="">Selecione a opção</option>
+                            <option value="Sim, eu autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos">Sim, autorizo</option>
+                            <option value="não, eu não autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos">Não autorizo</option>
+                        </select>
+                        @error('inclusion_of_the_name_of_the_land') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="suggestion_id" class="{{ $label }}">Sugestão</label>
+                        <select id="suggestion_id" wire:model.live="suggestion_id" class="{{ $field }}">
+                            <option value="">Selecione a sugestão</option>
+                            @foreach ($suggestions as $suggestion)<option value="{{ $suggestion->id }}">{{ $suggestion->name }}</option>@endforeach
+                        </select>
+                        @error('suggestion_id') <p class="{{ $err }}">{{ $message }}</p> @enderror
+                    </div>
                     @if ($showField)
-                        <div class="row">
-                            <div class="col-12 col-md-12">
-                                <label for="suggestion_text">Sua sugestão</label>
-                                <textarea name="suggestion_text" id="suggestion_text" class="form-control @error('suggestion_text') border-danger @enderror" wire:model.live="suggestion_text"></textarea>
-                                @error('suggestion_text') <div class="text-danger">{{ $message }}</div> @enderror
-                            </div>
+                        <div class="sm:col-span-2">
+                            <label for="suggestion_text" class="{{ $label }}">Sua sugestão</label>
+                            <textarea id="suggestion_text" wire:model.live="suggestion_text" rows="3" class="{{ $field }}"></textarea>
+                            @error('suggestion_text') <p class="{{ $err }}">{{ $message }}</p> @enderror
                         </div>
                     @endif
                 </div>
+            </fieldset>
 
-                <div class="form-group mt-3 mb-5">
-                    <div class="row">
-                        <div class="col">
-                            <button type="button" class="btn btn-outline-primary" wire:click="previousStep" wire:loading.attr="disabled">
-                                Etapa Anterior
-                                <span wire:loading wire:target="previousStep" class="spinner-border spinner-border-sm" role="status">
-                                    <span class="visually-hidden">{{ __('Loading...') }}</span>
-                                </span>
-                            </button>
-                            <button type="submit" class="btn btn-outline-primary" wire:loading.attr="disabled" wire:target="store">
-                                Responder
-                                <span wire:loading wire:target="store" class="spinner-border spinner-border-sm" role="status">
-                                    <span class="visually-hidden">{{ __('Loading...') }}</span>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            @endif
-        </form>
-    </div>
+            <div class="flex justify-between">
+                <button type="button" wire:click="previousStep" class="rounded-full border border-slate-300 px-6 py-3 font-medium text-slate-600 transition hover:bg-slate-50">← Etapa anterior</button>
+                <button type="submit" wire:loading.attr="disabled" wire:target="store"
+                        class="rounded-full bg-gradient-to-r from-violet-600 to-pink-500 px-7 py-3 font-semibold text-white shadow-md transition hover:brightness-110 disabled:opacity-60">
+                    <span wire:loading.remove wire:target="store">Enviar cadastro</span>
+                    <span wire:loading wire:target="store">{{ __('Loading...') }}</span>
+                </button>
+            </div>
+        @endif
+    </form>
 </div>

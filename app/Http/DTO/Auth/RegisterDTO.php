@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\DTO\Auth;
 
 use Spatie\LaravelData\Dto;
@@ -10,6 +12,6 @@ class RegisterDTO extends Dto
         public string $name,
         public string $email,
         public string $password,
-//        public string $password_confirmation,
-    ){}
+        //        public string $password_confirmation,
+    ) {}
 }

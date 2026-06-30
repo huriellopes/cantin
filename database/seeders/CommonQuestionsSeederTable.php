@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Enum\Status;
@@ -48,7 +50,7 @@ class CommonQuestionsSeederTable extends Seeder
 
         CommonQuestion::query()->create([
             'question' => 'Como posso encontrar um terreiro trans-inclusivo na minha região?',
-            'answer' => 'A página do CANTIn oferece uma ferramenta de busca que permite localizar terreiros cadastrados por região ou estado. <a href="'.route('site.terreiros.search').'" wire:navigate title="lista de terreiros">Lista de Terreiros</a>.',
+            'answer' => 'A página do CANTIn oferece uma ferramenta de busca que permite localizar terreiros cadastrados por região ou estado. <a href="' . route('site.terreiros.search') . '" wire:navigate title="lista de terreiros">Lista de Terreiros</a>.',
             'status' => Status::ACTIVE,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

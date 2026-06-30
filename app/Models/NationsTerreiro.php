@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class NationsTerreiro extends Model
@@ -15,13 +17,11 @@ class NationsTerreiro extends Model
      */
     protected $fillable = [
         'name',
-        'slug'
+        'slug',
     ];
 
-    /**
-     * @return string
-     */
-    public function getRouteKeyName() : string
+    #[Override]
+    public function getRouteKeyName(): string
     {
         return 'slug';
     }
@@ -29,7 +29,8 @@ class NationsTerreiro extends Model
     /**
      * @return string[]
      */
-    public function casts() : array
+    #[Override]
+    public function casts(): array
     {
         return [
             'created_at' => 'datetime',

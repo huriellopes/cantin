@@ -44,13 +44,13 @@
 
         @if (auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')))
             <li class="nav-item">
-                <a class="nav-link" onclick="window.location.href = '{{ route('filament.admin.pages.dashboard') }}'" style="cursor: pointer;">
+                <a class="nav-link" onclick="window.location.href = '{{ route('admin.dashboard') }}'" style="cursor: pointer;">
                     Painel do Admin
                 </a>
             </li>
         @elseif (auth()->check() && auth()->user()->hasRole('user'))
             <li class="nav-item">
-                <a class="nav-link" onclick="window.location.href = '{{ route('filament.userCommon.pages.dashboard') }}'" style="cursor: pointer;">
+                <a class="nav-link" onclick="window.location.href = '{{ route('site.home') }}'" style="cursor: pointer;">
                     Painel do Usuário
                 </a>
             </li>
@@ -61,7 +61,7 @@
 {{--                </a>--}}
 {{--            </li>--}}
             <li class="nav-item">
-                <a class="nav-link" onclick="window.location.href = '{{ route('filament.admin.auth.login') }}'" style="cursor: pointer;">
+                <a class="nav-link" onclick="window.location.href = '{{ route('site.auth.login') }}'" style="cursor: pointer;">
                     {{ __('Access Restricted') }}
                 </a>
             </li>

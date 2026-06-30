@@ -1,22 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Override;
 
 class CityResource extends JsonResource
 {
-    /**
-     * @param Request $request
-     * @return array
-     */
+    #[Override]
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'state_id' => $this->state_id
+            'state_id' => $this->state_id,
         ];
     }
 }

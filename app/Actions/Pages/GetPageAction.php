@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Pages;
 
 use App\Enum\Status;
 use App\Models\Page;
-use Exception;
 
 final class GetPageAction
 {

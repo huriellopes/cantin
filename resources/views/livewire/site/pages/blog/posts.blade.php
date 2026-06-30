@@ -1,122 +1,58 @@
-@assets
-<style>
-    .category-list {
-        list-style: none;
-        padding-left: 0;
-    }
+<div class="mx-auto max-w-7xl px-6 py-16">
+    <header class="text-center">
+        <h1 class="text-3xl font-extrabold text-slate-800 sm:text-4xl">Blog</h1>
+        <p class="mt-2 text-slate-500">Conteúdos, notícias e reflexões do CaNTIn.</p>
+    </header>
 
-    .category-list li {
-        margin-bottom: 8px;
-    }
+    <div class="mt-10 grid gap-8 lg:grid-cols-4">
+        {{-- Sidebar --}}
+        <aside class="space-y-6 lg:col-span-1">
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500">{{ __('Search') }}</h2>
+                <input type="search" wire:model.live.debounce.250ms="search" placeholder="Digite aqui..."
+                       class="mt-3 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
+            </div>
 
-    .category-list a {
-        text-decoration: none;
-        color: #495057;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 12px;
-        border-radius: 5px;
-        transition: all 0.3s;
-    }
-
-    .category-list a:hover {
-        background-color: #f8f9fa;
-        color: #0d6efd;
-    }
-
-    .category-list .badge {
-        background-color: #e9ecef;
-        color: #495057;
-    }
-
-    .post-card {
-        height: 100%;
-        transition: transform 0.3s;
-    }
-
-    .post-card:hover {
-        transform: translateY(-5px);
-    }
-    .post-img {
-        height: 200px;
-        object-fit: cover;
-    }
-    @media (max-width: 767.98px) {
-        .sidebar {
-            margin-bottom: 30px;
-        }
-    }
-</style>
-@endassets
-<div>
-    <div class="container py-5 mt-5">
-        <div class="row">
-            <!-- Sidebar com busca -->
-            <aside class="col-lg-3 col-md-4 sidebar">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-dark text-white">
-                        <h5 class="mb-0"><i class="bi bi-bookmarks-fill me-2"></i>{{ __('Search') }}</h5>
-                    </div>
-                    <div class="card-body">
-                        <form class="d-flex">
-                            <input class="form-control me-2" type="search" wire:model.live.debounce.150ms="search" placeholder="Digite aqui..." aria-label="Search">
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Sidebar com categorias -->
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-dark text-white">
-                        <h5 class="mb-0 d-flex align-items-center">
-                            <i class="bi bi-bookmarks-fill me-2"></i>
-                            <span>Categorias</span>
-                            @if($selectedCategory)
-                                <button wire:click="clearCategory" class="btn btn-sm btn-outline-light ms-auto">
-                                    Limpar
-                                </button>
-                            @endif
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="category-list">
-                            @foreach ($categories as $category)
-                                <li>
-                                    <a href="?category={{ $category->slug }}" wire:navigate wire:click="selectCategory({{ $category->slug }})"
-                                       class="text-decoration-none {{ $selectedCategory == $category->slug ? 'fw-bold text-primary' : '' }}">
-                                        {{ $category->name }} <span class="badge rounded-pill">( {{ $category->posts->count() }} )</span>
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Área principal com posts -->
-            <main class="col-lg-9 col-md-8">
-                @if($selectedCategory)
-                    <div class="alert alert-info mb-3" style="width: 100%;">
-                        Mostrando posts da categoria:
-                        <strong>{{ $categories->firstWhere('slug', $selectedCategory)->name }}</strong>
-                    </div>
-                @endif
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                    <!-- Posts -->
-                    @if ($posts->isEmpty())
-                            <div class="alert alert-warning" style="width: 100%;">
-                                Nenhum post encontrado com os critérios atuais.
-                            </div>
-                    @else
-                            @foreach($posts as $post)
-                                <x-partials.blog.card :post="$post" />
-                            @endforeach
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Categorias</h2>
+                    @if ($selectedCategory)
+                        <button wire:click="clearCategory" class="text-xs font-medium text-violet-600 hover:underline">Limpar</button>
                     @endif
                 </div>
+                <ul class="mt-3 space-y-1">
+                    @foreach ($categories as $category)
+                        <li>
+                            <a href="?category={{ $category->slug }}" wire:navigate
+                               class="flex items-center justify-between rounded-lg px-3 py-2 text-sm transition hover:bg-slate-50 {{ $selectedCategory == $category->slug ? 'bg-violet-50 font-semibold text-violet-700' : 'text-slate-700' }}">
+                                {{ $category->name }}
+                                <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">{{ $category->posts->count() }}</span>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </aside>
 
-                <!-- Paginação -->
-                {{ $posts->links() }}
-            </main>
-        </div>
+        {{-- Posts --}}
+        <main class="lg:col-span-3">
+            @if ($selectedCategory)
+                <div class="mb-4 rounded-lg bg-violet-50 px-4 py-3 text-sm text-violet-700">
+                    Categoria: <strong>{{ $categories->firstWhere('slug', $selectedCategory)?->name }}</strong>
+                </div>
+            @endif
+
+            @if ($posts->isEmpty())
+                <div class="rounded-2xl border border-dashed border-slate-300 p-12 text-center text-slate-400">Nenhum post encontrado.</div>
+            @else
+                <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                    @foreach ($posts as $post)
+                        <x-partials.blog.card :post="$post" />
+                    @endforeach
+                </div>
+            @endif
+
+            <div class="mt-8">{{ $posts->links() }}</div>
+        </main>
     </div>
 </div>

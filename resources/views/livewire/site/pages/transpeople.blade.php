@@ -1,30 +1,18 @@
-<div class="container mt-4 mb-4">
-    <div class="row mt-5">
-        <div class="col mt-2">
-            <h1 class="text-center">{{ __('Terreiro Trans People Registry') }}</h1>
-        </div>
-    </div>
+<div class="mx-auto max-w-3xl px-6 py-16">
+    <header class="text-center">
+        <h1 class="text-3xl font-extrabold text-slate-800 sm:text-4xl">{{ __('Terreiro Trans People Registry') }}</h1>
+        <p class="mt-2 text-slate-500">Cadastre-se para fazer parte da nossa rede de acolhimento.</p>
+    </header>
 
-    <div class="row mt-4">
-        <div class="col">
-            <form wire:submit.prevent="store" class="needs-validation">
-                <div class="form-group">
-                    @include('components.partials.creates.address-phone')
-                </div>
+    <form wire:submit.prevent="store" class="mt-10 space-y-5">
+        @include('components.partials.creates.address-phone')
 
-                <div class="form-group">
-                    <div class="row mt-4">
-                        <div class="col">
-                            <button type="submit" class="btn btn-outline-primary" wire:loading.attr="disabled" wire:target="store">
-                                {{ __('Register') }}
-                                <span wire:loading wire:target="store" class="spinner-border spinner-border-sm" role="status">
-                                    <span class="visually-hidden">{{ __('Loading...') }}</span>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+        <div class="flex justify-end">
+            <button type="submit" wire:loading.attr="disabled" wire:target="store"
+                    class="rounded-full bg-gradient-to-r from-violet-600 to-pink-500 px-7 py-3 font-semibold text-white shadow-md transition hover:brightness-110 disabled:opacity-60">
+                <span wire:loading.remove wire:target="store">{{ __('Register') }}</span>
+                <span wire:loading wire:target="store">{{ __('Loading...') }}</span>
+            </button>
         </div>
-    </div>
+    </form>
 </div>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Geocoder\Provider\Chain\Chain;
 use Geocoder\Provider\GeoPlugin\GeoPlugin;
 use Geocoder\Provider\GoogleMaps\GoogleMaps;
@@ -66,7 +68,7 @@ return [
                 env('GOOGLE_MAPS_LOCALE', 'us'),
                 env('GOOGLE_MAPS_API_KEY'),
             ],
-            GeoPlugin::class  => [],
+            GeoPlugin::class => [],
         ],
     ],
 
@@ -84,7 +86,7 @@ return [
     | Default: Client::class (FQCN for CURL adapter)
     |
     */
-    'adapter'  => Client::class,
+    'adapter' => Client::class,
 
     /*
     |---------------------------------------------------------------------------

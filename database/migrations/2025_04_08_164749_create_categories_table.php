@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Enum\Status;
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new class() extends Migration
 {
     /**
      * Run the migrations.
@@ -20,7 +23,7 @@ return new class extends Migration
                 ->unique()
                 ->index();
             $table->smallInteger('status')
-                ->default(\App\Enum\Status::ACTIVE);
+                ->default(Status::ACTIVE);
             $table->timestamps();
 
             $table->index('created_at');
@@ -33,13 +36,13 @@ return new class extends Migration
                         'name' => 'Terreiros',
                         'slug' => 'terreiros',
                         'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
+                        'updated_at' => Carbon::now(),
                     ],
                     [
                         'name' => 'Candomblé',
                         'slug' => 'candomble',
                         'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
+                        'updated_at' => Carbon::now(),
                     ],
                 ]);
         }

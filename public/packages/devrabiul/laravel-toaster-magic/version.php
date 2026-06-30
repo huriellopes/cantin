@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
-    'version' => '1.4',
+    'version' => '2.3.0',
 ];

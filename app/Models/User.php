@@ -1,24 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enum\Role as RoleEnum;
 use App\Enum\Status;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable
 {
     /* @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasApiTokens, Notifiable, KeepsDeletedModels;
+    use HasApiTokens, HasFactory, KeepsDeletedModels, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -45,29 +46,6 @@ class User extends Authenticatable implements FilamentUser
         'remember_token',
     ];
 
-    /**
-     * @return string[]
-     */
-    public function casts(): array
-    {
-        return [
-            'password' => 'hashed',
-            'role_id' => RoleEnum::class,
-            'status' => Status::class,
-            'email_verified_at' => 'datetime',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
-    }
-
-    public function canAccessPanel(Panel $panel): bool
-    {
-        return true;
-    }
-
-    /**
-     * @return BelongsTo
-     */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
@@ -78,8 +56,37 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Comment::class, 'user_id');
     }
 
-    public function hasRole(string $role): bool
+    public function hasRole(string ...$roles): bool
     {
-        return $this->role->slug === $role;
+        return in_array($this->role?->slug, $roles, true);
+    }
+
+    /**
+     * Verificação robusta via enum (não depende da tabela roles/slug).
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role_id === RoleEnum::SUPER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array($this->role_id, [RoleEnum::SUPER, RoleEnum::ADMIN], true);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+            'role_id' => RoleEnum::class,
+            'status' => Status::class,
+            'email_verified_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
     }
 }

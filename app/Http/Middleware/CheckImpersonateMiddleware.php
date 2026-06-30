@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -14,6 +16,7 @@ class CheckImpersonateMiddleware
             Auth::onceUsingId(['id' => $id]);
             session()->regenerate();
         }
+
         return $next($request);
     }
 }

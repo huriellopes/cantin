@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Pages;
 
 use App\Enum\Status;
+use App\Models\StaticPage as StaticPageModel;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
-use App\Models\StaticPage as StaticPageModel;
 
 class StaticPage extends Component
 {

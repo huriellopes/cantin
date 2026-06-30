@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Pages;
 
 use App\Actions\Address\FillAddressAction;
@@ -8,28 +10,39 @@ use App\Models\City;
 use App\Models\State;
 use App\Models\TransPeople as Trans;
 use App\Traits\Utils;
-use Devrabiul\ToastMagic\Facades\ToastMagic;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Exception;
 use Throwable;
 
 class Transpeople extends Component
 {
     public string $name = '';
+
     public string $email = '';
+
     public string $phone = '';
+
     public string $zipcode = '';
+
     public string $street = '';
+
     public string $complement = '';
+
     public string $neighborhood = '';
+
     public ?int $state_id = null;
+
     public $latitude;
+
     public $longitude;
+
     public $states;
+
     public ?int $city_id = null;
+
     public $cities;
 
     public function mount(): void
@@ -60,28 +73,11 @@ class Transpeople extends Component
         }
     }
 
-    /**
-     * @param $property
-     * @return void
-     */
     public function updated($property): void
     {
         if ($property !== 'state_id') {
             $this->validateOnly($property);
         }
-    }
-
-    protected function loadCities(int $stateId): void
-    {
-        $cacheKey = 'cities_of_state_' . $stateId;
-
-        $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
-            return City::query()
-                ->select('id', 'name')
-                ->where('state_id', '=', $stateId)
-                ->orderBy('name')
-                ->get();
-        });
     }
 
     public function searchZipCode(): void
@@ -91,6 +87,7 @@ class Transpeople extends Component
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
+
                 return;
             }
 
@@ -100,6 +97,7 @@ class Transpeople extends Component
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
+
                 return;
             }
 
@@ -142,13 +140,102 @@ class Transpeople extends Component
 
             Log::error($e->getMessage(), [
                 'line' => $e->getLine(),
-                'file' => $e->getFile()
+                'file' => $e->getFile(),
             ]);
 
             toastr()
                 ->timeOut(2000)
                 ->error(__('Error when searching for zip code!'));
         }
+    }
+
+    public function store(): void
+    {
+        try {
+            DB::beginTransaction();
+            $this->validate();
+
+            $clearZipCode = str($this->zipcode)->replace('-', '');
+
+            $address = Address::query()
+                ->where('zipcode', '=', $clearZipCode)
+                ->first();
+
+            if (!$address) {
+                $address = Address::create([
+                    'zipcode' => $clearZipCode,
+                    'address' => $this->street,
+                    'complement' => $this->complement,
+                    'neighborhood' => $this->neighborhood,
+                    'state_id' => $this->state_id,
+                    'city_id' => $this->city_id,
+                    'latitude' => $this->latitude,
+                    'longitude' => $this->longitude,
+                ]);
+            }
+
+            $transExist = Trans::query()->where('email', '=', $this->email)->first();
+
+            if ($transExist) {
+                toastr()
+                    ->timeOut(2000)
+                    ->error(__('Trans people already registered!'));
+
+                return;
+            }
+
+            Trans::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone' => Utils::clearMask($this->phone),
+                'address_id' => $address->id,
+            ]);
+
+            $this->reset([
+                'name',
+                'email',
+                'phone',
+                'zipcode',
+                'street',
+                'number',
+                'complement',
+                'neighborhood',
+                'state_id',
+                'city_id',
+                'latitude',
+                'longitude',
+            ]);
+            DB::commit();
+
+            toastr()
+                ->timeOut(2000)
+                ->success(__('Trans people successfully registered!'));
+        } catch (Exception|Throwable $e) {
+            DB::rollBack();
+            Utils::webhook('error', $e, 'Error when registering trans people', null);
+            Log::error($e->getMessage());
+            toastr()
+                ->timeOut(2000)
+                ->error(__('Error when registering trans people!'));
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.site.pages.transpeople');
+    }
+
+    protected function loadCities(int $stateId): void
+    {
+        $cacheKey = 'cities_of_state_' . $stateId;
+
+        $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
+            return City::query()
+                ->select('id', 'name')
+                ->where('state_id', '=', $stateId)
+                ->orderBy('name')
+                ->get();
+        });
     }
 
     /**
@@ -169,10 +256,7 @@ class Transpeople extends Component
         ];
     }
 
-    /**
-     * @return array
-     */
-    protected function messages() : array
+    protected function messages(): array
     {
         return [
             'name.required' => __('The name field is required.'),
@@ -194,80 +278,5 @@ class Transpeople extends Component
             'city_id.required' => __('The city field is required.'),
             'city_id.integer' => __('The city field is only allowed numeric characters.'),
         ];
-    }
-
-    public function store(): void
-    {
-        try {
-            DB::beginTransaction();
-                $this->validate();
-
-                $clearZipCode = str($this->zipcode)->replace('-', '');
-
-                $address = Address::query()
-                    ->where('zipcode', '=', $clearZipCode)
-                    ->first();
-
-                if (!$address) {
-                    $address = Address::create([
-                        'zipcode' => $clearZipCode,
-                        'address' => $this->street,
-                        'complement' => $this->complement,
-                        'neighborhood' => $this->neighborhood,
-                        'state_id' => $this->state_id,
-                        'city_id' => $this->city_id,
-                        'latitude' => $this->latitude,
-                        'longitude' => $this->longitude,
-                    ]);
-                }
-
-                $transExist = Trans::query()->where('email', '=', $this->email)->first();
-
-                if ($transExist) {
-                    toastr()
-                        ->timeOut(2000)
-                        ->error(__('Trans people already registered!'));
-                    return;
-                }
-
-                Trans::create([
-                    'name' => $this->name,
-                    'email' => $this->email,
-                    'phone' => Utils::clearMask($this->phone),
-                    'address_id' => $address->id,
-                ]);
-
-                $this->reset([
-                    'name',
-                    'email',
-                    'phone',
-                    'zipcode',
-                    'street',
-                    'number',
-                    'complement',
-                    'neighborhood',
-                    'state_id',
-                    'city_id',
-                    'latitude',
-                    'longitude',
-                ]);
-            DB::commit();
-
-            toastr()
-                ->timeOut(2000)
-                ->success(__('Trans people successfully registered!'));
-        } catch (Exception|Throwable $e) {
-            DB::rollBack();
-            Utils::webhook('error', $e, 'Error when registering trans people', null);
-            Log::error($e->getMessage());
-            toastr()
-                ->timeOut(2000)
-                ->error(__('Error when registering trans people!'));
-        }
-    }
-
-    public function render()
-    {
-        return view('livewire.site.pages.transpeople');
     }
 }

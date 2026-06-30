@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Enum\Status;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use App\Enum\Status;
 
-return new class extends Migration
+return new class() extends Migration
 {
     /**
      * Run the migrations.
@@ -58,7 +60,7 @@ return new class extends Migration
                 ],
                 [
                     'question' => 'Como posso encontrar um terreiro trans-inclusivo na minha região?',
-                    'answer' => 'A página do CANTIn oferece uma ferramenta de busca que permite localizar terreiros cadastrados por região ou estado. <a href="'.route('site.terreiros.search').'" wire:navigate title="lista de terreiros">Lista de Terreiros</a>.',
+                    'answer' => 'A página do CANTIn oferece uma ferramenta de busca que permite localizar terreiros cadastrados por região ou estado. <a href="' . route('site.terreiros.search') . '" wire:navigate title="lista de terreiros">Lista de Terreiros</a>.',
                     'status' => Status::ACTIVE,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
