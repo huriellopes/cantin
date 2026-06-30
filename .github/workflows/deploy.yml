@@ -82,6 +82,9 @@ jobs:
             echo "==> Gerando sitemap.xml"
             $COMPOSE exec -T app php artisan sitemap:generate
 
+            echo "==> Aquecendo o cache de estatísticas do dashboard"
+            $COMPOSE exec -T app php artisan dashboard:refresh
+
             echo "==> Permissões de escrita (workers rodam como www-data)"
             # public/sitemap.xml é regenerado diariamente pelo agendador (www-data):
             # ele precisa ser dono do arquivo para sobrescrevê-lo (file_put_contents).

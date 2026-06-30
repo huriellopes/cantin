@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use App\Livewire\Admin\Dashboard;
+use App\Services\DashboardStatsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
@@ -34,4 +36,16 @@ it('filters the charts by period (default 30 days)', function (): void {
         // valor inválido cai para o padrão (30)
         ->call('setPeriod', 999)
         ->assertSet('period', 30);
+});
+
+it('caches the dashboard stats via the scheduled command', function (): void {
+    Cache::forget(DashboardStatsService::CACHE_KEY);
+
+    $this->artisan('dashboard:refresh')->assertSuccessful();
+
+    expect(Cache::has(DashboardStatsService::CACHE_KEY))->toBeTrue();
+
+    $data = Cache::get(DashboardStatsService::CACHE_KEY);
+    expect($data)->toHaveKeys(['generated_at', 'counts', 'series'])
+        ->and($data['series']['visits'])->toHaveCount(DashboardStatsService::WINDOW_DAYS);
 });
