@@ -2,9 +2,13 @@ services:
   nginx:
     container_name: nginx
     image: nginx:1.27-alpine
-    ports:
-      - "80:80"
-      - "443:443"
+    # Quem publica 80/443 no host é o Nginx Proxy Manager (projeto /apps/proxy).
+    # Este nginx NÃO expõe portas no host (evita conflito com o NPM) e é
+    # alcançado pelo NPM através da rede externa 'proxy', pelo nome 'nginx'.
+    # Rollback: reexpor as portas abaixo e remover a rede 'proxy'.
+    # ports:
+    #   - "80:80"
+    #   - "443:443"
     volumes:
       - ./:/app
       - ./.docker/nginx/conf.d:/etc/nginx/conf.d
@@ -16,6 +20,7 @@ services:
     restart: unless-stopped
     networks:
       - cantin
+      - proxy
 
   app:
     build:
@@ -70,3 +75,8 @@ services:
 networks:
   cantin:
     driver: bridge
+  # Rede do Nginx Proxy Manager (criada pelo projeto /apps/proxy). O nginx do
+  # cantin entra nela para que o NPM o alcance e roteie cantinbr.com.br.
+  proxy:
+    external: true
+    name: proxy
