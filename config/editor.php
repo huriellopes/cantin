@@ -13,7 +13,7 @@ return [
     | (post_max_size / upload_max_filesize). Para vídeos maiores, use links
     | (YouTube/Vimeo).
     */
-    'max_upload_kb' => (int) env('EDITOR_MAX_UPLOAD_KB', 102400), // 100 MB
+    'max_upload_kb' => (int) env('EDITOR_MAX_UPLOAD_KB', 25600), // 25 MB (alinhado ao php.ini/nginx do servidor)
 
     'upload_disk' => env('EDITOR_UPLOAD_DISK', 'public'),
     'upload_path' => env('EDITOR_UPLOAD_PATH', 'editor-attachments'),
