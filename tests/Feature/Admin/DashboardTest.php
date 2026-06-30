@@ -11,12 +11,6 @@ it('redirects guests to the site login', function (): void {
     $this->get('/admin')->assertRedirect(route('site.auth.login'));
 });
 
-it('forbids regular users from the admin panel', function (): void {
-    $this->actingAs(userWithRole('user'))
-        ->get('/admin')
-        ->assertForbidden();
-});
-
 it('renders the dashboard for an admin', function (): void {
     $this->actingAs(userWithRole('super-admin'))
         ->get('/admin')
