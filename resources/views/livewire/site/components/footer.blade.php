@@ -7,14 +7,14 @@
                     <img src="{{ $logo }}" alt="CaNTIn" class="h-16 w-auto" />
                 </a>
                 <p class="mt-3 text-sm text-slate-400">
-                    Cadastro Nacional de Terreiros Inclusivos — acolhimento, respeito e visibilidade para pessoas trans.
+                    {{ __('footer.tagline') }}
                 </p>
             </div>
 
             {{-- Páginas --}}
             @if (! empty($static_pages) && count($static_pages) > 0)
                 <div>
-                    <h5 class="text-sm font-semibold uppercase tracking-wider text-slate-200">Páginas</h5>
+                    <h5 class="text-sm font-semibold uppercase tracking-wider text-slate-200">{{ __('footer.pages') }}</h5>
                     <ul class="mt-4 space-y-2 text-sm">
                         @foreach ($static_pages as $page)
                             <li>
@@ -29,7 +29,7 @@
 
             {{-- Contato --}}
             <div class="md:text-right">
-                <h5 class="text-sm font-semibold uppercase tracking-wider text-slate-200">Contato</h5>
+                <h5 class="text-sm font-semibold uppercase tracking-wider text-slate-200">{{ __('footer.contact') }}</h5>
                 <p class="mt-4 font-semibold text-white">Babalorixá Alan T'Ogun</p>
                 <p class="mt-1 text-sm text-slate-400">(61) 9 9977-6608</p>
                 <p class="text-sm text-slate-400">seggvg@gmail.com</p>
@@ -50,10 +50,10 @@
         <div class="flex flex-col gap-3 border-t border-slate-800 px-6 py-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
             <p>© {{ date('Y') }} CaNTIn</p>
             <div class="flex flex-wrap items-center justify-center gap-4">
-                <a href="{{ route('site.privacy') }}" wire:navigate class="transition hover:text-white">Política de Privacidade</a>
-                <a href="{{ route('site.guidelines') }}" wire:navigate class="transition hover:text-white">Diretrizes</a>
+                <a href="{{ route('site.privacy') }}" wire:navigate class="transition hover:text-white">{{ __('footer.privacy') }}</a>
+                <a href="{{ route('site.guidelines') }}" wire:navigate class="transition hover:text-white">{{ __('footer.guidelines') }}</a>
             </div>
-            <p>Desenvolvido pela Empresa Hurvion Systems</p>
+            <p>{{ __('footer.developed_by') }}</p>
         </div>
     </footer>
 </div>

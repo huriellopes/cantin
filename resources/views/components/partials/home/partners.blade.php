@@ -68,7 +68,7 @@
 <div class="container mt-4 mb-5">
     <div class="row justify-content-center">
         <div class="col-12 col-lg-10">
-            <h2 class="text-center mb-4 text-dark">Nossos Parceiros</h2>
+            <h2 class="text-center mb-4 text-dark">{{ __('comp_home_partners.title') }}</h2>
             <div id="parceirosCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
                 <div class="carousel-inner">
                     @foreach($partners->chunk(5) as $key => $chunk)
@@ -91,11 +91,11 @@
 
                 <button class="carousel-control-prev" type="button" data-bs-target="#parceirosCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Anterior</span>
+                    <span class="visually-hidden">{{ __('comp_home_partners.previous') }}</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#parceirosCarousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Próximo</span>
+                    <span class="visually-hidden">{{ __('comp_home_partners.next') }}</span>
                 </button>
             </div>
         </div>

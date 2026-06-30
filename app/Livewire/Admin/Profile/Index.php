@@ -52,7 +52,7 @@ class Index extends Component
         ]);
 
         $user->update($data);
-        $this->notify('Perfil atualizado com sucesso.');
+        $this->notify(__('admin.profile.updated'));
     }
 
     public function updatePassword(): void
@@ -65,7 +65,7 @@ class Index extends Component
         Auth::user()->update(['password' => Hash::make($this->password)]);
 
         $this->reset(['current_password', 'password', 'password_confirmation']);
-        $this->notify('Senha alterada com sucesso.');
+        $this->notify(__('admin.profile.password_changed'));
     }
 
     public function confirmDeleteAccount(): void
@@ -79,7 +79,7 @@ class Index extends Component
     {
         $this->validate(
             ['delete_password' => ['required', 'current_password']],
-            ['delete_password.current_password' => 'A senha informada está incorreta.'],
+            ['delete_password.current_password' => __('admin.profile.wrong_password')],
         );
 
         $user = Auth::user();

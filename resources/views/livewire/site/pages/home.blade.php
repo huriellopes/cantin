@@ -7,23 +7,23 @@
 
         <div class="relative mx-auto max-w-4xl px-6 text-center">
             <span class="inline-block rounded-full bg-white/15 px-4 py-1 text-sm font-medium text-white ring-1 ring-white/30 backdrop-blur">
-                Acolhimento, respeito e axé 💜
+                {{ __('page_home.hero_badge') }}
             </span>
             <h1 class="mt-6 text-4xl font-extrabold leading-tight text-white sm:text-5xl md:text-6xl">
-                Cadastro Nacional de<br>
-                <span class="bg-gradient-to-r from-pink-300 to-sky-300 bg-clip-text text-transparent">Terreiros Inclusivos</span>
+                {{ __('page_home.hero_title_line1') }}<br>
+                <span class="bg-gradient-to-r from-pink-300 to-sky-300 bg-clip-text text-transparent">{{ __('page_home.hero_title_highlight') }}</span>
             </h1>
             <p class="mx-auto mt-5 max-w-2xl text-lg text-white/90">
-                Conectando pessoas trans a espaços religiosos que acolhem, respeitam e valorizam a transgeneridade em todo o Brasil.
+                {{ __('page_home.hero_subtitle') }}
             </p>
             <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <a href="{{ route('site.terreiros.create') }}" wire:navigate
                    class="rounded-full bg-white px-7 py-3 font-semibold text-violet-700 shadow-lg transition hover:scale-105 hover:shadow-xl">
-                    Cadastre seu terreiro
+                    {{ __('page_home.hero_cta_register') }}
                 </a>
                 <a href="{{ route('site.terreiros.search') }}" wire:navigate
                    class="rounded-full bg-white/10 px-7 py-3 font-semibold text-white ring-1 ring-white/40 backdrop-blur transition hover:bg-white/20">
-                    Encontrar terreiros
+                    {{ __('page_home.hero_cta_find') }}
                 </a>
             </div>
         </div>
@@ -37,9 +37,9 @@
     <section class="mx-auto max-w-7xl px-6 py-20">
         <div class="grid gap-8 md:grid-cols-3">
             @foreach ([
-                ['💜', 'Acolhimento', 'Mapeamos casas que recebem pessoas trans com respeito e dignidade.'],
-                ['🌎', 'Alcance nacional', 'Um mapeamento que conecta pessoas a terreiros inclusivos em todo o Brasil.'],
-                ['✨', 'Visibilidade', 'Damos visibilidade a sacerdotes trans e a práticas inclusivas já existentes.'],
+                ['💜', __('page_home.value_welcome_title'), __('page_home.value_welcome_text')],
+                ['🌎', __('page_home.value_reach_title'), __('page_home.value_reach_text')],
+                ['✨', __('page_home.value_visibility_title'), __('page_home.value_visibility_text')],
             ] as [$emoji, $titulo, $texto])
                 <div class="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
                     <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-100 to-pink-100 text-2xl">{{ $emoji }}</div>
@@ -55,8 +55,8 @@
         <section class="bg-slate-50 py-20">
             <div class="mx-auto max-w-7xl px-6">
                 <div class="text-center">
-                    <h2 class="text-3xl font-bold text-slate-800">Entidades parceiras</h2>
-                    <p class="mt-2 text-slate-500">Organizações que caminham conosco nessa missão.</p>
+                    <h2 class="text-3xl font-bold text-slate-800">{{ __('page_home.partners_title') }}</h2>
+                    <p class="mt-2 text-slate-500">{{ __('page_home.partners_subtitle') }}</p>
                 </div>
                 <div class="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
                     @foreach ($partners as $partner)
@@ -74,8 +74,8 @@
     @if (! empty($commons) && count($commons) > 0)
         <section class="mx-auto max-w-3xl px-6 py-20">
             <div class="text-center">
-                <h2 class="text-3xl font-bold text-slate-800">Perguntas frequentes</h2>
-                <p class="mt-2 text-slate-500">Tire suas dúvidas sobre o projeto.</p>
+                <h2 class="text-3xl font-bold text-slate-800">{{ __('page_home.faq_title') }}</h2>
+                <p class="mt-2 text-slate-500">{{ __('page_home.faq_subtitle') }}</p>
             </div>
             <div class="mt-10 space-y-3" x-data="{ open: null }">
                 @foreach ($commons as $i => $common)
@@ -96,10 +96,10 @@
     {{-- CTA final --}}
     <section class="px-6 pb-24">
         <div class="mx-auto max-w-5xl overflow-hidden rounded-[2rem] bg-gradient-to-r from-violet-600 to-pink-500 px-8 py-14 text-center shadow-xl">
-            <h2 class="text-3xl font-bold text-white">Seu terreiro acolhe pessoas trans?</h2>
-            <p class="mx-auto mt-3 max-w-2xl text-white/90">Faça parte do mapeamento nacional e ajude a construir uma rede de espaços religiosos inclusivos.</p>
+            <h2 class="text-3xl font-bold text-white">{{ __('page_home.cta_title') }}</h2>
+            <p class="mx-auto mt-3 max-w-2xl text-white/90">{{ __('page_home.cta_text') }}</p>
             <a href="{{ route('site.terreiros.create') }}" wire:navigate class="mt-8 inline-block rounded-full bg-white px-8 py-3 font-semibold text-violet-700 shadow-lg transition hover:scale-105">
-                Quero cadastrar
+                {{ __('page_home.cta_button') }}
             </a>
         </div>
     </section>

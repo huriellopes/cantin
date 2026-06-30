@@ -100,19 +100,19 @@ class Index extends Component
         }
 
         $this->showModal = false;
-        $this->notify($editing ? 'Entidade atualizada.' : 'Entidade criada.');
+        $this->notify($editing ? __('msg_partner_entities.entity_updated') : __('msg_partner_entities.entity_created'));
     }
 
     public function view(int $id): void
     {
         $entity = PartnerEntity::query()->with(['address.state', 'address.city'])->findOrFail($id);
         $this->viewData = [
-            ['label' => 'Nome', 'value' => $entity->name],
-            ['label' => 'E-mail', 'value' => $entity->email],
-            ['label' => 'Telefone', 'value' => $entity->phone],
-            ['label' => 'Atividade', 'value' => $entity->activity_carried_out],
-            ['label' => 'Cidade/UF', 'value' => ($entity->address?->city?->name ?? '') . '/' . ($entity->address?->state?->abbr ?? '')],
-            ['label' => 'Status', 'value' => $entity->status?->label()],
+            ['label' => __('msg_partner_entities.label_name'), 'value' => $entity->name],
+            ['label' => __('msg_partner_entities.label_email'), 'value' => $entity->email],
+            ['label' => __('msg_partner_entities.label_phone'), 'value' => $entity->phone],
+            ['label' => __('msg_partner_entities.label_activity'), 'value' => $entity->activity_carried_out],
+            ['label' => __('msg_partner_entities.label_city_uf'), 'value' => ($entity->address?->city?->name ?? '') . '/' . ($entity->address?->state?->abbr ?? '')],
+            ['label' => __('msg_partner_entities.label_status'), 'value' => $entity->status?->label()],
         ];
         $this->viewTitle = $entity->name;
         $this->showView = true;
@@ -122,13 +122,13 @@ class Index extends Component
     {
         $entity = PartnerEntity::query()->findOrFail($id);
         $entity->update(['status' => $entity->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
-        $this->notify('Status atualizado.');
+        $this->notify(__('msg_partner_entities.status_updated'));
     }
 
     public function delete(int $id): void
     {
         PartnerEntity::query()->findOrFail($id)->delete();
-        $this->notify('Entidade excluída.');
+        $this->notify(__('msg_partner_entities.entity_deleted'));
     }
 
     public function render(): Factory|View

@@ -61,20 +61,20 @@ class Index extends Component
         ]);
 
         $this->showModal = false;
-        $this->notify('Resposta publicada.');
+        $this->notify(__('msg_comments.reply_published'));
     }
 
     public function view(int $id): void
     {
         $comment = Comment::query()->with(['user:id,name', 'post:id,title'])->findOrFail($id);
         $this->viewData = [
-            ['label' => 'Autor', 'value' => $comment->user?->name ?? $comment->name],
-            ['label' => 'Post', 'value' => $comment->post?->title],
-            ['label' => 'Comentário', 'value' => $comment->body],
-            ['label' => 'Status', 'value' => $comment->status?->label()],
-            ['label' => 'Data', 'value' => $comment->created_at?->format('d/m/Y H:i')],
+            ['label' => __('msg_comments.label_author'), 'value' => $comment->user?->name ?? $comment->name],
+            ['label' => __('msg_comments.label_post'), 'value' => $comment->post?->title],
+            ['label' => __('msg_comments.label_comment'), 'value' => $comment->body],
+            ['label' => __('msg_comments.label_status'), 'value' => $comment->status?->label()],
+            ['label' => __('msg_comments.label_date'), 'value' => $comment->created_at?->format('d/m/Y H:i')],
         ];
-        $this->viewTitle = 'Comentário';
+        $this->viewTitle = __('msg_comments.view_title');
         $this->showView = true;
     }
 
@@ -84,7 +84,7 @@ class Index extends Component
         $comment->update([
             'status' => $comment->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE,
         ]);
-        $this->notify('Status atualizado.');
+        $this->notify(__('msg_comments.status_updated'));
     }
 
     public function render(): Factory|View

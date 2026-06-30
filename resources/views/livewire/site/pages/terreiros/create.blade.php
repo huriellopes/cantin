@@ -6,12 +6,12 @@
 
 <div class="mx-auto max-w-3xl px-6 py-16">
     <header class="text-center">
-        <h1 class="text-3xl font-extrabold text-slate-800 sm:text-4xl">Cadastro de Terreiros Inclusivos</h1>
+        <h1 class="text-3xl font-extrabold text-slate-800 sm:text-4xl">{{ __('page_terreiros_create.page_title') }}</h1>
     </header>
 
     {{-- Steps --}}
     <div class="mt-8 flex items-center justify-center gap-4">
-        @foreach (['Dados do Terreiro', 'Perguntas'] as $i => $stepLabel)
+        @foreach ([__('page_terreiros_create.step_terreiro_data'), __('page_terreiros_create.step_questions')] as $i => $stepLabel)
             @php $n = $i + 1; @endphp
             <div class="flex items-center gap-2">
                 <span class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold text-white {{ $currentStep >= $n ? 'bg-violet-600' : 'bg-slate-300' }}">{{ $n }}</span>
@@ -25,10 +25,10 @@
         @csrf
         @if ($currentStep === 1)
             <fieldset class="rounded-2xl border border-slate-200 p-5">
-                <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Dados do terreiro</legend>
+                <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">{{ __('page_terreiros_create.fieldset_terreiro_data') }}</legend>
                 <div class="grid grid-cols-1 gap-4">
                     <div>
-                        <label for="name" class="{{ $label }}">Nome do Terreiro</label>
+                        <label for="name" class="{{ $label }}">{{ __('page_terreiros_create.label_name') }}</label>
                         <input type="text" id="name" wire:model.live="name" class="{{ $field }}" />
                         @error('name') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
@@ -42,21 +42,21 @@
                             @error('nation_terreiro_id') <p class="{{ $err }}">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label for="phone" class="{{ $label }}">Telefone</label>
+                            <label for="phone" class="{{ $label }}">{{ __('page_terreiros_create.label_phone') }}</label>
                             <input type="text" id="phone" x-mask="(99) 9 9999-9999" wire:model.live="phone" class="{{ $field }}" />
                             @error('phone') <p class="{{ $err }}">{{ $message }}</p> @enderror
                         </div>
                     </div>
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
-                            <label for="leadership_orunko" class="{{ $label }}">Orukó ou nome da liderança</label>
+                            <label for="leadership_orunko" class="{{ $label }}">{{ __('page_terreiros_create.label_leadership_orunko') }}</label>
                             <input type="text" id="leadership_orunko" wire:model.live="leadership_orunko" class="{{ $field }}" />
                             @error('leadership_orunko') <p class="{{ $err }}">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label for="color_of_leadership" class="{{ $label }}">Cor de pele da liderança</label>
+                            <label for="color_of_leadership" class="{{ $label }}">{{ __('page_terreiros_create.label_color_of_leadership') }}</label>
                             <select id="color_of_leadership" wire:model.live="color_of_leadership" class="{{ $field }}">
-                                <option value="">Selecione a cor de pele</option>
+                                <option value="">{{ __('page_terreiros_create.select_color_of_leadership') }}</option>
                                 @foreach (config('color-leader.list') as $color => $name)<option value="{{ $color }}">{{ $name }}</option>@endforeach
                             </select>
                             @error('color_of_leadership') <p class="{{ $err }}">{{ $message }}</p> @enderror
@@ -66,14 +66,14 @@
             </fieldset>
 
             <fieldset class="rounded-2xl border border-slate-200 p-5">
-                <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Endereço do terreiro</legend>
+                <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">{{ __('page_terreiros_create.fieldset_address') }}</legend>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                         <label for="zipcode" class="{{ $label }}">{{ __('Zip Code') }}</label>
                         <div class="flex gap-2">
                             <input type="text" id="zipcode" maxlength="9" x-mask="99999-999" wire:model.live="zipcode" class="{{ $field }}" />
                             <button type="button" wire:click="searchZipCode" wire:loading.attr="disabled" wire:target="searchZipCode" class="shrink-0 rounded-lg bg-slate-100 px-3 text-sm font-medium text-slate-600 hover:bg-slate-200">
-                                <span wire:loading.remove wire:target="searchZipCode">Buscar</span><span wire:loading wire:target="searchZipCode">...</span>
+                                <span wire:loading.remove wire:target="searchZipCode">{{ __('common.search') }}</span><span wire:loading wire:target="searchZipCode">...</span>
                             </button>
                         </div>
                         @error('zipcode') <p class="{{ $err }}">{{ $message }}</p> @enderror
@@ -117,101 +117,101 @@
             <div class="flex justify-end">
                 <button type="button" wire:click="nextStep" wire:loading.attr="disabled"
                         class="rounded-full bg-gradient-to-r from-violet-600 to-pink-500 px-7 py-3 font-semibold text-white shadow-md transition hover:brightness-110">
-                    Próxima etapa →
+                    {{ __('page_terreiros_create.next_step') }}
                 </button>
             </div>
         @elseif ($currentStep === 2)
             <fieldset class="rounded-2xl border border-slate-200 p-5">
-                <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Questionário de acolhimento</legend>
+                <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">{{ __('page_terreiros_create.fieldset_questionnaire') }}</legend>
                 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <div>
-                        <label for="type_people_id" class="{{ $label }}">Qual a identidade de gênero da liderança do terreiro?</label>
+                        <label for="type_people_id" class="{{ $label }}">{{ __('page_terreiros_create.label_type_people') }}</label>
                         <select id="type_people_id" wire:model.live="type_people_id" class="{{ $field }}">
-                            <option value="">Selecione a identidade de gênero</option>
+                            <option value="">{{ __('page_terreiros_create.select_type_people') }}</option>
                             @foreach ($typePeoples as $typePeople)<option value="{{ $typePeople->id }}">{{ $typePeople->name }}</option>@endforeach
                         </select>
                         @error('type_people_id') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label for="number_of_children_of_saint" class="{{ $label }}">Quantos membros ativos o terreiro tem?</label>
+                        <label for="number_of_children_of_saint" class="{{ $label }}">{{ __('page_terreiros_create.label_number_of_children_of_saint') }}</label>
                         <input type="number" id="number_of_children_of_saint" wire:model.live="number_of_children_of_saint" class="{{ $field }}" />
                         @error('number_of_children_of_saint') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label for="number_of_children_of_saint_trans" class="{{ $label }}">Quantas pessoas trans/travestis integram o terreiro?</label>
+                        <label for="number_of_children_of_saint_trans" class="{{ $label }}">{{ __('page_terreiros_create.label_number_of_children_of_saint_trans') }}</label>
                         <input type="number" id="number_of_children_of_saint_trans" wire:model.live="number_of_children_of_saint_trans" class="{{ $field }}" />
                         @error('number_of_children_of_saint_trans') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label for="trans_men_and_women" class="{{ $label }}">As pessoas trans usam roupas segundo o gênero com que se identificam?</label>
+                        <label for="trans_men_and_women" class="{{ $label }}">{{ __('page_terreiros_create.label_trans_men_and_women') }}</label>
                         <select id="trans_men_and_women" wire:model.live="trans_men_and_women" class="{{ $field }}">
-                            <option value="">Selecione a opção</option>
-                            <option value="sim, usam sempre">sim, usam sempre</option>
-                            <option value="usam apenas nas funções internas">usam apenas nas funções internas</option>
-                            <option value="não">não</option>
+                            <option value="">{{ __('page_terreiros_create.select_option') }}</option>
+                            <option value="sim, usam sempre">{{ __('page_terreiros_create.trans_clothes_always') }}</option>
+                            <option value="usam apenas nas funções internas">{{ __('page_terreiros_create.trans_clothes_internal_only') }}</option>
+                            <option value="não">{{ __('page_terreiros_create.trans_clothes_no') }}</option>
                         </select>
                         @error('trans_men_and_women') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label for="name_gender" class="{{ $label }}">As pessoas trans são chamadas pelo nome e gênero que desejam?</label>
+                        <label for="name_gender" class="{{ $label }}">{{ __('page_terreiros_create.label_name_gender') }}</label>
                         <select id="name_gender" wire:model.live="name_gender" class="{{ $field }}">
-                            <option value="">Selecione a opção</option>
-                            <option value="sim">sim</option>
-                            <option value="não">não</option>
+                            <option value="">{{ __('page_terreiros_create.select_option') }}</option>
+                            <option value="sim">{{ __('page_terreiros_create.option_yes') }}</option>
+                            <option value="não">{{ __('page_terreiros_create.option_no') }}</option>
                         </select>
                         @error('name_gender') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label for="fully_welcomes" class="{{ $label }}">A família espiritual acolhe integralmente as pessoas trans?</label>
+                        <label for="fully_welcomes" class="{{ $label }}">{{ __('page_terreiros_create.label_fully_welcomes') }}</label>
                         <select id="fully_welcomes" wire:model.live="fully_welcomes" class="{{ $field }}">
-                            <option value="">Selecione a opção</option>
-                            <option value="acolhe plenamente">acolhe plenamente</option>
-                            <option value="acolhe parcialmente">acolhe parcialmente</option>
-                            <option value="não acolhe">não acolhe</option>
-                            <option value="rejeita totalmente">rejeita totalmente</option>
+                            <option value="">{{ __('page_terreiros_create.select_option') }}</option>
+                            <option value="acolhe plenamente">{{ __('page_terreiros_create.welcomes_fully') }}</option>
+                            <option value="acolhe parcialmente">{{ __('page_terreiros_create.welcomes_partially') }}</option>
+                            <option value="não acolhe">{{ __('page_terreiros_create.welcomes_not') }}</option>
+                            <option value="rejeita totalmente">{{ __('page_terreiros_create.welcomes_rejects') }}</option>
                         </select>
                         @error('fully_welcomes') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label for="respect_for_trans_people" class="{{ $label }}">O terreiro fez ações de conscientização sobre acolhimento de pessoas trans?</label>
+                        <label for="respect_for_trans_people" class="{{ $label }}">{{ __('page_terreiros_create.label_respect_for_trans_people') }}</label>
                         <select id="respect_for_trans_people" wire:model.live="respect_for_trans_people" class="{{ $field }}">
-                            <option value="">Selecione a opção</option>
-                            <option value="sim, tem">sim, tem</option>
-                            <option value="sim, começou recentemente">sim, começou recentemente</option>
-                            <option value="não, não tem">não, não tem</option>
-                            <option value="não, mas precisamos de apoio para implementar">não, mas precisamos de apoio para implementar</option>
+                            <option value="">{{ __('page_terreiros_create.select_option') }}</option>
+                            <option value="sim, tem">{{ __('page_terreiros_create.respect_yes_has') }}</option>
+                            <option value="sim, começou recentemente">{{ __('page_terreiros_create.respect_yes_recently') }}</option>
+                            <option value="não, não tem">{{ __('page_terreiros_create.respect_no_has_not') }}</option>
+                            <option value="não, mas precisamos de apoio para implementar">{{ __('page_terreiros_create.respect_no_need_support') }}</option>
                         </select>
                         @error('respect_for_trans_people') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label for="suffered_aggregation" class="{{ $label }}">A liderança/pessoas trans foram hostilizadas por serem respeitadas na casa?</label>
+                        <label for="suffered_aggregation" class="{{ $label }}">{{ __('page_terreiros_create.label_suffered_aggregation') }}</label>
                         <select id="suffered_aggregation" wire:model.live="suffered_aggregation" class="{{ $field }}">
-                            <option value="">Selecione a opção</option>
-                            <option value="sim">sim</option>
-                            <option value="não">não</option>
+                            <option value="">{{ __('page_terreiros_create.select_option') }}</option>
+                            <option value="sim">{{ __('page_terreiros_create.option_yes') }}</option>
+                            <option value="não">{{ __('page_terreiros_create.option_no') }}</option>
                         </select>
                         @error('suffered_aggregation') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                     <div class="sm:col-span-2">
-                        <label for="inclusion_of_the_name_of_the_land" class="{{ $label }}">Podemos incluir seu terreiro na lista de casas trans-inclusivas?</label>
+                        <label for="inclusion_of_the_name_of_the_land" class="{{ $label }}">{{ __('page_terreiros_create.label_inclusion_of_the_name_of_the_land') }}</label>
                         <select id="inclusion_of_the_name_of_the_land" wire:model.live="inclusion_of_the_name_of_the_land" class="{{ $field }}">
-                            <option value="">Selecione a opção</option>
-                            <option value="Sim, eu autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos">Sim, autorizo</option>
-                            <option value="não, eu não autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos">Não autorizo</option>
+                            <option value="">{{ __('page_terreiros_create.select_option') }}</option>
+                            <option value="Sim, eu autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos">{{ __('page_terreiros_create.inclusion_authorize_label') }}</option>
+                            <option value="não, eu não autorizo que nosso terreiro faça parte da listagem de terreiros trans-inclusivos">{{ __('page_terreiros_create.inclusion_not_authorize_label') }}</option>
                         </select>
                         @error('inclusion_of_the_name_of_the_land') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                     <div class="sm:col-span-2">
-                        <label for="suggestion_id" class="{{ $label }}">Sugestão</label>
+                        <label for="suggestion_id" class="{{ $label }}">{{ __('page_terreiros_create.label_suggestion') }}</label>
                         <select id="suggestion_id" wire:model.live="suggestion_id" class="{{ $field }}">
-                            <option value="">Selecione a sugestão</option>
+                            <option value="">{{ __('page_terreiros_create.select_suggestion') }}</option>
                             @foreach ($suggestions as $suggestion)<option value="{{ $suggestion->id }}">{{ $suggestion->name }}</option>@endforeach
                         </select>
                         @error('suggestion_id') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                     @if ($showField)
                         <div class="sm:col-span-2">
-                            <label for="suggestion_text" class="{{ $label }}">Sua sugestão</label>
+                            <label for="suggestion_text" class="{{ $label }}">{{ __('page_terreiros_create.label_suggestion_text') }}</label>
                             <textarea id="suggestion_text" wire:model.live="suggestion_text" rows="3" class="{{ $field }}"></textarea>
                             @error('suggestion_text') <p class="{{ $err }}">{{ $message }}</p> @enderror
                         </div>
@@ -220,10 +220,10 @@
             </fieldset>
 
             <div class="flex justify-between">
-                <button type="button" wire:click="previousStep" class="rounded-full border border-slate-300 px-6 py-3 font-medium text-slate-600 transition hover:bg-slate-50">← Etapa anterior</button>
+                <button type="button" wire:click="previousStep" class="rounded-full border border-slate-300 px-6 py-3 font-medium text-slate-600 transition hover:bg-slate-50">{{ __('page_terreiros_create.previous_step') }}</button>
                 <button type="submit" wire:loading.attr="disabled" wire:target="store"
                         class="rounded-full bg-gradient-to-r from-violet-600 to-pink-500 px-7 py-3 font-semibold text-white shadow-md transition hover:brightness-110 disabled:opacity-60">
-                    <span wire:loading.remove wire:target="store">Enviar cadastro</span>
+                    <span wire:loading.remove wire:target="store">{{ __('page_terreiros_create.submit_registration') }}</span>
                     <span wire:loading wire:target="store">{{ __('Loading...') }}</span>
                 </button>
             </div>

@@ -78,7 +78,7 @@ class Index extends Component
             ]);
         }
 
-        $message = $this->editingId ? 'Usuário atualizado.' : 'Usuário criado.';
+        $message = $this->editingId ? __('msg_users.user_updated') : __('msg_users.user_created');
         $this->showModal = false;
         $this->notify($message);
     }
@@ -87,11 +87,11 @@ class Index extends Component
     {
         $user = User::query()->findOrFail($id);
         $this->viewData = [
-            ['label' => 'Nome', 'value' => $user->name],
-            ['label' => 'E-mail', 'value' => $user->email],
-            ['label' => 'Perfil', 'value' => $user->role_id?->label()],
-            ['label' => 'Status', 'value' => $user->status?->label()],
-            ['label' => 'Criado em', 'value' => $user->created_at?->format('d/m/Y H:i')],
+            ['label' => __('msg_users.label_name'), 'value' => $user->name],
+            ['label' => __('msg_users.label_email'), 'value' => $user->email],
+            ['label' => __('msg_users.label_role'), 'value' => $user->role_id?->label()],
+            ['label' => __('msg_users.label_status'), 'value' => $user->status?->label()],
+            ['label' => __('msg_users.label_created_at'), 'value' => $user->created_at?->format('d/m/Y H:i')],
         ];
         $this->viewTitle = $user->name;
         $this->showView = true;
@@ -100,9 +100,9 @@ class Index extends Component
     public function confirmReset(int $id): void
     {
         $this->requestConfirm('resetPassword', [$id], [
-            'title' => 'Resetar senha',
-            'message' => 'Gerar uma nova senha aleatória para este usuário?',
-            'label' => 'Gerar senha',
+            'title' => __('msg_users.reset_password_title'),
+            'message' => __('msg_users.reset_password_message'),
+            'label' => __('msg_users.reset_password_label'),
         ]);
     }
 
@@ -114,7 +114,7 @@ class Index extends Component
 
         $user = User::query()->findOrFail($id);
         $user->update(['status' => $user->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
-        $this->notify('Status atualizado.');
+        $this->notify(__('msg_users.status_updated'));
     }
 
     public function delete(int $id): void
@@ -124,7 +124,7 @@ class Index extends Component
         }
 
         User::query()->findOrFail($id)->delete();
-        $this->notify('Usuário excluído.');
+        $this->notify(__('msg_users.user_deleted'));
     }
 
     public function resetPassword(int $id): void
@@ -135,7 +135,7 @@ class Index extends Component
 
         $this->generatedFor = $user->name;
         $this->generatedPassword = $newPassword;
-        $this->notify('Senha redefinida com sucesso.');
+        $this->notify(__('msg_users.password_reset_success'));
     }
 
     public function exportCsv()

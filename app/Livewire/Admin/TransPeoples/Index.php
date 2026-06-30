@@ -84,18 +84,18 @@ class Index extends Component
         }
 
         $this->showModal = false;
-        $this->notify($editing ? 'Cadastro atualizado.' : 'Pessoa cadastrada.');
+        $this->notify($editing ? __('msg_trans_peoples.cadastro_atualizado') : __('msg_trans_peoples.pessoa_cadastrada'));
     }
 
     public function view(int $id): void
     {
         $person = TransPeople::query()->with(['address.state', 'address.city'])->findOrFail($id);
         $this->viewData = [
-            ['label' => 'Nome', 'value' => $person->name],
-            ['label' => 'E-mail', 'value' => $person->email],
-            ['label' => 'Telefone', 'value' => $person->phone],
-            ['label' => 'Cidade/UF', 'value' => ($person->address?->city?->name ?? '') . '/' . ($person->address?->state?->abbr ?? '')],
-            ['label' => 'Status', 'value' => $person->status?->label()],
+            ['label' => __('msg_trans_peoples.label_nome'), 'value' => $person->name],
+            ['label' => __('msg_trans_peoples.label_email'), 'value' => $person->email],
+            ['label' => __('msg_trans_peoples.label_telefone'), 'value' => $person->phone],
+            ['label' => __('msg_trans_peoples.label_cidade_uf'), 'value' => ($person->address?->city?->name ?? '') . '/' . ($person->address?->state?->abbr ?? '')],
+            ['label' => __('msg_trans_peoples.label_status'), 'value' => $person->status?->label()],
         ];
         $this->viewTitle = $person->name;
         $this->showView = true;
@@ -105,13 +105,13 @@ class Index extends Component
     {
         $person = TransPeople::query()->findOrFail($id);
         $person->update(['status' => $person->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
-        $this->notify('Status atualizado.');
+        $this->notify(__('msg_trans_peoples.status_atualizado'));
     }
 
     public function delete(int $id): void
     {
         TransPeople::query()->findOrFail($id)->delete();
-        $this->notify('Cadastro excluído.');
+        $this->notify(__('msg_trans_peoples.cadastro_excluido'));
     }
 
     public function render(): Factory|View

@@ -105,20 +105,20 @@ class Index extends Component
         }
 
         $this->showModal = false;
-        $this->notify($editing ? 'Post atualizado.' : 'Post criado.');
+        $this->notify($editing ? __('msg_posts.post_updated') : __('msg_posts.post_created'));
     }
 
     public function view(int $id): void
     {
         $post = Post::query()->with(['user:id,name', 'category:id,name'])->findOrFail($id);
         $this->viewData = [
-            ['label' => 'Título', 'value' => $post->title],
-            ['label' => 'Categoria', 'value' => $post->category?->name],
-            ['label' => 'Autor', 'value' => $post->user?->name],
-            ['label' => 'Publicação', 'value' => $post->published_at?->format('d/m/Y')],
-            ['label' => 'Status', 'value' => $post->status?->label()],
-            ['label' => 'Views', 'value' => $post->views],
-            ['label' => 'Conteúdo', 'value' => strip_tags((string) $post->content)],
+            ['label' => __('msg_posts.label_title'), 'value' => $post->title],
+            ['label' => __('msg_posts.label_category'), 'value' => $post->category?->name],
+            ['label' => __('msg_posts.label_author'), 'value' => $post->user?->name],
+            ['label' => __('msg_posts.label_publication'), 'value' => $post->published_at?->format('d/m/Y')],
+            ['label' => __('msg_posts.label_status'), 'value' => $post->status?->label()],
+            ['label' => __('msg_posts.label_views'), 'value' => $post->views],
+            ['label' => __('msg_posts.label_content'), 'value' => strip_tags((string) $post->content)],
         ];
         $this->viewTitle = $post->title;
         $this->showView = true;
@@ -129,25 +129,25 @@ class Index extends Component
         $post = Post::query()->findOrFail($id);
 
         if ($post->published_at?->startOfDay()->gt(today())) {
-            $this->notify('A data de publicação ainda é futura.', 'warning');
+            $this->notify(__('msg_posts.publish_date_future'), 'warning');
 
             return;
         }
 
         $post->update(['status' => StatusPost::PUBLISHED]);
-        $this->notify('Post publicado.');
+        $this->notify(__('msg_posts.post_published'));
     }
 
     public function unpublish(int $id): void
     {
         Post::query()->findOrFail($id)->update(['status' => StatusPost::PENDING]);
-        $this->notify('Post despublicado.');
+        $this->notify(__('msg_posts.post_unpublished'));
     }
 
     public function delete(int $id): void
     {
         Post::query()->findOrFail($id)->delete();
-        $this->notify('Post excluído.');
+        $this->notify(__('msg_posts.post_deleted'));
     }
 
     public function render(): Factory|View

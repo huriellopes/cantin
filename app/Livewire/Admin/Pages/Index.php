@@ -20,20 +20,20 @@ class Index extends ResourceComponent
     protected function fields(): array
     {
         return [
-            'name' => ['label' => 'Nome'],
-            'slug' => ['label' => 'Slug', 'unique' => true],
-            'content' => ['label' => 'Conteúdo', 'type' => 'textarea', 'rules' => ['required', 'string']],
+            'name' => ['label' => __('msg_pages.label_name')],
+            'slug' => ['label' => __('msg_pages.label_slug'), 'unique' => true],
+            'content' => ['label' => __('msg_pages.label_content'), 'type' => 'textarea', 'rules' => ['required', 'string']],
         ];
     }
 
     protected function heading(): string
     {
-        return 'Páginas';
+        return __('msg_pages.heading');
     }
 
     protected function singular(): string
     {
-        return 'Página';
+        return __('msg_pages.singular');
     }
 
     #[Override]

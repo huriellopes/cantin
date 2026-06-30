@@ -11,8 +11,8 @@ enum Status: int
     public function label(): string
     {
         return match ($this) {
-            self::ACTIVE => 'Ativo',
-            self::INACTIVE => 'Inativo',
+            self::ACTIVE => (string) __('common.active'),
+            self::INACTIVE => (string) __('common.inactive'),
         };
     }
 

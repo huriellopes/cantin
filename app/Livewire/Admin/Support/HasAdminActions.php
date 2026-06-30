@@ -39,9 +39,9 @@ trait HasAdminActions
         $this->confirm = array_merge([
             'method' => $method,
             'args' => $args,
-            'title' => 'Confirmar ação',
-            'message' => 'Tem certeza que deseja continuar?',
-            'label' => 'Confirmar',
+            'title' => __('msg_admin_actions.confirm_title'),
+            'message' => __('msg_admin_actions.confirm_message'),
+            'label' => __('msg_admin_actions.confirm_label'),
             'danger' => false,
         ], $options);
     }
@@ -66,9 +66,9 @@ trait HasAdminActions
     public function confirmDelete(int $id): void
     {
         $this->requestConfirm('delete', [$id], [
-            'title' => 'Excluir registro',
-            'message' => 'Tem certeza que deseja excluir? Esta ação não pode ser desfeita.',
-            'label' => 'Excluir',
+            'title' => __('msg_admin_actions.delete_title'),
+            'message' => __('msg_admin_actions.delete_message'),
+            'label' => __('msg_admin_actions.delete_label'),
             'danger' => true,
         ]);
     }
@@ -76,9 +76,9 @@ trait HasAdminActions
     public function confirmToggle(int $id): void
     {
         $this->requestConfirm('toggleStatus', [$id], [
-            'title' => 'Alterar status',
-            'message' => 'Deseja alterar o status deste registro?',
-            'label' => 'Confirmar',
+            'title' => __('msg_admin_actions.toggle_title'),
+            'message' => __('msg_admin_actions.toggle_message'),
+            'label' => __('msg_admin_actions.confirm_label'),
         ]);
     }
 }

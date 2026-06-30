@@ -1,15 +1,15 @@
 <div class="mx-auto max-w-6xl px-6 py-16">
     <header class="text-center">
-        <h1 class="text-3xl font-extrabold text-slate-800 sm:text-4xl">Terreiros inclusivos</h1>
-        <p class="mt-2 text-slate-500">Encontre casas que acolhem e respeitam pessoas trans.</p>
+        <h1 class="text-3xl font-extrabold text-slate-800 sm:text-4xl">{{ __('page_terreiros_search.title') }}</h1>
+        <p class="mt-2 text-slate-500">{{ __('page_terreiros_search.subtitle') }}</p>
     </header>
 
     <div class="mx-auto mt-8 max-w-xl">
-        <input type="search" wire:model.live.debounce.300ms="search" placeholder="Pesquisar por nome do terreiro ou estado"
+        <input type="search" wire:model.live.debounce.300ms="search" placeholder="{{ __('page_terreiros_search.search_placeholder') }}"
                class="w-full rounded-full border border-slate-300 px-5 py-3 text-sm shadow-sm focus:border-violet-500 focus:ring-violet-500">
     </div>
 
-    <div wire:loading wire:target="search" class="mt-6 text-center text-sm text-slate-400">{{ __('Searching terreiros...') }}</div>
+    <div wire:loading wire:target="search" class="mt-6 text-center text-sm text-slate-400">{{ __('page_terreiros_search.searching') }}</div>
 
     <div class="mt-8 space-y-4" wire:loading.remove wire:target="search" x-data="{ expanded: null }">
         @forelse ($terreiros as $terreiro)
@@ -25,22 +25,22 @@
                         <span class="hidden sm:inline">{{ maskPhone($terreiro->phone) }}</span>
                         <button @click="expanded = (expanded === {{ $terreiro->id }} ? null : {{ $terreiro->id }})"
                                 class="rounded-full border border-violet-200 px-4 py-1.5 text-sm font-medium text-violet-700 transition hover:bg-violet-50">
-                            Detalhes
+                            {{ __('page_terreiros_search.details') }}
                         </button>
                     </div>
                 </div>
                 <div x-show="expanded === {{ $terreiro->id }}" x-transition x-cloak class="border-t border-slate-100 bg-slate-50 p-5 text-sm text-slate-600">
                     <dl class="grid gap-2 sm:grid-cols-2">
-                        <div><dt class="font-semibold text-slate-700">Liderança</dt><dd>{{ $terreiro->leadership_orunko }}</dd></div>
-                        <div><dt class="font-semibold text-slate-700">Telefone</dt><dd>{{ maskPhone($terreiro->phone) }}</dd></div>
-                        <div class="sm:col-span-2"><dt class="font-semibold text-slate-700">Endereço</dt>
+                        <div><dt class="font-semibold text-slate-700">{{ __('page_terreiros_search.leadership') }}</dt><dd>{{ $terreiro->leadership_orunko }}</dd></div>
+                        <div><dt class="font-semibold text-slate-700">{{ __('page_terreiros_search.phone') }}</dt><dd>{{ maskPhone($terreiro->phone) }}</dd></div>
+                        <div class="sm:col-span-2"><dt class="font-semibold text-slate-700">{{ __('page_terreiros_search.address') }}</dt>
                             <dd>{{ $terreiro->address?->address }}, {{ $terreiro->address?->neighborhood }}@if(!empty($terreiro->address?->complement)), {{ $terreiro->address->complement }}@endif — {{ $terreiro->address?->city?->name }}/{{ $terreiro->address?->state?->abbr }}, {{ $terreiro->address?->zipcode }}</dd>
                         </div>
                     </dl>
                 </div>
             </div>
         @empty
-            <div class="rounded-2xl border border-dashed border-slate-300 p-12 text-center text-slate-400">Nenhum terreiro encontrado.</div>
+            <div class="rounded-2xl border border-dashed border-slate-300 p-12 text-center text-slate-400">{{ __('page_terreiros_search.empty') }}</div>
         @endforelse
     </div>
 

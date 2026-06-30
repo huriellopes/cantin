@@ -1,31 +1,31 @@
 <div class="space-y-6">
     <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
-            <h2 class="text-xl font-bold text-slate-800">Usuários</h2>
-            <p class="text-sm text-slate-500">Gerencie os acessos ao painel.</p>
+            <h2 class="text-xl font-bold text-slate-800">{{ __('crud_users.title') }}</h2>
+            <p class="text-sm text-slate-500">{{ __('crud_users.subtitle') }}</p>
         </div>
         <div class="flex items-center gap-2">
             <button wire:click="exportCsv" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">
-                Exportar CSV
+                {{ __('crud_users.export_csv') }}
             </button>
             <button wire:click="create" class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
                 @svg('lucide-plus', 'h-4 w-4')
-                Novo usuário
+                {{ __('crud_users.new_user') }}
             </button>
         </div>
     </div>
 
     @if ($generatedPassword)
         <div class="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            Nova senha de <strong>{{ $generatedFor }}</strong>:
+            {{ __('crud_users.new_password_for') }} <strong>{{ $generatedFor }}</strong>:
             <code class="rounded bg-amber-100 px-2 py-0.5 font-mono">{{ $generatedPassword }}</code>
-            <button wire:click="$set('generatedPassword', null)" class="ml-2 underline">ocultar</button>
+            <button wire:click="$set('generatedPassword', null)" class="ml-2 underline">{{ __('crud_users.hide') }}</button>
         </div>
     @endif
 
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
-            <input wire:model.live.debounce.400ms="search" type="search" placeholder="Buscar por nome ou e-mail..."
+            <input wire:model.live.debounce.400ms="search" type="search" placeholder="{{ __('crud_users.search_placeholder') }}"
                    class="w-full max-w-sm rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
         </div>
 
@@ -34,11 +34,11 @@
                 <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                     <tr>
                         <th class="px-4 py-3">#</th>
-                        <th class="px-4 py-3">Nome</th>
-                        <th class="px-4 py-3">E-mail</th>
-                        <th class="px-4 py-3">Perfil</th>
-                        <th class="px-4 py-3">Status</th>
-                        <th class="px-4 py-3 text-right">Ações</th>
+                        <th class="px-4 py-3">{{ __('crud_users.col_name') }}</th>
+                        <th class="px-4 py-3">{{ __('crud_users.col_email') }}</th>
+                        <th class="px-4 py-3">{{ __('crud_users.col_role') }}</th>
+                        <th class="px-4 py-3">{{ __('common.status') }}</th>
+                        <th class="px-4 py-3 text-right">{{ __('common.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -53,21 +53,21 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-1">
-                                    <x-admin.action icon="view" color="sky" label="Visualizar" wire:click="view({{ $user->id }})" />
-                                    <x-admin.action icon="edit" color="violet" label="Editar" wire:click="edit({{ $user->id }})" />
+                                    <x-admin.action icon="view" color="sky" label="{{ __('common.view') }}" wire:click="view({{ $user->id }})" />
+                                    <x-admin.action icon="edit" color="violet" label="{{ __('common.edit') }}" wire:click="edit({{ $user->id }})" />
                                     @if ($user->id !== auth()->id())
                                         <x-admin.action icon="toggle"
                                             :color="$user->status === \App\Enum\Status::ACTIVE ? 'amber' : 'emerald'"
-                                            :label="$user->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar'"
+                                            :label="$user->status === \App\Enum\Status::ACTIVE ? __('common.deactivate') : __('common.activate')"
                                             wire:click="confirmToggle({{ $user->id }})" />
-                                        <x-admin.action icon="reset" color="amber" label="Resetar senha" wire:click="confirmReset({{ $user->id }})" />
-                                        <x-admin.action icon="delete" color="rose" label="Excluir" wire:click="confirmDelete({{ $user->id }})" />
+                                        <x-admin.action icon="reset" color="amber" label="{{ __('crud_users.reset_password') }}" wire:click="confirmReset({{ $user->id }})" />
+                                        <x-admin.action icon="delete" color="rose" label="{{ __('common.delete') }}" wire:click="confirmDelete({{ $user->id }})" />
                                     @endif
                                 </div>
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="px-4 py-10 text-center text-slate-400">Nenhum usuário encontrado.</td></tr>
+                        <tr><td colspan="6" class="px-4 py-10 text-center text-slate-400">{{ __('crud_users.empty') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -79,15 +79,15 @@
     </div>
 
     {{-- Modal criar/editar --}}
-    <x-admin.modal title="{{ $editingId ? 'Editar usuário' : 'Novo usuário' }}">
+    <x-admin.modal title="{{ $editingId ? __('crud_users.edit_user') : __('crud_users.new_user') }}">
         <form wire:submit="save" class="space-y-4">
-            <x-admin.input label="Nome" name="name" wire:model="name" />
-            <x-admin.input label="E-mail" name="email" type="email" wire:model="email" />
+            <x-admin.input label="{{ __('crud_users.field_name') }}" name="name" wire:model="name" />
+            <x-admin.input label="{{ __('crud_users.field_email') }}" name="email" type="email" wire:model="email" />
 
             <div class="space-y-1">
-                <label for="role_id" class="block text-sm font-medium text-slate-700">Perfil de acesso</label>
+                <label for="role_id" class="block text-sm font-medium text-slate-700">{{ __('crud_users.access_role') }}</label>
                 <select id="role_id" wire:model="role_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
-                    <option value="">Selecione...</option>
+                    <option value="">{{ __('crud_users.select_placeholder') }}</option>
                     @foreach ($roles as $id => $label)
                         <option value="{{ $id }}">{{ $label }}</option>
                     @endforeach
@@ -96,10 +96,10 @@
             </div>
 
             <div class="flex justify-end gap-2 pt-2">
-                <button type="button" @click="$wire.showModal = false" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">Cancelar</button>
+                <button type="button" @click="$wire.showModal = false" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">{{ __('common.cancel') }}</button>
                 <button type="submit" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-700">
-                    <span wire:loading.remove wire:target="save">Salvar</span>
-                    <span wire:loading wire:target="save">Salvando...</span>
+                    <span wire:loading.remove wire:target="save">{{ __('common.save') }}</span>
+                    <span wire:loading wire:target="save">{{ __('common.saving') }}</span>
                 </button>
             </div>
         </form>

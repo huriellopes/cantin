@@ -28,21 +28,21 @@ class Dashboard extends Component
     public function render(): Factory|View
     {
         $stats = [
-            ['label' => 'Visitas no site', 'value' => Visit::query()->count(), 'icon' => 'eye', 'color' => 'sky'],
-            ['label' => 'Terreiros', 'value' => Terreiro::query()->count(), 'icon' => 'house', 'color' => 'violet'],
-            ['label' => 'Comentários', 'value' => Comment::query()->whereNull('parent_id')->count(), 'icon' => 'message-square', 'color' => 'amber'],
-            ['label' => 'Usuários', 'value' => User::query()->count(), 'icon' => 'users', 'color' => 'emerald'],
-            ['label' => 'Entidades parceiras', 'value' => PartnerEntity::query()->where('status', Status::ACTIVE)->count(), 'icon' => 'star', 'color' => 'rose'],
-            ['label' => 'Pessoas trans', 'value' => TransPeople::query()->count(), 'icon' => 'user', 'color' => 'indigo'],
+            ['label' => __('msg_dashboard.stat_visits'), 'value' => Visit::query()->count(), 'icon' => 'eye', 'color' => 'sky'],
+            ['label' => __('msg_dashboard.stat_terreiros'), 'value' => Terreiro::query()->count(), 'icon' => 'house', 'color' => 'violet'],
+            ['label' => __('msg_dashboard.stat_comments'), 'value' => Comment::query()->whereNull('parent_id')->count(), 'icon' => 'message-square', 'color' => 'amber'],
+            ['label' => __('msg_dashboard.stat_users'), 'value' => User::query()->count(), 'icon' => 'users', 'color' => 'emerald'],
+            ['label' => __('msg_dashboard.stat_partner_entities'), 'value' => PartnerEntity::query()->where('status', Status::ACTIVE)->count(), 'icon' => 'star', 'color' => 'rose'],
+            ['label' => __('msg_dashboard.stat_trans_people'), 'value' => TransPeople::query()->count(), 'icon' => 'user', 'color' => 'indigo'],
         ];
 
         return view('livewire.admin.dashboard', [
             'stats' => $stats,
             'recentTerreiros' => Terreiro::query()->latest()->take(6)->get(['id', 'name', 'created_at']),
             'charts' => [
-                ['title' => 'Visitas (30 dias)', 'color' => 'sky', 'series' => $this->dailySeries(Visit::query(), 'visited_at')],
-                ['title' => 'Terreiros (30 dias)', 'color' => 'violet', 'series' => $this->dailySeries(Terreiro::query(), 'created_at')],
-                ['title' => 'Posts (30 dias)', 'color' => 'amber', 'series' => $this->dailySeries(Post::query(), 'created_at')],
+                ['title' => __('msg_dashboard.chart_visits'), 'color' => 'sky', 'series' => $this->dailySeries(Visit::query(), 'visited_at')],
+                ['title' => __('msg_dashboard.chart_terreiros'), 'color' => 'violet', 'series' => $this->dailySeries(Terreiro::query(), 'created_at')],
+                ['title' => __('msg_dashboard.chart_posts'), 'color' => 'amber', 'series' => $this->dailySeries(Post::query(), 'created_at')],
             ],
         ]);
     }

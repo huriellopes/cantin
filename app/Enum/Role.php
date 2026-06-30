@@ -9,10 +9,10 @@ enum Role: int
     public function label(): string
     {
         return match ($this) {
-            self::SUPER => 'Super Usuário',
-            self::ADMIN => 'Administrador(a)',
-            self::USER => 'Usuário(a)',
-            default => 'Nível de acesso não encontrado.',
+            self::SUPER => (string) __('admin.roles.super'),
+            self::ADMIN => (string) __('admin.roles.admin'),
+            self::USER => (string) __('admin.roles.user'),
+            default => (string) __('admin.roles.unknown'),
         };
     }
 

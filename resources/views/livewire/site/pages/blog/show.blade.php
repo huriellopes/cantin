@@ -23,17 +23,17 @@
         <div class="mt-8 flex gap-3">
             <button wire:click="like" @if ($userDisliked) disabled @endif wire:loading.attr="disabled"
                     class="flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition {{ $userLiked ? 'bg-emerald-600 text-white' : 'border border-slate-300 text-slate-600 hover:bg-slate-50' }}">
-                👍 Curtir ({{ $post->likes()->count() }})
+                👍 {{ __('page_blog_show.like') }} ({{ $post->likes()->count() }})
             </button>
             <button wire:click="dislike" @if ($userLiked) disabled @endif wire:loading.attr="disabled"
                     class="flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition {{ $userDisliked ? 'bg-rose-600 text-white' : 'border border-slate-300 text-slate-600 hover:bg-slate-50' }}">
-                👎 Descurtir ({{ $post->dislikes()->count() }})
+                👎 {{ __('page_blog_show.dislike') }} ({{ $post->dislikes()->count() }})
             </button>
         </div>
 
         {{-- Compartilhar --}}
         <div class="mt-10 border-t border-slate-100 pt-6">
-            <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Compartilhe</h3>
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-500">{{ __('page_blog_show.share') }}</h3>
             <div class="mt-3 flex gap-3">
                 @foreach ([
                     ['Facebook', 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode($postUrl)],

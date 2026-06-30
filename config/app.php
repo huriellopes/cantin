@@ -102,7 +102,13 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'pt_BR'),
+
+    // Idiomas disponíveis na plataforma (usado pelo seletor de idioma).
+    'available_locales' => [
+        'pt_BR' => 'Português',
+        'en' => 'English',
+    ],
 
     /*
     |--------------------------------------------------------------------------
