@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'save' => 'Salvar',
+    'cancel' => 'Cancelar',
+    'edit' => 'Editar',
+    'delete' => 'Excluir',
+    'view' => 'Visualizar',
+    'create' => 'Criar',
+    'confirm' => 'Confirmar',
+    'search' => 'Buscar',
+    'actions' => 'Ações',
+    'status' => 'Status',
+    'activate' => 'Ativar',
+    'deactivate' => 'Inativar',
+    'active' => 'Ativo',
+    'inactive' => 'Inativo',
+    'yes' => 'Sim',
+    'no' => 'Não',
+    'back' => 'Voltar',
+    'close' => 'Fechar',
+    'export' => 'Exportar',
+    // Estados de carregamento (anti duplo-clique)
+    'processing' => 'Processando...',
+    'saving' => 'Salvando...',
+    'deleting' => 'Excluindo...',
+    'exporting' => 'Exportando...',
+    'sending' => 'Enviando...',
+];

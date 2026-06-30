@@ -44,19 +44,19 @@
 >
     <div class="mx-auto flex max-w-4xl flex-col gap-4 rounded-2xl border border-slate-200 bg-white/95 p-5 shadow-2xl backdrop-blur sm:flex-row sm:items-center sm:justify-between">
         <p class="text-sm text-slate-600">
-            Usamos cookies essenciais e, mediante seu consentimento, cookies de análise e publicidade (Google).
-            Saiba mais na <a href="{{ route('site.privacy') }}" wire:navigate class="font-medium text-violet-600 hover:underline">Política de Privacidade</a>.
+            {{ __('cookies.message') }}
+            {!! __('cookies.see_more', ['link' => '<a href="'.route('site.privacy').'" class="font-medium text-violet-600 hover:underline">'.__('cookies.privacy_link').'</a>']) !!}
         </p>
         <div class="flex shrink-0 gap-3">
             <button type="button"
                     @click="localStorage.setItem('cookie-consent','rejected'); show = false"
                     class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
-                Rejeitar
+                {{ __('cookies.reject') }}
             </button>
             <button type="button"
                     @click="localStorage.setItem('cookie-consent','accepted'); show = false; window.loadCantinAnalytics && window.loadCantinAnalytics()"
                     class="rounded-lg bg-gradient-to-r from-violet-600 to-pink-500 px-4 py-2 text-sm font-semibold text-white transition hover:brightness-110">
-                Aceitar
+                {{ __('cookies.accept') }}
             </button>
         </div>
     </div>

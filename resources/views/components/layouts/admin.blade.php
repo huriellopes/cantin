@@ -35,24 +35,24 @@
 >
     @php
         $nav = [
-            ['Painel', route('admin.dashboard'), request()->routeIs('admin.dashboard'), 'layout-dashboard'],
-            ['Terreiros', route('admin.terreiros.index'), request()->routeIs('admin.terreiros.*'), 'house'],
-            ['Nações', route('admin.nations.index'), request()->routeIs('admin.nations.*'), 'globe'],
-            ['Tipos de Terreiro', route('admin.type-terreiros.index'), request()->routeIs('admin.type-terreiros.*'), 'layout-grid'],
-            ['Gêneros', route('admin.type-peoples.index'), request()->routeIs('admin.type-peoples.*'), 'users'],
-            ['Pessoas Trans', route('admin.trans-peoples.index'), request()->routeIs('admin.trans-peoples.*'), 'user'],
-            ['Entidades Parceiras', route('admin.partner-entities.index'), request()->routeIs('admin.partner-entities.*'), 'heart-handshake'],
-            ['Posts', route('admin.posts.index'), request()->routeIs('admin.posts.*'), 'file-text'],
-            ['Categorias', route('admin.categories.index'), request()->routeIs('admin.categories.*'), 'tag'],
-            ['Comentários', route('admin.comments.index'), request()->routeIs('admin.comments.*'), 'message-square'],
-            ['Páginas', route('admin.pages.index'), request()->routeIs('admin.pages.*'), 'file'],
-            ['Páginas Estáticas', route('admin.static-pages.index'), request()->routeIs('admin.static-pages.*'), 'file-text'],
-            ['Tipos de Link', route('admin.type-external-links.index'), request()->routeIs('admin.type-external-links.*'), 'link'],
-            ['Links Externos', route('admin.external-links.index'), request()->routeIs('admin.external-links.*'), 'external-link'],
+            [__('admin.nav.dashboard'), route('admin.dashboard'), request()->routeIs('admin.dashboard'), 'layout-dashboard'],
+            [__('admin.nav.terreiros'), route('admin.terreiros.index'), request()->routeIs('admin.terreiros.*'), 'house'],
+            [__('admin.nav.nations'), route('admin.nations.index'), request()->routeIs('admin.nations.*'), 'globe'],
+            [__('admin.nav.type_terreiros'), route('admin.type-terreiros.index'), request()->routeIs('admin.type-terreiros.*'), 'layout-grid'],
+            [__('admin.nav.genders'), route('admin.type-peoples.index'), request()->routeIs('admin.type-peoples.*'), 'users'],
+            [__('admin.nav.trans_people'), route('admin.trans-peoples.index'), request()->routeIs('admin.trans-peoples.*'), 'user'],
+            [__('admin.nav.partners'), route('admin.partner-entities.index'), request()->routeIs('admin.partner-entities.*'), 'heart-handshake'],
+            [__('admin.nav.posts'), route('admin.posts.index'), request()->routeIs('admin.posts.*'), 'file-text'],
+            [__('admin.nav.categories'), route('admin.categories.index'), request()->routeIs('admin.categories.*'), 'tag'],
+            [__('admin.nav.comments'), route('admin.comments.index'), request()->routeIs('admin.comments.*'), 'message-square'],
+            [__('admin.nav.pages'), route('admin.pages.index'), request()->routeIs('admin.pages.*'), 'file'],
+            [__('admin.nav.static_pages'), route('admin.static-pages.index'), request()->routeIs('admin.static-pages.*'), 'file-text'],
+            [__('admin.nav.link_types'), route('admin.type-external-links.index'), request()->routeIs('admin.type-external-links.*'), 'link'],
+            [__('admin.nav.external_links'), route('admin.external-links.index'), request()->routeIs('admin.external-links.*'), 'external-link'],
         ];
         if (auth()->user()?->isSuperAdmin()) {
-            $nav[] = ['Usuários', route('admin.users.index'), request()->routeIs('admin.users.*'), 'users'];
-            $nav[] = ['Modelos Excluídos', route('admin.deleted-models.index'), request()->routeIs('admin.deleted-models.*'), 'trash-2'];
+            $nav[] = [__('admin.nav.users'), route('admin.users.index'), request()->routeIs('admin.users.*'), 'users'];
+            $nav[] = [__('admin.nav.deleted_models'), route('admin.deleted-models.index'), request()->routeIs('admin.deleted-models.*'), 'trash-2'];
         }
     @endphp
 
@@ -68,7 +68,7 @@
                 <img src="{{ asset('assets/images/CANTIn.png') }}" alt="CaNTIn" class="admin-logo-mark" />
             </a>
             <button type="button" @click="toggleCollapse()"
-                    @mouseenter="showTip($el, collapsed ? 'Expandir menu' : 'Recolher menu')" @mouseleave="tip.show = false"
+                    @mouseenter="showTip($el, collapsed ? @js(__('admin.header.expand')) : @js(__('admin.header.collapse')))" @mouseleave="tip.show = false"
                     class="admin-chevron-toggle rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
                     aria-label="Recolher/expandir menu">
                 @svg('lucide-chevron-left', 'admin-chevron h-5 w-5 transition-transform')
@@ -113,14 +113,16 @@
                 @svg('lucide-menu', 'h-6 w-6')
             </button>
 
-            <h1 class="text-base font-semibold text-slate-700">{{ $title ?? 'Painel' }}</h1>
+            <h1 class="text-base font-semibold text-slate-700">{{ $title ?? __('admin.header.panel') }}</h1>
 
             <div class="ml-auto flex items-center gap-2">
                 <a href="{{ route('site.home') }}" target="_blank" rel="noopener"
                    class="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 sm:flex">
                     @svg('lucide-external-link', 'h-4 w-4')
-                    Ver o site
+                    {{ __('admin.header.view_site') }}
                 </a>
+
+                <x-lang-switcher />
 
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = ! open" class="flex items-center gap-2 rounded-full py-1 pl-1 pr-3 hover:bg-slate-100">
@@ -132,13 +134,13 @@
                     <div x-show="open" x-cloak @click.outside="open = false" class="absolute right-0 top-12 z-50 w-48 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
                         <a href="{{ route('admin.profile') }}" wire:navigate class="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
                             @svg('lucide-user-cog', 'h-4 w-4')
-                            Meu perfil
+                            {{ __('admin.header.my_profile') }}
                         </a>
                         <form method="POST" action="{{ route('admin.logout') }}">
                             @csrf
                             <button type="submit" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
                                 @svg('lucide-log-out', 'h-4 w-4')
-                                Sair
+                                {{ __('admin.header.logout') }}
                             </button>
                         </form>
                     </div>
