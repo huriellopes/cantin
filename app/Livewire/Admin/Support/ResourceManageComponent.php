@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Admin\Support;
 
 use App\Enum\Status;
+use App\Support\HtmlSanitizer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -31,6 +32,13 @@ abstract class ResourceManageComponent extends Component
         $this->validate();
 
         $data = $this->form;
+
+        // Sanitiza os campos de conteúdo rico (defesa contra XSS armazenado).
+        foreach ($this->fields() as $name => $cfg) {
+            if (($cfg['type'] ?? null) === 'richtext' && array_key_exists($name, $data)) {
+                $data[$name] = HtmlSanitizer::clean((string) $data[$name]);
+            }
+        }
 
         // slug automático a partir do nome quando vazio
         if (array_key_exists('slug', $this->fields()) && blank($data['slug'] ?? null) && filled($data['name'] ?? null)) {

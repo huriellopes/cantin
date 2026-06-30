@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\Posts;
 use App\Enum\StatusPost;
 use App\Models\Category;
 use App\Models\Post;
+use App\Support\HtmlSanitizer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Date;
@@ -71,7 +72,7 @@ class Manage extends Component
             'slug' => Str::slug($this->slug ?: $this->titleField),
             'category_id' => $this->category_id,
             'published_at' => $publishedAt,
-            'content' => $this->content,
+            'content' => HtmlSanitizer::clean($this->content),
             'status' => $publishedAt->startOfDay()->lte(today()) ? StatusPost::PUBLISHED : StatusPost::PENDING,
         ];
 

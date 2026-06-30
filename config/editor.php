@@ -18,12 +18,13 @@ return [
     'upload_disk' => env('EDITOR_UPLOAD_DISK', 'public'),
     'upload_path' => env('EDITOR_UPLOAD_PATH', 'editor-attachments'),
 
+    // SVG é intencionalmente omitido: pode conter <script> e, servido na mesma
+    // origem, vira XSS armazenado.
     'allowed_mimetypes' => [
         'image/jpeg',
         'image/png',
         'image/gif',
         'image/webp',
-        'image/svg+xml',
         'video/mp4',
         'video/webm',
         'video/ogg',
