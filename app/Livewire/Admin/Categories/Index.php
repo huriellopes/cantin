@@ -20,19 +20,19 @@ class Index extends ResourceComponent
     protected function fields(): array
     {
         return [
-            'name' => ['label' => 'Nome'],
-            'slug' => ['label' => 'Slug', 'unique' => true],
+            'name' => ['label' => __('msg_categories.field_name')],
+            'slug' => ['label' => __('msg_categories.field_slug'), 'unique' => true],
         ];
     }
 
     protected function heading(): string
     {
-        return 'Categorias';
+        return __('msg_categories.heading');
     }
 
     protected function singular(): string
     {
-        return 'Categoria';
+        return __('msg_categories.singular');
     }
 
     #[Override]

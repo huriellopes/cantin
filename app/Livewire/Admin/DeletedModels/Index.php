@@ -37,18 +37,18 @@ class Index extends Component
     public function confirmRestore(int $id): void
     {
         $this->requestConfirm('restore', [$id], [
-            'title' => 'Restaurar registro',
-            'message' => 'Deseja restaurar este registro excluído?',
-            'label' => 'Restaurar',
+            'title' => __('msg_deleted_models.confirm_restore_title'),
+            'message' => __('msg_deleted_models.confirm_restore_message'),
+            'label' => __('msg_deleted_models.confirm_restore_label'),
         ]);
     }
 
     public function confirmForceDelete(int $id): void
     {
         $this->requestConfirm('forceDelete', [$id], [
-            'title' => 'Excluir permanentemente',
-            'message' => 'Esta ação remove o registro definitivamente e não pode ser desfeita.',
-            'label' => 'Excluir permanentemente',
+            'title' => __('msg_deleted_models.confirm_force_delete_title'),
+            'message' => __('msg_deleted_models.confirm_force_delete_message'),
+            'label' => __('msg_deleted_models.confirm_force_delete_label'),
             'danger' => true,
         ]);
     }
@@ -59,16 +59,16 @@ class Index extends Component
 
         try {
             $record->model::restore($record->key);
-            $this->notify('Registro restaurado com sucesso.');
+            $this->notify(__('msg_deleted_models.restored_success'));
         } catch (Throwable) {
-            $this->notify('Não foi possível restaurar o registro.', 'error');
+            $this->notify(__('msg_deleted_models.restore_failed'), 'error');
         }
     }
 
     public function forceDelete(int $id): void
     {
         DeletedModel::query()->findOrFail($id)->delete();
-        $this->notify('Registro removido permanentemente.');
+        $this->notify(__('msg_deleted_models.force_deleted_success'));
     }
 
     public function render(): Factory|View

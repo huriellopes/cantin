@@ -101,14 +101,14 @@ class Comments extends Component
                 ]);
 
                 Log::info('User ' . auth()->user()->id . ' replied to comment ' . $parentComment->id . ' successfully.');
-                session()->flash('success', 'Sua resposta foi enviada com sucesso!');
+                session()->flash('success', __('msg_comments_site.reply_sent_success'));
             } else {
                 Log::error('User ' . auth()->user()->id . ' tried to reply to comment ' . $parentComment->id . ' without admin or super-admin role.');
-                session()->flash('error', 'Você não tem permissão para responder a este comentário.');
+                session()->flash('error', __('msg_comments_site.no_permission_to_reply'));
             }
         } else {
             Log::error('User tried to reply to comment ' . $parentComment->id . ' without being logged in.');
-            session()->flash('error', 'É necessário estar logado como administrador para responder a este comentário.');
+            session()->flash('error', __('msg_comments_site.must_be_logged_as_admin'));
         }
 
         $this->replies[$parentComment->id] = '';
@@ -206,7 +206,7 @@ class Comments extends Component
     protected function messages(): array
     {
         return [
-            'newComment.required' => 'O campos comentário é obrigatório.',
+            'newComment.required' => __('msg_comments_site.comment_required'),
         ];
     }
 }

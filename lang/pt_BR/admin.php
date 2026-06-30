@@ -3,6 +3,12 @@
 declare(strict_types=1);
 
 return [
+    'roles' => [
+        'super' => 'Super Usuário',
+        'admin' => 'Administrador(a)',
+        'user' => 'Usuário(a)',
+        'unknown' => 'Nível de acesso não encontrado.',
+    ],
     'nav' => [
         'dashboard' => 'Painel',
         'terreiros' => 'Terreiros',

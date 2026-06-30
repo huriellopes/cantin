@@ -101,7 +101,7 @@ class Index extends Component
             $this->latitude = $data->latitude ?? null;
             $this->longitude = $data->longitude ?? null;
         } catch (Throwable) {
-            $this->addError('zipcode', 'Não foi possível buscar o CEP.');
+            $this->addError('zipcode', __('msg_terreiros.cep_lookup_failed'));
         }
     }
 
@@ -180,20 +180,20 @@ class Index extends Component
         });
 
         $this->showModal = false;
-        $this->notify('Terreiro salvo com sucesso.');
+        $this->notify(__('msg_terreiros.terreiro_saved'));
     }
 
     public function view(int $id): void
     {
         $terreiro = Terreiro::query()->with(['nation', 'address.state', 'address.city'])->findOrFail($id);
         $this->viewData = [
-            ['label' => 'Nome', 'value' => $terreiro->name],
-            ['label' => 'Telefone', 'value' => $terreiro->phone],
-            ['label' => 'Liderança', 'value' => $terreiro->leadership_orunko],
-            ['label' => 'Nação', 'value' => $terreiro->nation?->name],
-            ['label' => 'Cor da liderança', 'value' => $terreiro->color_of_leadership],
-            ['label' => 'Endereço', 'value' => mb_trim(($terreiro->address?->address ?? '') . ' — ' . ($terreiro->address?->city?->name ?? '') . '/' . ($terreiro->address?->state?->abbr ?? ''))],
-            ['label' => 'CEP', 'value' => $terreiro->address?->zipcode],
+            ['label' => __('msg_terreiros.label_name'), 'value' => $terreiro->name],
+            ['label' => __('msg_terreiros.label_phone'), 'value' => $terreiro->phone],
+            ['label' => __('msg_terreiros.label_leadership'), 'value' => $terreiro->leadership_orunko],
+            ['label' => __('msg_terreiros.label_nation'), 'value' => $terreiro->nation?->name],
+            ['label' => __('msg_terreiros.label_color_of_leadership'), 'value' => $terreiro->color_of_leadership],
+            ['label' => __('msg_terreiros.label_address'), 'value' => mb_trim(($terreiro->address?->address ?? '') . ' — ' . ($terreiro->address?->city?->name ?? '') . '/' . ($terreiro->address?->state?->abbr ?? ''))],
+            ['label' => __('msg_terreiros.label_zipcode'), 'value' => $terreiro->address?->zipcode],
         ];
         $this->viewTitle = $terreiro->name;
         $this->showView = true;
@@ -202,7 +202,7 @@ class Index extends Component
     public function delete(int $id): void
     {
         Terreiro::query()->findOrFail($id)->delete();
-        $this->notify('Terreiro excluído.');
+        $this->notify(__('msg_terreiros.terreiro_deleted'));
     }
 
     public function exportCsv()
@@ -211,7 +211,7 @@ class Index extends Component
 
         return response()->streamDownload(function (): void {
             $out = fopen('php://output', 'w');
-            fputcsv($out, ['ID', 'Nome', 'Telefone', 'Nação', 'CEP', 'Endereço', 'Liderança', 'Cor da liderança', 'Criado em']);
+            fputcsv($out, [__('msg_terreiros.csv_id'), __('msg_terreiros.label_name'), __('msg_terreiros.label_phone'), __('msg_terreiros.label_nation'), __('msg_terreiros.label_zipcode'), __('msg_terreiros.label_address'), __('msg_terreiros.label_leadership'), __('msg_terreiros.label_color_of_leadership'), __('msg_terreiros.csv_created_at')]);
 
             Terreiro::query()->with(['nation', 'address'])->orderBy('id')
                 ->chunk(200, function ($terreiros) use ($out): void {

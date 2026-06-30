@@ -82,7 +82,7 @@ abstract class ResourceComponent extends Component
         }
 
         $this->showModal = false;
-        $this->notify($editing ? "{$this->singular()} atualizado(a)." : "{$this->singular()} criado(a).");
+        $this->notify($editing ? __('msg_resource.updated', ['name' => $this->singular()]) : __('msg_resource.created', ['name' => $this->singular()]));
     }
 
     public function view(int $id): void
@@ -109,13 +109,13 @@ abstract class ResourceComponent extends Component
 
         $record = $this->model()::query()->findOrFail($id);
         $record->update(['status' => $record->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
-        $this->notify('Status atualizado.');
+        $this->notify(__('msg_resource.status_updated'));
     }
 
     public function delete(int $id): void
     {
         $this->model()::query()->findOrFail($id)->delete();
-        $this->notify("{$this->singular()} excluído(a).");
+        $this->notify(__('msg_resource.deleted', ['name' => $this->singular()]));
     }
 
     public function render()

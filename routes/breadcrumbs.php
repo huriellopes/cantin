@@ -7,31 +7,31 @@ use Diglactic\Breadcrumbs\Generator as Trail;
 
 // Raiz do painel
 Breadcrumbs::for('admin.dashboard', function (Trail $trail): void {
-    $trail->push('Painel', route('admin.dashboard'));
+    $trail->push(__('admin.nav.dashboard'), route('admin.dashboard'));
 });
 
-// Páginas de listagem do admin (todas filhas do Painel)
+// Páginas de listagem do admin (todas filhas do Painel) — rótulos reutilizam admin.nav.*
 $adminPages = [
-    'admin.terreiros.index' => 'Terreiros',
-    'admin.nations.index' => 'Nações',
-    'admin.type-terreiros.index' => 'Tipos de Terreiro',
-    'admin.type-peoples.index' => 'Gêneros',
-    'admin.trans-peoples.index' => 'Pessoas Trans',
-    'admin.partner-entities.index' => 'Entidades Parceiras',
-    'admin.posts.index' => 'Posts',
-    'admin.categories.index' => 'Categorias',
-    'admin.comments.index' => 'Comentários',
-    'admin.pages.index' => 'Páginas',
-    'admin.static-pages.index' => 'Páginas Estáticas',
-    'admin.type-external-links.index' => 'Tipos de Link',
-    'admin.external-links.index' => 'Links Externos',
-    'admin.users.index' => 'Usuários',
-    'admin.deleted-models.index' => 'Modelos Excluídos',
+    'admin.terreiros.index' => 'terreiros',
+    'admin.nations.index' => 'nations',
+    'admin.type-terreiros.index' => 'type_terreiros',
+    'admin.type-peoples.index' => 'genders',
+    'admin.trans-peoples.index' => 'trans_people',
+    'admin.partner-entities.index' => 'partners',
+    'admin.posts.index' => 'posts',
+    'admin.categories.index' => 'categories',
+    'admin.comments.index' => 'comments',
+    'admin.pages.index' => 'pages',
+    'admin.static-pages.index' => 'static_pages',
+    'admin.type-external-links.index' => 'link_types',
+    'admin.external-links.index' => 'external_links',
+    'admin.users.index' => 'users',
+    'admin.deleted-models.index' => 'deleted_models',
 ];
 
-foreach ($adminPages as $name => $label) {
-    Breadcrumbs::for($name, function (Trail $trail) use ($name, $label): void {
+foreach ($adminPages as $name => $navKey) {
+    Breadcrumbs::for($name, function (Trail $trail) use ($name, $navKey): void {
         $trail->parent('admin.dashboard');
-        $trail->push($label, route($name));
+        $trail->push(__('admin.nav.' . $navKey), route($name));
     });
 }

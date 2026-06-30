@@ -90,18 +90,18 @@ class Index extends Component
         }
 
         $this->showModal = false;
-        $this->notify($editing ? 'Link atualizado.' : 'Link criado.');
+        $this->notify($editing ? __('msg_external_links.notify_updated') : __('msg_external_links.notify_created'));
     }
 
     public function view(int $id): void
     {
         $link = ExternalLink::query()->with('type:id,name')->findOrFail($id);
         $this->viewData = [
-            ['label' => 'Título', 'value' => $link->title],
-            ['label' => 'Tipo', 'value' => $link->type?->name],
-            ['label' => 'URL', 'value' => $link->url],
-            ['label' => 'Descrição', 'value' => $link->description],
-            ['label' => 'Status', 'value' => $link->status?->label()],
+            ['label' => __('msg_external_links.label_title'), 'value' => $link->title],
+            ['label' => __('msg_external_links.label_type'), 'value' => $link->type?->name],
+            ['label' => __('msg_external_links.label_url'), 'value' => $link->url],
+            ['label' => __('msg_external_links.label_description'), 'value' => $link->description],
+            ['label' => __('msg_external_links.label_status'), 'value' => $link->status?->label()],
         ];
         $this->viewTitle = $link->title;
         $this->showView = true;
@@ -111,13 +111,13 @@ class Index extends Component
     {
         $link = ExternalLink::query()->findOrFail($id);
         $link->update(['status' => $link->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
-        $this->notify('Status atualizado.');
+        $this->notify(__('msg_external_links.notify_status_updated'));
     }
 
     public function delete(int $id): void
     {
         ExternalLink::query()->findOrFail($id)->delete();
-        $this->notify('Link excluído.');
+        $this->notify(__('msg_external_links.notify_deleted'));
     }
 
     public function render(): Factory|View
