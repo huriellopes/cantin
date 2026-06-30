@@ -29,7 +29,6 @@ class DatabaseSeeder extends Seeder
             NationsTerreirosSeederTable::class,
             AddressSeeder::class,
             SuggestionSeederTable::class,
-            CommonQuestionsSeederTable::class,
             CategorySeeder::class,
             PostSeeder::class,
             TypeExternalLinkSeeder::class,
