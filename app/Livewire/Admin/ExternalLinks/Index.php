@@ -91,7 +91,12 @@ class Index extends Component
         }
 
         $editing = (bool) $this->editingId;
-        ExternalLink::query()->updateOrCreate(['id' => $this->editingId], $payload);
+
+        if ($editing) {
+            ExternalLink::query()->whereKey($this->editingId)->update($payload);
+        } else {
+            ExternalLink::query()->create($payload);
+        }
 
         $this->showModal = false;
         $this->notify($editing ? 'Link atualizado.' : 'Link criado.');

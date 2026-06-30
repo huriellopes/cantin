@@ -58,7 +58,8 @@
 
             <button @click="open = !open" class="lg:hidden" aria-label="Menu"
                     :class="solid ? 'text-slate-800' : 'text-white'">
-                <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path x-show="!open" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/><path x-show="open" x-cloak stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+                <span x-show="!open">@svg('lucide-menu', 'h-7 w-7')</span>
+                <span x-show="open" x-cloak>@svg('lucide-x', 'h-7 w-7')</span>
             </button>
         </div>
 

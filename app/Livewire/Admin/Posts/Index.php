@@ -107,7 +107,12 @@ class Index extends Component
         }
 
         $editing = (bool) $this->editingId;
-        Post::query()->updateOrCreate(['id' => $this->editingId], $payload);
+
+        if ($editing) {
+            Post::query()->whereKey($this->editingId)->update($payload);
+        } else {
+            Post::query()->create($payload);
+        }
 
         $this->showModal = false;
         $this->notify($editing ? 'Post atualizado.' : 'Post criado.');

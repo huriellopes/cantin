@@ -101,7 +101,12 @@ class Index extends Component
         }
 
         $editing = (bool) $this->editingId;
-        PartnerEntity::query()->updateOrCreate(['id' => $this->editingId], $payload);
+
+        if ($editing) {
+            PartnerEntity::query()->whereKey($this->editingId)->update($payload);
+        } else {
+            PartnerEntity::query()->create($payload);
+        }
 
         $this->showModal = false;
         $this->notify($editing ? 'Entidade atualizada.' : 'Entidade criada.');

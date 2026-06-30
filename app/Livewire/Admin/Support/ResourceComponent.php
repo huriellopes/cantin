@@ -131,7 +131,12 @@ abstract class ResourceComponent extends Component
         }
 
         $editing = (bool) $this->editingId;
-        $this->model()::query()->updateOrCreate(['id' => $this->editingId], $data);
+
+        if ($editing) {
+            $this->model()::query()->whereKey($this->editingId)->update($data);
+        } else {
+            $this->model()::query()->create($data);
+        }
 
         $this->showModal = false;
         $this->notify($editing ? "{$this->singular()} atualizado(a)." : "{$this->singular()} criado(a).");

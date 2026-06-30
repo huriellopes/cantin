@@ -83,7 +83,12 @@ class Index extends Component
         }
 
         $editing = (bool) $this->editingId;
-        TransPeople::query()->updateOrCreate(['id' => $this->editingId], $payload);
+
+        if ($editing) {
+            TransPeople::query()->whereKey($this->editingId)->update($payload);
+        } else {
+            TransPeople::query()->create($payload);
+        }
 
         $this->showModal = false;
         $this->notify($editing ? 'Cadastro atualizado.' : 'Pessoa cadastrada.');

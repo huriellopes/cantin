@@ -75,12 +75,15 @@ class Index extends Component
     {
         $data = $this->validate();
 
-        User::query()->updateOrCreate(
-            ['id' => $this->editingId],
-            $this->editingId
-                ? $data
-                : [...$data, 'slug' => Str::slug($this->name).'-'.Str::random(5), 'password' => bcrypt(Str::password(12))]
-        );
+        if ($this->editingId) {
+            User::query()->whereKey($this->editingId)->update($data);
+        } else {
+            User::query()->create([
+                ...$data,
+                'slug' => Str::slug($this->name).'-'.Str::random(5),
+                'password' => bcrypt(Str::password(12)),
+            ]);
+        }
 
         $message = $this->editingId ? 'Usuário atualizado.' : 'Usuário criado.';
         $this->showModal = false;

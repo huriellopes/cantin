@@ -29,7 +29,7 @@
         </div>
 
         <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/70">
-            <svg class="h-6 w-6 animate-bounce" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
+            @svg('lucide-chevron-down', 'h-6 w-6 animate-bounce')
         </div>
     </section>
 
@@ -82,7 +82,7 @@
                     <div class="overflow-hidden rounded-2xl border border-slate-200">
                         <button @click="open = (open === {{ $i }} ? null : {{ $i }})" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-medium text-slate-800 hover:bg-slate-50">
                             <span>{{ $common->question }}</span>
-                            <svg class="h-5 w-5 shrink-0 text-violet-500 transition-transform" :class="open === {{ $i }} && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
+                            <span class="shrink-0 text-violet-500 transition-transform" :class="open === {{ $i }} && 'rotate-180'">@svg('lucide-chevron-down', 'h-5 w-5')</span>
                         </button>
                         <div x-show="open === {{ $i }}" x-transition x-cloak class="max-w-none px-5 pb-5 text-slate-600">
                             {!! $common->answer !!}

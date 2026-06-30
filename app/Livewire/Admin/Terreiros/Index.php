@@ -179,17 +179,21 @@ class Index extends Component
                 ]
             );
 
-            $terreiro = Terreiro::query()->updateOrCreate(
-                ['id' => $this->editingId],
-                [
-                    'name' => $this->name,
-                    'phone' => preg_replace('/\D/', '', $this->phone),
-                    'nation_terreiro_id' => $this->nation_terreiro_id,
-                    'leadership_orunko' => $this->leadership_orunko,
-                    'color_of_leadership' => $this->color_of_leadership,
-                    'address_id' => $address->id,
-                ]
-            );
+            $terreiroData = [
+                'name' => $this->name,
+                'phone' => preg_replace('/\D/', '', $this->phone),
+                'nation_terreiro_id' => $this->nation_terreiro_id,
+                'leadership_orunko' => $this->leadership_orunko,
+                'color_of_leadership' => $this->color_of_leadership,
+                'address_id' => $address->id,
+            ];
+
+            if ($this->editingId) {
+                $terreiro = Terreiro::query()->findOrFail($this->editingId);
+                $terreiro->update($terreiroData);
+            } else {
+                $terreiro = Terreiro::query()->create($terreiroData);
+            }
 
             $terreiro->question()->updateOrCreate(
                 ['terreiro_id' => $terreiro->id],
