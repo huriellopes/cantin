@@ -27,6 +27,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Version
+    |--------------------------------------------------------------------------
+    | Fallback usado quando o arquivo VERSION (gravado no deploy a partir da
+    | tag git) não está presente. Veja App\Support\Version.
+    */
+
+    'version' => env('APP_VERSION', 'dev'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

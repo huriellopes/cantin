@@ -39,8 +39,11 @@ jobs:
             COMPOSE="docker compose -f docker-compose.prod.yml"
 
             echo "==> Atualizando código ($BRANCH)"
-            git fetch --all --prune
+            git fetch --all --prune --tags
             git reset --hard "origin/${BRANCH}"
+
+            echo "==> Gravando versão atual (tag git) em VERSION"
+            git describe --tags --always > VERSION 2>/dev/null || echo "dev" > VERSION
 
             echo "==> Garantindo certificado para o nginx subir (dummy só se não existir)"
             mkdir -p ./.docker/certbot/www

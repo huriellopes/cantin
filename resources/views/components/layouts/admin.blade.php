@@ -90,6 +90,11 @@
                 </a>
             @endforeach
         </nav>
+
+        {{-- Footer fixo: versão atual do projeto (auto-atualizada no deploy) --}}
+        <div class="shrink-0 border-t border-slate-800 px-3 py-3 text-center text-xs text-slate-500">
+            <span class="admin-label">CaNTIn </span>v{{ \App\Support\Version::current() }}
+        </div>
     </aside>
 
     {{-- Tooltip flutuante (fixed): escapa do overflow do menu, fica acima do conteúdo --}}
