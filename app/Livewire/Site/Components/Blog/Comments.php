@@ -103,7 +103,7 @@ class Comments extends Component
                 Log::info('User ' . auth()->user()->id . ' replied to comment ' . $parentComment->id . ' successfully.');
                 session()->flash('success', 'Sua resposta foi enviada com sucesso!');
             } else {
-                Log::error('User ' . auth()->user()->id . ' tried to reply to comment ' . $parentComment->id . ' without admin or super-user role.');
+                Log::error('User ' . auth()->user()->id . ' tried to reply to comment ' . $parentComment->id . ' without admin or super-admin role.');
                 session()->flash('error', 'Você não tem permissão para responder a este comentário.');
             }
         } else {

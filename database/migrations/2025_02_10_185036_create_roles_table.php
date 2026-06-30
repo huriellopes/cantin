@@ -26,8 +26,8 @@ return new class() extends Migration
         if (app()->isProduction()) {
             DB::table('roles')->insert([
                 [
-                    'name' => 'Super User',
-                    'slug' => 'super-user',
+                    'name' => 'Super Admin',
+                    'slug' => 'super-admin',
                 ],
                 [
                     'name' => 'Admin',
