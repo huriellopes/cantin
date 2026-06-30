@@ -14,7 +14,7 @@ return new class() extends Migration
      */
     public function up(): void
     {
-        Schema::create('partners_entities', function (Blueprint $table) {
+        Schema::create('partners_entities', function (Blueprint $table): void {
             $table->id();
             $table->string('name')->index();
             $table->text('activity_carried_out'); // Atividade Desenvolvida

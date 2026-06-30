@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Site\Pages\Legal;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -12,7 +14,7 @@ use Livewire\Component;
 #[Title('Política de Privacidade')]
 class Privacy extends Component
 {
-    public function render()
+    public function render(): Factory|View
     {
         return view('livewire.site.pages.legal.privacy');
     }

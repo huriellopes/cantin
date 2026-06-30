@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Livewire\Site\Pages\Blog;
 
 use App\Models\Post;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Show extends Component
@@ -30,7 +32,7 @@ class Show extends Component
         $this->postUrl = url()->current();
     }
 
-    public function like()
+    public function like(): void
     {
         // Se o usuário já deu like, remove o like
         if ($this->userLiked) {
@@ -65,7 +67,7 @@ class Show extends Component
         }
     }
 
-    public function dislike()
+    public function dislike(): void
     {
         // Se o usuário já deu dislike, remove o dislike
         if ($this->userDisliked) {
@@ -100,7 +102,7 @@ class Show extends Component
         }
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         $this->post->increment('views');
 

@@ -102,12 +102,6 @@ class Handler extends ExceptionHandler
 
         $path = mb_strtolower(request()->path());
 
-        foreach (['wp-', '.env', '.git', 'phpmyadmin', 'xmlrpc', 'vendor/', '.php', 'wp/'] as $needle) {
-            if (str_contains($path, $needle)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any(['wp-', '.env', '.git', 'phpmyadmin', 'xmlrpc', 'vendor/', '.php', 'wp/'], fn (string $needle): bool => str_contains($path, $needle));
     }
 }

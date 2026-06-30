@@ -7,14 +7,14 @@ use App\Livewire\Admin\Comments\Index;
 use App\Models\Comment;
 use Livewire\Livewire;
 
-it('lets an admin open the comments page', function () {
+it('lets an admin open the comments page', function (): void {
     $this->actingAs(userWithRole('admin'))
         ->get('/admin/comments')
         ->assertOk()
         ->assertSeeLivewire(Index::class);
 });
 
-it('publishes a reply to a comment', function () {
+it('publishes a reply to a comment', function (): void {
     $admin = userWithRole('admin');
     $comment = Comment::factory()->create();
 
@@ -32,7 +32,7 @@ it('publishes a reply to a comment', function () {
         ->exists())->toBeTrue();
 });
 
-it('validates the reply body', function () {
+it('validates the reply body', function (): void {
     $admin = userWithRole('admin');
     $comment = Comment::factory()->create();
 
@@ -43,7 +43,7 @@ it('validates the reply body', function () {
         ->assertHasErrors(['body']);
 });
 
-it('toggles a comment status', function () {
+it('toggles a comment status', function (): void {
     $admin = userWithRole('admin');
     $comment = Comment::factory()->create(['status' => Status::ACTIVE]);
 

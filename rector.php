@@ -14,11 +14,6 @@ return RectorConfig::configure()
         __DIR__ . '/routes',
         __DIR__ . '/tests',
     ])
-    ->withSkip([
-        // Código morto a ser removido na refatoração — não vale processar
-        __DIR__ . '/app/Livewire/Site',
-        __DIR__ . '/app/Http/Routes/Web/SiteRoute.php',
-    ])
     // Regras de qualidade de código PHP
     ->withPhpSets(php83: true)
     ->withPreparedSets(

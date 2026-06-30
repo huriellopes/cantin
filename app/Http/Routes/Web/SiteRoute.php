@@ -27,7 +27,7 @@ class SiteRoute
         Route::name('site.')
             ->middleware('visit_register')
             ->prefix('/')
-            ->group(function () {
+            ->group(function (): void {
                 Route::get('/', Home::class)
                     ->name('home');
                 Route::get('/sobre', About::class)
@@ -44,7 +44,7 @@ class SiteRoute
                 // Terreiro Route
                 Route::name('terreiros.')
                     ->prefix('terreiros')
-                    ->group(function () {
+                    ->group(function (): void {
                         Route::get('/', Search::class)
                             ->name('search');
                         Route::get('/cadastro', Create::class)
@@ -53,7 +53,7 @@ class SiteRoute
 
                 Route::name('blog.')
                     ->prefix('blog')
-                    ->group(function () {
+                    ->group(function (): void {
                         Route::get('/', Posts::class)
                             ->name('posts');
                         Route::get('/{post}', Show::class)
@@ -62,20 +62,20 @@ class SiteRoute
 
                 Route::name('links.')
                     ->prefix('links')
-                    ->group(function () {
+                    ->group(function (): void {
                         Route::get('/', ExternalLinks::class)->name('external');
                     });
 
                 Route::name('static.')
                     ->prefix('paginas-estaticas')
-                    ->group(function () {
+                    ->group(function (): void {
                         Route::get('/{staticPage}', StaticPage::class)
                             ->name('page');
                     });
 
                 Route::name('auth.')
                     ->prefix('login')
-                    ->group(function () {
+                    ->group(function (): void {
                         Route::get('/', Login::class)
                             ->name('login');
                         Route::post('/', [LoginController::class, 'login'])

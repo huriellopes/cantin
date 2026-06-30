@@ -8,20 +8,20 @@ use App\Models\Role;
 use App\Models\User;
 use Livewire\Livewire;
 
-it('forbids non super-admins from the users page', function () {
+it('forbids non super-admins from the users page', function (): void {
     $this->actingAs(userWithRole('admin'))
         ->get('/admin/users')
         ->assertForbidden();
 });
 
-it('lets a super-admin open the users page', function () {
+it('lets a super-admin open the users page', function (): void {
     $this->actingAs(userWithRole('super-admin'))
         ->get('/admin/users')
         ->assertOk()
         ->assertSeeLivewire(Index::class);
 });
 
-it('creates a user through the component', function () {
+it('creates a user through the component', function (): void {
     $this->actingAs(userWithRole('super-admin'));
     $roleId = Role::query()->firstOrCreate(['slug' => 'user'], ['name' => 'User'])->id;
 
@@ -37,19 +37,19 @@ it('creates a user through the component', function () {
     expect(User::query()->where('email', 'maria@example.com')->exists())->toBeTrue();
 });
 
-it('validates required fields on save', function () {
+it('validates required fields on save', function (): void {
     $this->actingAs(userWithRole('super-admin'));
 
     Livewire::test(Index::class)
         ->call('create')
         ->set('name', '')
         ->set('email', 'not-an-email')
-        ->set('role_id', null)
+        ->set('role_id')
         ->call('save')
         ->assertHasErrors(['name', 'email', 'role_id']);
 });
 
-it('toggles status and refuses to disable yourself', function () {
+it('toggles status and refuses to disable yourself', function (): void {
     $admin = userWithRole('super-admin');
     $target = userWithRole('user');
 
@@ -63,7 +63,7 @@ it('toggles status and refuses to disable yourself', function () {
     expect($admin->fresh()->status)->toBe(Status::ACTIVE);
 });
 
-it('resets a user password', function () {
+it('resets a user password', function (): void {
     $admin = userWithRole('super-admin');
     $target = userWithRole('user');
     $oldHash = $target->password;

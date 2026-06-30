@@ -7,16 +7,14 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateShortURLTableForVersionTwoZeroZero extends Migration
+return new class() extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::connection(config('short-url.connection'))->table('short_urls', function (Blueprint $table) {
+        Schema::connection(config('short-url.connection'))->table('short_urls', function (Blueprint $table): void {
             $table->integer('redirect_status_code')->after('track_visits')->default(301);
             $table->boolean('track_ip_address')->after('redirect_status_code')->default(false);
             $table->boolean('track_operating_system')->after('track_ip_address')->default(false);
@@ -40,12 +38,10 @@ class UpdateShortURLTableForVersionTwoZeroZero extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::connection(config('short-url.connection'))->table('short_urls', function (Blueprint $table) {
+        Schema::connection(config('short-url.connection'))->table('short_urls', function (Blueprint $table): void {
             $table->dropColumn([
                 'redirect_status_code',
                 'track_ip_address',
@@ -58,4 +54,4 @@ class UpdateShortURLTableForVersionTwoZeroZero extends Migration
             ]);
         });
     }
-}
+};

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
 class SuggestionSeederTable extends Seeder
@@ -20,22 +20,22 @@ class SuggestionSeederTable extends Seeder
                 'name' => 'Criticas',
                 'slug' => 'criticas',
                 'description' => 'Criticas construtivas e sugestões de melhorias',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
+                'created_at' => Date::now(),
+                'updated_at' => Date::now(),
             ],
             [
                 'name' => 'Dúvidas',
                 'slug' => 'duvidas',
                 'description' => null,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
+                'created_at' => Date::now(),
+                'updated_at' => Date::now(),
             ],
             [
                 'name' => 'Indicações',
                 'slug' => 'indicacoes',
                 'description' => null,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
+                'created_at' => Date::now(),
+                'updated_at' => Date::now(),
             ],
         ]);
     }

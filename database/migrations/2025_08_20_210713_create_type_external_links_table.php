@@ -12,7 +12,7 @@ return new class() extends Migration
 {
     public function up(): void
     {
-        Schema::create('type_external_links', function (Blueprint $table) {
+        Schema::create('type_external_links', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
             $table->string('slug');

@@ -14,14 +14,14 @@ function aCategory(): Category
     return Category::query()->create(['name' => 'Geral', 'slug' => 'geral-' . uniqid(), 'status' => Status::ACTIVE]);
 }
 
-it('lets an admin open the posts page', function () {
+it('lets an admin open the posts page', function (): void {
     $this->actingAs(userWithRole('admin'))
         ->get('/admin/posts')
         ->assertOk()
         ->assertSeeLivewire(Index::class);
 });
 
-it('creates a post and publishes it when the date is today', function () {
+it('creates a post and publishes it when the date is today', function (): void {
     $admin = userWithRole('admin');
     $category = aCategory();
 
@@ -41,7 +41,7 @@ it('creates a post and publishes it when the date is today', function () {
         ->and($post->user_id)->toBe($admin->id);
 });
 
-it('keeps a future post pending', function () {
+it('keeps a future post pending', function (): void {
     $admin = userWithRole('admin');
     $category = aCategory();
 
@@ -57,7 +57,7 @@ it('keeps a future post pending', function () {
     expect(Post::query()->where('slug', 'post-futuro')->value('status'))->toBe(StatusPost::PENDING);
 });
 
-it('publishes and unpublishes a post', function () {
+it('publishes and unpublishes a post', function (): void {
     $admin = userWithRole('admin');
     $post = Post::factory()->create(['status' => StatusPost::PENDING, 'published_at' => now()->subDay()]);
 
@@ -68,11 +68,11 @@ it('publishes and unpublishes a post', function () {
     expect($post->fresh()->status)->toBe(StatusPost::PENDING);
 });
 
-it('validates required post fields', function () {
+it('validates required post fields', function (): void {
     Livewire::actingAs(userWithRole('admin'))->test(Index::class)
         ->call('create')
         ->set('titleField', '')
-        ->set('category_id', null)
+        ->set('category_id')
         ->set('content', '')
         ->call('save')
         ->assertHasErrors(['titleField', 'category_id', 'content']);
