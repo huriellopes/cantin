@@ -40,6 +40,7 @@
                         <x-admin.th column="email" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_users.col_email') }}</x-admin.th>
                         <th class="px-4 py-3">{{ __('crud_users.col_role') }}</th>
                         <x-admin.th column="status" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('common.status') }}</x-admin.th>
+                        <x-admin.th column="last_login_at" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_users.col_last_login') }}</x-admin.th>
                         <th class="px-4 py-3 text-right">{{ __('common.actions') }}</th>
                     </tr>
                 </thead>
@@ -53,6 +54,7 @@
                             <td class="px-4 py-3">
                                 <x-admin.badge :color="$user->status?->getColor() ?? 'slate'">{{ $user->status?->label() }}</x-admin.badge>
                             </td>
+                            <td class="px-4 py-3 text-slate-600">{{ $user->last_login_at?->format('d/m/Y H:i') ?? __('crud_users.never_logged_in') }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-1">
                                     <x-admin.action icon="view" color="sky" label="{{ __('common.view') }}" wire:click="view({{ $user->id }})" />
@@ -74,7 +76,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="px-4 py-10 text-center text-slate-400">{{ __('crud_users.empty') }}</td></tr>
+                        <tr><td colspan="7" class="px-4 py-10 text-center text-slate-400">{{ __('crud_users.empty') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

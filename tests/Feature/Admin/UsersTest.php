@@ -69,14 +69,16 @@ it('toggles status and refuses to disable yourself', function (): void {
     expect($admin->fresh()->status)->toBe(Status::ACTIVE);
 });
 
-it('resets a user password', function (): void {
+it('resets a user password to the default and forces a change', function (): void {
     $admin = userWithRole('super-admin');
     $target = userWithRole('admin');
-    $oldHash = $target->password;
 
     Livewire::actingAs($admin)->test(Index::class)
         ->call('resetPassword', $target->id)
-        ->assertSet('generatedFor', $target->name);
+        ->assertSet('generatedFor', $target->name)
+        ->assertSet('generatedPassword', User::DEFAULT_PASSWORD);
 
-    expect($target->fresh()->password)->not->toBe($oldHash);
+    $fresh = $target->fresh();
+    expect(Hash::check(User::DEFAULT_PASSWORD, $fresh->password))->toBeTrue()
+        ->and($fresh->password_change_required)->toBeTrue();
 });
