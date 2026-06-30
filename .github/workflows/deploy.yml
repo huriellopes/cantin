@@ -42,6 +42,18 @@ jobs:
             git fetch --all --prune
             git reset --hard "origin/${BRANCH}"
 
+            echo "==> Garantindo certificado para o nginx subir (dummy se ainda não emitido)"
+            CERT_DIR="./.docker/certbot/conf/live/cantinbr.com.br"
+            mkdir -p "$CERT_DIR" ./.docker/certbot/www
+            if [ ! -s "$CERT_DIR/fullchain.pem" ]; then
+              echo "    -> gerando certificado temporário auto-assinado"
+              docker run --rm -v "$(pwd)/.docker/certbot/conf:/etc/letsencrypt" alpine/openssl \
+                req -x509 -nodes -newkey rsa:2048 -days 1 \
+                -keyout "/etc/letsencrypt/live/cantinbr.com.br/privkey.pem" \
+                -out    "/etc/letsencrypt/live/cantinbr.com.br/fullchain.pem" \
+                -subj "/CN=cantinbr.com.br" 2>/dev/null || true
+            fi
+
             echo "==> Subindo containers (build da imagem app)"
             $COMPOSE build app
             $COMPOSE up -d
@@ -62,5 +74,8 @@ jobs:
 
             echo "==> Reiniciando app para aplicar a config do supervisor/php-fpm"
             $COMPOSE restart app
+
+            echo "==> Recarregando nginx (aplica certificado renovado, se houver)"
+            $COMPOSE exec -T nginx nginx -s reload || $COMPOSE restart nginx
 
             echo "==> Deploy concluído"
