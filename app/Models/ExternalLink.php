@@ -19,6 +19,7 @@ class ExternalLink extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'url',
         'description',
         'status',
