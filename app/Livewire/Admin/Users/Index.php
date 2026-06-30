@@ -6,6 +6,7 @@ namespace App\Livewire\Admin\Users;
 
 use App\Enum\Status;
 use App\Livewire\Admin\Support\HasAdminActions;
+use App\Livewire\Admin\Support\WithDataTable;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
@@ -22,9 +23,7 @@ use Livewire\WithPagination;
 #[Title('Usuários')]
 class Index extends Component
 {
-    use HasAdminActions, WithPagination;
-
-    public string $search = '';
+    use HasAdminActions, WithDataTable, WithPagination;
 
     public bool $showModal = false;
 
@@ -39,11 +38,6 @@ class Index extends Component
     public ?string $generatedPassword = null;
 
     public ?string $generatedFor = null;
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
 
     public function create(): void
     {
@@ -166,19 +160,20 @@ class Index extends Component
 
     public function render(): Factory|View
     {
-        $users = User::query()
-            ->where('id', '<>', auth()->id())
-            ->when($this->search, fn ($q) => $q->where(
-                fn ($q) => $q->where('name', 'like', "%{$this->search}%")
-                    ->orWhere('email', 'like', "%{$this->search}%"),
-            ))
-            ->orderByDesc('id')
-            ->paginate(10);
+        $queryBase = User::query()
+            ->where('id', '<>', auth()->id());
+
+        $users = $this->applyTable($queryBase, ['name', 'email']);
 
         return view('livewire.admin.users.index', [
             'users' => $users,
             'roles' => Role::query()->orderBy('name')->pluck('name', 'id'),
         ]);
+    }
+
+    protected function sortableColumns(): array
+    {
+        return ['id', 'name', 'email', 'status', 'created_at'];
     }
 
     protected function rules(): array

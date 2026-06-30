@@ -6,6 +6,7 @@ namespace App\Livewire\Admin\Comments;
 
 use App\Enum\Status;
 use App\Livewire\Admin\Support\HasAdminActions;
+use App\Livewire\Admin\Support\WithDataTable;
 use App\Models\Comment;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -18,9 +19,7 @@ use Livewire\WithPagination;
 #[Title('Comentários')]
 class Index extends Component
 {
-    use HasAdminActions, WithPagination;
-
-    public string $search = '';
+    use HasAdminActions, WithDataTable, WithPagination;
 
     public bool $showModal = false;
 
@@ -29,11 +28,6 @@ class Index extends Component
     public string $originalBody = '';
 
     public string $body = '';
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
 
     public function reply(int $id): void
     {
@@ -89,16 +83,20 @@ class Index extends Component
 
     public function render(): Factory|View
     {
-        $comments = Comment::query()
+        $queryBase = Comment::query()
             ->whereNull('parent_id')
-            ->with(['user:id,name', 'post:id,title,slug'])
-            ->when($this->search, fn ($q) => $q->where('body', 'like', "%{$this->search}%"))
-            ->orderByDesc('id')
-            ->paginate(10);
+            ->with(['user:id,name', 'post:id,title,slug']);
+
+        $comments = $this->applyTable($queryBase, ['body']);
 
         return view('livewire.admin.comments.index', [
             'comments' => $comments,
         ]);
+    }
+
+    protected function sortableColumns(): array
+    {
+        return ['id', 'body', 'status', 'created_at'];
     }
 
     protected function rules(): array

@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\TransPeoples;
 use App\Enum\Status;
 use App\Livewire\Admin\Support\HasAdminActions;
 use App\Livewire\Admin\Support\InteractsWithAddress;
+use App\Livewire\Admin\Support\WithDataTable;
 use App\Models\TransPeople;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -19,9 +20,7 @@ use Livewire\WithPagination;
 #[Title('Pessoas Trans')]
 class Index extends Component
 {
-    use HasAdminActions, InteractsWithAddress, WithPagination;
-
-    public string $search = '';
+    use HasAdminActions, InteractsWithAddress, WithDataTable, WithPagination;
 
     public bool $showModal = false;
 
@@ -32,11 +31,6 @@ class Index extends Component
     public string $email = '';
 
     public string $phone = '';
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
 
     public function create(): void
     {
@@ -116,17 +110,21 @@ class Index extends Component
 
     public function render(): Factory|View
     {
-        $people = TransPeople::query()
-            ->with(['address.city:id,name', 'address.state:id,name'])
-            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%")->orWhere('email', 'like', "%{$this->search}%"))
-            ->orderByDesc('id')
-            ->paginate(10);
+        $queryBase = TransPeople::query()
+            ->with(['address.city:id,name', 'address.state:id,name']);
+
+        $people = $this->applyTable($queryBase, ['name', 'email']);
 
         return view('livewire.admin.trans-peoples.index', [
             'people' => $people,
             'states' => $this->statesOptions(),
             'cities' => $this->citiesOptions(),
         ]);
+    }
+
+    protected function sortableColumns(): array
+    {
+        return ['id', 'name', 'email', 'status', 'created_at'];
     }
 
     protected function rules(): array

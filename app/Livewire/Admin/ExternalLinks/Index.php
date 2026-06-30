@@ -6,6 +6,7 @@ namespace App\Livewire\Admin\ExternalLinks;
 
 use App\Enum\Status;
 use App\Livewire\Admin\Support\HasAdminActions;
+use App\Livewire\Admin\Support\WithDataTable;
 use App\Models\ExternalLink;
 use App\Models\TypeExternalLink;
 use Illuminate\Contracts\View\Factory;
@@ -21,9 +22,7 @@ use Livewire\WithPagination;
 #[Title('Links Externos')]
 class Index extends Component
 {
-    use HasAdminActions, WithPagination;
-
-    public string $search = '';
+    use HasAdminActions, WithDataTable, WithPagination;
 
     public bool $showModal = false;
 
@@ -38,11 +37,6 @@ class Index extends Component
     public string $url = '';
 
     public string $description = '';
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
 
     public function create(): void
     {
@@ -122,16 +116,20 @@ class Index extends Component
 
     public function render(): Factory|View
     {
-        $links = ExternalLink::query()
-            ->with('type:id,name')
-            ->when($this->search, fn ($q) => $q->where('title', 'like', "%{$this->search}%")->orWhere('url', 'like', "%{$this->search}%"))
-            ->orderByDesc('id')
-            ->paginate(10);
+        $queryBase = ExternalLink::query()
+            ->with('type:id,name');
+
+        $links = $this->applyTable($queryBase, ['title', 'url']);
 
         return view('livewire.admin.external-links.index', [
             'links' => $links,
             'types' => TypeExternalLink::query()->orderBy('name')->pluck('name', 'id'),
         ]);
+    }
+
+    protected function sortableColumns(): array
+    {
+        return ['id', 'title', 'url', 'status', 'created_at'];
     }
 
     protected function rules(): array

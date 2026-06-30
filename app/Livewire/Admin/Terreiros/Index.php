@@ -6,6 +6,7 @@ namespace App\Livewire\Admin\Terreiros;
 
 use App\Actions\Address\FillAddressAction;
 use App\Livewire\Admin\Support\HasAdminActions;
+use App\Livewire\Admin\Support\WithDataTable;
 use App\Models\Address;
 use App\Models\City;
 use App\Models\NationsTerreiro;
@@ -25,9 +26,7 @@ use Throwable;
 #[Title('Terreiros')]
 class Index extends Component
 {
-    use HasAdminActions, WithPagination;
-
-    public string $search = '';
+    use HasAdminActions, WithDataTable, WithPagination;
 
     public bool $showModal = false;
 
@@ -83,11 +82,6 @@ class Index extends Component
     public ?int $suggestion_id = null;
 
     public ?string $suggestion_text = null;
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
 
     public function buscarCep(): void
     {
@@ -236,11 +230,11 @@ class Index extends Component
 
     public function render(): Factory|View
     {
-        $terreiros = Terreiro::query()
-            ->with(['nation:id,name', 'address.state:id,name', 'address.city:id,name'])
-            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
-            ->orderByDesc('id')
-            ->paginate(10);
+        $terreiros = $this->applyTable(
+            Terreiro::query()
+                ->with(['nation:id,name', 'address.state:id,name', 'address.city:id,name']),
+            ['name'],
+        );
 
         return view('livewire.admin.terreiros.index', [
             'terreiros' => $terreiros,
@@ -252,6 +246,11 @@ class Index extends Component
                 : collect(),
             'config' => config('terreiro'),
         ]);
+    }
+
+    protected function sortableColumns(): array
+    {
+        return ['id', 'name', 'phone', 'leadership_orunko'];
     }
 
     protected function rules(): array
