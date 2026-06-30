@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Actions\Address\FillAddressAction;
+use App\Models\City;
+use App\Models\State;
 use App\Services\Address\ViaCepService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
@@ -67,3 +70,19 @@ it('throws when both providers fail', function () {
 it('rejects an invalid zipcode', function () {
     app(ViaCepService::class)->getAddressInfoFromZipCode('123');
 })->throws(Exception::class);
+
+it('resolves state and city ids case-insensitively (DB stores uppercase)', function () {
+    // A base guarda nomes em CAIXA ALTA; a API retorna caixa mista.
+    Http::fake(['viacep.com.br/*' => Http::response([
+        'cep' => '50010-000', 'logradouro' => 'Rua do Sol', 'complemento' => '',
+        'bairro' => 'Centro', 'localidade' => 'Recife', 'uf' => 'PE',
+    ])]);
+
+    $state = State::query()->forceCreate(['name' => 'Pernambuco', 'abbr' => 'pe', 'slug' => 'pe']);
+    $city = City::query()->forceCreate(['name' => 'RECIFE', 'slug' => 'recife', 'state_id' => $state->id]);
+
+    $result = FillAddressAction::exec('50010000');
+
+    expect($result->state)->toBe($state->id)
+        ->and($result->city)->toBe($city->id);
+});

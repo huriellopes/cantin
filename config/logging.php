@@ -57,7 +57,9 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            // 'telegram_alerts' só envia em nível >= warning e cai em silêncio
+            // sem token — assim todo erro logado também chega ao Telegram.
+            'channels' => ['single', 'telegram_alerts'],
             'ignore_exceptions' => false,
         ],
 
