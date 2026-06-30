@@ -6,7 +6,7 @@ use App\Models\City;
 use App\Models\State;
 use Illuminate\Support\Facades\Http;
 
-it('syncs states and cities from the IBGE API', function () {
+it('syncs states and cities from the IBGE API', function (): void {
     Http::fake([
         '*/estados' => Http::response([
             ['id' => 35, 'sigla' => 'SP', 'nome' => 'São Paulo'],
@@ -31,7 +31,7 @@ it('syncs states and cities from the IBGE API', function () {
         ->and(City::query()->where('name', 'Recife')->where('state_id', $pe->id)->exists())->toBeTrue();
 });
 
-it('reseeds (replaces) existing localidades on each sync', function () {
+it('reseeds (replaces) existing localidades on each sync', function (): void {
     State::query()->forceCreate(['name' => 'Antigo', 'abbr' => 'XX', 'slug' => 'antigo']);
 
     Http::fake([

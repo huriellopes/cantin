@@ -41,6 +41,9 @@ jobs:
       - name: Análise estática (PHPStan)
         run: ./vendor/bin/phpstan analyse --memory-limit=1G --no-progress
 
+      - name: Integridade de código (Rector — dry-run)
+        run: ./vendor/bin/rector process --dry-run --no-progress-bar
+
       - name: Rodar testes (Pest)
         run: ./vendor/bin/pest --ci
 

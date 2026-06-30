@@ -23,7 +23,7 @@ function fakeSpCep(): array
     return [$state, $city];
 }
 
-it('fills the address from a CEP on the public terreiro form', function () {
+it('fills the address from a CEP on the public terreiro form', function (): void {
     Http::fake(['viacep.com.br/*' => Http::response([
         'cep' => '01001-000', 'logradouro' => 'Praça da Sé', 'complemento' => 'lado ímpar',
         'bairro' => 'Sé', 'localidade' => 'São Paulo', 'uf' => 'SP',
@@ -42,14 +42,14 @@ it('fills the address from a CEP on the public terreiro form', function () {
         ->assertSet('city_id', $city->id);
 });
 
-it('shows an error for an invalid zipcode on the public form', function () {
+it('shows an error for an invalid zipcode on the public form', function (): void {
     Livewire::test(Create::class)
         ->set('zipcode', '123')
         ->call('searchZipCode')
         ->assertHasErrors('zipcode');
 });
 
-it('fills the address from a CEP on the trans people form', function () {
+it('fills the address from a CEP on the trans people form', function (): void {
     [$state, $city] = fakeSpCep();
 
     Livewire::test(Transpeople::class)
@@ -61,7 +61,7 @@ it('fills the address from a CEP on the trans people form', function () {
         ->assertSet('city_id', $city->id);
 });
 
-it('fills the address from a CEP on the partner entities form', function () {
+it('fills the address from a CEP on the partner entities form', function (): void {
     [$state, $city] = fakeSpCep();
 
     Livewire::test(PartnersEntities::class)

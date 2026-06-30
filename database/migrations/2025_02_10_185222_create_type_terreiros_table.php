@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -15,7 +15,7 @@ return new class() extends Migration
      */
     public function up(): void
     {
-        Schema::create('type_terreiros', function (Blueprint $table) {
+        Schema::create('type_terreiros', function (Blueprint $table): void {
             $table->id();
             $table->string('name')
                 ->index();
@@ -33,15 +33,15 @@ return new class() extends Migration
                     'name' => 'Trans-inclusivos',
                     'slug' => 'trans-inclusivos',
                     'description' => 'Terreiro que é trans-inclusivo',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
+                    'created_at' => Date::now(),
+                    'updated_at' => Date::now(),
                 ],
                 [
                     'name' => 'Não se aplica',
                     'slug' => 'nao-se-aplica',
                     'description' => null,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
+                    'created_at' => Date::now(),
+                    'updated_at' => Date::now(),
                 ],
             ]);
         }

@@ -7,6 +7,8 @@ namespace App\Livewire\Site\Pages;
 use App\Enum\Status;
 use App\Models\ExternalLink;
 use App\Models\TypeExternalLink;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -19,7 +21,7 @@ class ExternalLinks extends Component
     #[Url]
     public string $search = '';
 
-    public $selectedLinkType = null;
+    public $selectedLinkType;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -44,34 +46,28 @@ class ExternalLinks extends Component
         $this->resetPage();
     }
 
-    public function render()
+    public function render(): Factory|View
     {
-        $types = Cache::remember('types_external_links_cantin', 60 * 60 * 24, function () {
-            return TypeExternalLink::query()
-                ->withCount('links')
-                ->where('status', '=', Status::ACTIVE)
-                ->orderBy('created_at', 'asc')
-                ->get();
-        });
+        $types = Cache::remember('types_external_links_cantin', 60 * 60 * 24, fn () => TypeExternalLink::query()
+            ->withCount('links')
+            ->where('status', '=', Status::ACTIVE)->oldest()
+            ->get());
 
         return view('livewire.site.pages.external-links', [
-            'links' => Cache::remember('external_links_cantin' . $this?->selectedLinkType, 60 * 60 * 24, function () {
-                return ExternalLink::query()
-                    ->with(['type', 'user'])
-                    ->when($this->search, function ($query) {
-                        $query->where('title', 'like', '%' . $this->search . '%')
-                            ->orWhere('description', 'like', '%' . $this->search . '%');
-                    })
-                    ->where('status', '=', Status::ACTIVE)
-                    ->when($this->selectedLinkType, function ($query) {
-                        $query->whereHas('type', function ($queryType) {
-                            $queryType->where('slug', '=', $this->selectedLinkType);
-                        });
-                    })
-                    ->whereNotNull('url')
-                    ->orderBy('created_at', 'asc')
-                    ->paginate(10);
-            }),
+            'links' => Cache::remember('external_links_cantin' . $this?->selectedLinkType, 60 * 60 * 24, fn () => ExternalLink::query()
+                ->with(['type', 'user'])
+                ->when($this->search, function ($query): void {
+                    $query->where('title', 'like', '%' . $this->search . '%')
+                        ->orWhere('description', 'like', '%' . $this->search . '%');
+                })
+                ->where('status', '=', Status::ACTIVE)
+                ->when($this->selectedLinkType, function ($query): void {
+                    $query->whereHas('type', function ($queryType): void {
+                        $queryType->where('slug', '=', $this->selectedLinkType);
+                    });
+                })
+                ->whereNotNull('url')->oldest()
+                ->paginate(10)),
             'types' => $types,
         ]);
     }

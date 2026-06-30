@@ -9,7 +9,7 @@ use App\Models\Category;
 use App\Models\User;
 use Livewire\Livewire;
 
-it('opens a confirm modal and only deletes after confirmation', function () {
+it('opens a confirm modal and only deletes after confirmation', function (): void {
     $admin = userWithRole('super-admin');
     $target = userWithRole('user');
 
@@ -24,7 +24,7 @@ it('opens a confirm modal and only deletes after confirmation', function () {
     expect(User::query()->whereKey($target->id)->exists())->toBeFalse(); // excluiu após confirmar
 });
 
-it('cancels a pending confirmation without acting', function () {
+it('cancels a pending confirmation without acting', function (): void {
     $category = Category::query()->create(['name' => 'X', 'slug' => 'x', 'status' => Status::ACTIVE]);
 
     Livewire::actingAs(userWithRole('super-admin'))->test(CategoriesIndex::class)
@@ -35,7 +35,7 @@ it('cancels a pending confirmation without acting', function () {
     expect(Category::query()->whereKey($category->id)->exists())->toBeTrue();
 });
 
-it('populates the view modal', function () {
+it('populates the view modal', function (): void {
     $user = userWithRole('user');
 
     Livewire::actingAs(userWithRole('super-admin'))->test(UsersIndex::class)
@@ -44,7 +44,7 @@ it('populates the view modal', function () {
         ->assertSet('viewTitle', $user->name);
 });
 
-it('dispatches a toast on actions', function () {
+it('dispatches a toast on actions', function (): void {
     $category = Category::query()->create(['name' => 'Y', 'slug' => 'y', 'status' => Status::ACTIVE]);
 
     Livewire::actingAs(userWithRole('super-admin'))->test(CategoriesIndex::class)

@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 
-it('updates the authenticated user profile', function () {
+it('updates the authenticated user profile', function (): void {
     $user = userWithRole('super-admin');
 
     Livewire::actingAs($user)
@@ -21,7 +21,7 @@ it('updates the authenticated user profile', function () {
         ->and($user->fresh()->email)->toBe('novo@cantin.test');
 });
 
-it('changes the password with the correct current password', function () {
+it('changes the password with the correct current password', function (): void {
     $user = userWithRole('super-admin');
 
     Livewire::actingAs($user)
@@ -35,7 +35,7 @@ it('changes the password with the correct current password', function () {
     expect(Hash::check('nova-senha-123', $user->fresh()->password))->toBeTrue();
 });
 
-it('rejects a password change with a wrong current password', function () {
+it('rejects a password change with a wrong current password', function (): void {
     $user = userWithRole('super-admin');
 
     Livewire::actingAs($user)
@@ -47,7 +47,7 @@ it('rejects a password change with a wrong current password', function () {
         ->assertHasErrors('current_password');
 });
 
-it('deletes the account only with the correct password', function () {
+it('deletes the account only with the correct password', function (): void {
     $user = userWithRole('super-admin');
 
     Livewire::actingAs($user)
@@ -60,7 +60,7 @@ it('deletes the account only with the correct password', function () {
     expect(auth()->check())->toBeFalse();
 });
 
-it('does not delete the account with a wrong password', function () {
+it('does not delete the account with a wrong password', function (): void {
     $user = userWithRole('super-admin');
 
     Livewire::actingAs($user)

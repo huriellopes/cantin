@@ -20,22 +20,22 @@ class ImpersonateController extends Controller
         $impersonatorId = session('impersonator_id');
 
         if (!$impersonatorId) {
-            return redirect()->route('site.home');
+            return to_route('site.home');
         }
 
-        $original = User::find($impersonatorId);
+        $original = User::query()->find($impersonatorId);
         session()->forget('impersonator_id');
 
         if (!$original) {
             Auth::logout();
 
-            return redirect()->route('site.auth.login');
+            return to_route('site.auth.login');
         }
 
         $this->log($original->id, (int) Auth::id(), 'stopped');
         Auth::login($original);
 
-        return redirect()->route('admin.users.index');
+        return to_route('admin.users.index');
     }
 
     private function log(int $impersonatorId, int $impersonatedId, string $action): void

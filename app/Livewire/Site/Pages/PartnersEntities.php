@@ -10,8 +10,11 @@ use App\Models\City;
 use App\Models\PartnerEntity;
 use App\Models\State;
 use App\Traits\Utils;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Sleep;
 use Livewire\Component;
 use Throwable;
 
@@ -47,12 +50,10 @@ class PartnersEntities extends Component
 
     public function mount(): void
     {
-        $this->states = Cache::remember('all_brazilian_states', 60 * 60 * 24, function () {
-            return State::query()
-                ->select('id', 'name')
-                ->orderBy('name')
-                ->get();
-        });
+        $this->states = Cache::remember('all_brazilian_states', 60 * 60 * 24, fn () => State::query()
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->get());
 
         $this->cities = collect();
 
@@ -82,7 +83,7 @@ class PartnersEntities extends Component
 
     public function searchZipCode(): void
     {
-        $cleanedZipCode = preg_replace('/\D/', '', (string) $this->zipcode);
+        $cleanedZipCode = preg_replace('/\D/', '', $this->zipcode);
 
         if (!preg_match('/^\d{8}$/', (string) $cleanedZipCode)) {
             $this->addError('zipcode', __('Invalid zipcode!'));
@@ -123,7 +124,7 @@ class PartnersEntities extends Component
             ->first();
 
         if (!$address) {
-            $address = Address::create([
+            $address = Address::query()->create([
                 'zipcode' => $clearZipCode,
                 'address' => $this->street,
                 'complement' => $this->complement,
@@ -145,7 +146,7 @@ class PartnersEntities extends Component
             return;
         }
 
-        PartnerEntity::create([
+        PartnerEntity::query()->create([
             'name' => $this->name,
             'email' => $this->email,
             'phone' => Utils::clearMask($this->phone),
@@ -168,14 +169,14 @@ class PartnersEntities extends Component
             'longitude',
         ]);
 
-        sleep(3);
+        Sleep::sleep(3);
 
         toastr()
             ->timeOut(2000)
             ->success(__('Partner entity successfully registered!'));
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         return view('livewire.site.pages.partners-entities');
     }

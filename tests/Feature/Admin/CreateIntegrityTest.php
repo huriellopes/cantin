@@ -13,9 +13,9 @@ use Livewire\Livewire;
  * Isso passava silenciosamente no SQLite (autoincrement ignora null), mas
  * estourava no PostgreSQL ("null value in column id violates not-null").
  */
-it('does not set a null id when creating via the base resource (type_peoples)', function () {
+it('does not set a null id when creating via the base resource (type_peoples)', function (): void {
     $captured = null;
-    TypePeople::creating(function ($model) use (&$captured) {
+    TypePeople::creating(function ($model) use (&$captured): false {
         $captured = $model->getAttributes();
 
         return false; // aborta o insert; só inspecionamos os atributos
@@ -34,11 +34,11 @@ it('does not set a null id when creating via the base resource (type_peoples)', 
         ->and($captured)->not->toHaveKey('id');
 });
 
-it('does not set a null id when creating a user', function () {
+it('does not set a null id when creating a user', function (): void {
     Role::query()->firstOrCreate(['slug' => 'user'], ['name' => 'User']);
 
     $captured = null;
-    User::creating(function ($model) use (&$captured) {
+    User::creating(function ($model) use (&$captured): false {
         $captured = $model->getAttributes();
 
         return false;

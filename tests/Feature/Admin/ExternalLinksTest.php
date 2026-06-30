@@ -13,14 +13,14 @@ function aLinkType(): TypeExternalLink
     return TypeExternalLink::query()->create(['name' => 'Apoio', 'slug' => 'apoio-' . uniqid(), 'status' => Status::ACTIVE]);
 }
 
-it('lets an admin open the external links page', function () {
+it('lets an admin open the external links page', function (): void {
     $this->actingAs(userWithRole('admin'))
         ->get('/admin/external-links')
         ->assertOk()
         ->assertSeeLivewire(Index::class);
 });
 
-it('creates an external link with the author set', function () {
+it('creates an external link with the author set', function (): void {
     $admin = userWithRole('admin');
     $type = aLinkType();
 
@@ -41,18 +41,18 @@ it('creates an external link with the author set', function () {
         ->and($link->status)->toBe(Status::ACTIVE);
 });
 
-it('validates external link fields', function () {
+it('validates external link fields', function (): void {
     Livewire::actingAs(userWithRole('admin'))->test(Index::class)
         ->call('create')
         ->set('title', '')
-        ->set('type_external_link_id', null)
+        ->set('type_external_link_id')
         ->set('url', 'not-a-url')
         ->set('description', '')
         ->call('save')
         ->assertHasErrors(['title', 'type_external_link_id', 'url', 'description']);
 });
 
-it('toggles an external link status', function () {
+it('toggles an external link status', function (): void {
     $type = aLinkType();
     $link = ExternalLink::factory()->create(['type_external_link_id' => $type->id, 'status' => Status::ACTIVE]);
 

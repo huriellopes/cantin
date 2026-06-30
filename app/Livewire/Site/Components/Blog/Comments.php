@@ -7,9 +7,10 @@ namespace App\Livewire\Site\Components\Blog;
 use App\Enum\StatusPost;
 use App\Models\Comment;
 use App\Models\Post;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
 class Comments extends Component
@@ -78,15 +79,11 @@ class Comments extends Component
         $post->refresh();
     }
 
-    public function postReply(Comment $parentComment)
+    public function postReply(Comment $parentComment): void
     {
-        try {
-            $this->validateOnly('replies.' . $parentComment->id, [
-                'replies.' . $parentComment->id => 'required|string|max:1000',
-            ]);
-        } catch (ValidationException $e) {
-            throw $e;
-        }
+        $this->validateOnly('replies.' . $parentComment->id, [
+            'replies.' . $parentComment->id => 'required|string|max:1000',
+        ]);
 
         if (auth()->check()) {
             if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-admin')) {
@@ -116,12 +113,12 @@ class Comments extends Component
         $this->post->refresh();
     }
 
-    public function toggleReplyForm(int $commentId)
+    public function toggleReplyForm(int $commentId): void
     {
         $this->showReplyForm[$commentId] = !($this->showReplyForm[$commentId] ?? false);
     }
 
-    public function likeComment(Comment $comment)
+    public function likeComment(Comment $comment): void
     {
         $user = Auth::user();
         $ipAddress = request()->ip();
@@ -152,7 +149,7 @@ class Comments extends Component
         $this->post->refresh();
     }
 
-    public function dislikeComment(Comment $comment)
+    public function dislikeComment(Comment $comment): void
     {
         $user = Auth::user();
         $ipAddress = request()->ip();
@@ -183,7 +180,7 @@ class Comments extends Component
         $this->post->refresh();
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         $post = Post::query()->where('id', $this->post->id)->firstOrFail();
         $comments = $post->comments()->whereNull('parent_id')->with(['replies'])->paginate(10);

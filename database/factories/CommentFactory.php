@@ -34,7 +34,7 @@ class CommentFactory extends Factory
      */
     public function replyTo(Comment $parent): static
     {
-        return $this->state(fn () => [
+        return $this->state(fn (): array => [
             'parent_id' => $parent->id,
             'post_id' => $parent->post_id,
         ]);

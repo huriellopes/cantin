@@ -88,7 +88,7 @@ class Index extends Component
         session()->regenerateToken();
         User::query()->whereKey($user->id)->delete();
 
-        return redirect()->route('site.home');
+        return to_route('site.home');
     }
 
     public function render(): Factory|View

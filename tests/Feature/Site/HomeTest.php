@@ -10,23 +10,23 @@ use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
-it('render home page', function () {
+it('render home page', function (): void {
     Livewire::test(Home::class)
         ->assertViewIs('livewire.site.pages.home');
 });
 
-it('not render questions in home page', function () {
+it('not render questions in home page', function (): void {
     Livewire::test(Home::class)
-        ->assertViewHas('commons', fn ($commons) => $commons->count() === 0);
+        ->assertViewHas('commons', fn ($commons): bool => $commons->count() === 0);
 });
 
-it('render questions in home page', function () {
-    collect(range(1, 3))->each(fn (int $i) => CommonQuestion::create([
+it('render questions in home page', function (): void {
+    collect(range(1, 3))->each(fn (int $i) => CommonQuestion::query()->create([
         'question' => "Pergunta {$i}?",
         'answer' => "Resposta {$i}.",
         'status' => Status::ACTIVE,
     ]));
 
     Livewire::test(Home::class)
-        ->assertViewHas('commons', fn ($commons) => $commons->count() === 3);
+        ->assertViewHas('commons', fn ($commons): bool => $commons->count() === 3);
 });

@@ -19,7 +19,7 @@ class Login extends Component
     public function render()
     {
         if (auth()->check()) {
-            return redirect()->route('site.home');
+            return to_route('site.home');
         }
 
         return view('livewire.site.pages.auth.login');

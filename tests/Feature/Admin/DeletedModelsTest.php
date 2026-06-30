@@ -8,13 +8,13 @@ use App\Models\Category;
 use Livewire\Livewire;
 use Spatie\DeletedModels\Models\DeletedModel;
 
-it('forbids non super-admins', function () {
+it('forbids non super-admins', function (): void {
     $this->actingAs(userWithRole('admin'))
         ->get('/admin/deleted-models')
         ->assertForbidden();
 });
 
-it('lists and restores a deleted record', function () {
+it('lists and restores a deleted record', function (): void {
     $category = Category::query()->create(['name' => 'Temp', 'slug' => 'temp', 'status' => Status::ACTIVE]);
     $key = $category->getKey();
     $category->delete();
@@ -32,7 +32,7 @@ it('lists and restores a deleted record', function () {
         ->and(DeletedModel::query()->count())->toBe(0);
 });
 
-it('permanently deletes a record', function () {
+it('permanently deletes a record', function (): void {
     $category = Category::query()->create(['name' => 'Temp2', 'slug' => 'temp2', 'status' => Status::ACTIVE]);
     $category->delete();
     $deleted = DeletedModel::query()->first();

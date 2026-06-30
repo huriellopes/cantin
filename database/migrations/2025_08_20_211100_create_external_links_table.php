@@ -11,7 +11,7 @@ return new class() extends Migration
 {
     public function up(): void
     {
-        Schema::create('external_links', function (Blueprint $table) {
+        Schema::create('external_links', function (Blueprint $table): void {
             $table->id();
             $table->string('title')
                 ->index();

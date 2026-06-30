@@ -25,7 +25,7 @@ class TelegramLoggerHandler extends AbstractProcessingHandler
     protected function write(LogRecord $record): void
     {
         // Sem token/chat configurados, não há para onde enviar (ex.: local/CI).
-        if (empty($this->token) || empty($this->chatId)) {
+        if (in_array($this->token, [null, '', '0'], true) || in_array($this->chatId, [null, '', '0'], true)) {
             return;
         }
 
@@ -36,7 +36,7 @@ class TelegramLoggerHandler extends AbstractProcessingHandler
             'disable_web_page_preview' => true,
         ];
 
-        if (!empty($this->threadId)) {
+        if (!in_array($this->threadId, [null, '', '0'], true)) {
             $data['message_thread_id'] = (int) $this->threadId;
         }
 

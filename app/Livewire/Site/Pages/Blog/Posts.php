@@ -7,6 +7,8 @@ namespace App\Livewire\Site\Pages\Blog;
 use App\Enum\Status;
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -19,7 +21,7 @@ class Posts extends Component
     #[Url]
     public string $search = '';
 
-    public $selectedCategory = null;
+    public $selectedCategory;
 
     public object $categories;
 
@@ -49,26 +51,22 @@ class Posts extends Component
 
     public function mount(): void
     {
-        $this->categories = Cache::remember('categories_cantin', 60 * 60 * 24, function () {
-            return Category::query()
-                ->select(['id', 'name', 'slug'])
-                ->where('status', '=', Status::ACTIVE)
-                ->withCount('posts')
-                ->get();
-        });
+        $this->categories = Cache::remember('categories_cantin', 60 * 60 * 24, fn () => Category::query()
+            ->select(['id', 'name', 'slug'])
+            ->where('status', '=', Status::ACTIVE)
+            ->withCount('posts')
+            ->get());
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         return view('livewire.site.pages.blog.posts', [
             'posts' => Post::query()
                 ->with(['category:id,name', 'user:id,name'])
                 ->published()
-                ->when($this->selectedCategory, function ($query) {
-                    return $query->whereHas('category', function ($query) {
-                        $query->where('slug', $this->selectedCategory);
-                    });
-                })
+                ->when($this->selectedCategory, fn ($query) => $query->whereHas('category', function ($query): void {
+                    $query->where('slug', $this->selectedCategory);
+                }))
                 ->search($this->search)
                 ->orderBy('created_at', 'desc')
                 ->paginate(10),

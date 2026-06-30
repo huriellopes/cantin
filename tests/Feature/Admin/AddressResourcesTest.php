@@ -20,7 +20,7 @@ function addressPair(): array
     return [$state, $city];
 }
 
-it('creates a trans person with address', function () {
+it('creates a trans person with address', function (): void {
     [$state, $city] = addressPair();
 
     Livewire::actingAs(userWithRole('admin'))
@@ -44,7 +44,7 @@ it('creates a trans person with address', function () {
         ->and($person->address->neighborhood)->toBe('Sé');
 });
 
-it('creates a partner entity with image and author', function () {
+it('creates a partner entity with image and author', function (): void {
     Storage::fake('public');
     [$state, $city] = addressPair();
     $admin = userWithRole('admin');
@@ -73,7 +73,7 @@ it('creates a partner entity with image and author', function () {
     Storage::disk('public')->assertExists($entity->path_image);
 });
 
-it('requires an image when creating a partner entity', function () {
+it('requires an image when creating a partner entity', function (): void {
     Livewire::actingAs(userWithRole('admin'))
         ->test(App\Livewire\Admin\PartnerEntities\Index::class)
         ->call('create')

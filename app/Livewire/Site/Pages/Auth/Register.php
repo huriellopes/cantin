@@ -7,6 +7,8 @@ namespace App\Livewire\Site\Pages\Auth;
 use App\Http\DTO\Auth\RegisterDTO;
 use App\Services\Auth\LoginService;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -33,12 +35,12 @@ class Register extends Component
 
             $dto = RegisterDTO::from($params);
 
-            $user = app(LoginService::class)->HasRegister($dto);
+            $user = resolve(LoginService::class)->HasRegister($dto);
 
             if ($user) {
                 Auth::login($user);
 
-                return redirect()->route('site.home');
+                return to_route('site.home');
             }
         } catch (Exception|Throwable $e) {
             Log::error('Error: ' . $e->getMessage(), [
@@ -53,7 +55,7 @@ class Register extends Component
         }
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         return view('livewire.site.pages.auth.register');
     }
