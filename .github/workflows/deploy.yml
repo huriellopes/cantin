@@ -57,4 +57,10 @@ jobs:
             $COMPOSE exec -T app php artisan migrate --force
             $COMPOSE exec -T app php artisan optimize
 
+            echo "==> Permissões de escrita (workers rodam como www-data)"
+            $COMPOSE exec -T -u root app chown -R www-data:www-data storage bootstrap/cache
+
+            echo "==> Reiniciando app para aplicar a config do supervisor/php-fpm"
+            $COMPOSE restart app
+
             echo "==> Deploy concluído"
