@@ -38,10 +38,6 @@ class PartnersEntities extends Component
 
     public ?int $city_id = null;
 
-    public $latitude;
-
-    public $longitude;
-
     public string $activity_carried_out = '';
 
     public $states;
@@ -98,8 +94,6 @@ class PartnersEntities extends Component
             $this->street = $data->address ?? '';
             $this->neighborhood = $data->neighborhood ?? '';
             $this->complement = $data->complement ?? '';
-            $this->latitude = $data->latitude ?? null;
-            $this->longitude = $data->longitude ?? null;
             $this->state_id = $data->state;
 
             if ($this->state_id) {
@@ -131,8 +125,6 @@ class PartnersEntities extends Component
                 'neighborhood' => $this->neighborhood,
                 'state_id' => $this->state_id,
                 'city_id' => $this->city_id,
-                'latitude' => $this->latitude,
-                'longitude' => $this->longitude,
             ]);
         }
 
@@ -165,8 +157,6 @@ class PartnersEntities extends Component
             'state_id',
             'city_id',
             'activity_carried_out',
-            'latitude',
-            'longitude',
         ]);
 
         Sleep::sleep(3);

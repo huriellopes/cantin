@@ -110,8 +110,6 @@
                         @error('city_id') <p class="{{ $err }}">{{ $message }}</p> @enderror
                     </div>
                 </div>
-                <input type="hidden" wire:model="latitude" />
-                <input type="hidden" wire:model="longitude" />
             </fieldset>
 
             <div class="flex justify-end">
