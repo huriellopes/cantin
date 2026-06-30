@@ -10,7 +10,7 @@
     </div>
 
 
-    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <x-admin.table-toolbar :options="$this->perPageOptions()" />
 
         <div class="overflow-x-auto">

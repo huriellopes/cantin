@@ -27,6 +27,7 @@ $adminPages = [
     'admin.external-links.index' => 'external_links',
     'admin.users.index' => 'users',
     'admin.deleted-models.index' => 'deleted_models',
+    'admin.impersonation-logs.index' => 'impersonation_logs',
 ];
 
 foreach ($adminPages as $name => $navKey) {

@@ -5,7 +5,7 @@
     </div>
 
 
-    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
             <input wire:model.live.debounce.400ms="search" type="search" placeholder="{{ __('crud_deleted_models.search_placeholder') }}"
                    class="w-full max-w-sm rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">

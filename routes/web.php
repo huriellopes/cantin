@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Web\ImpersonateController;
 use App\Http\Routes\Web\AdminRoute;
 use App\Http\Routes\Web\SiteRoute;
 use Illuminate\Http\RedirectResponse;
@@ -10,6 +11,11 @@ use Illuminate\Support\Facades\Route;
 
 SiteRoute::web();
 AdminRoute::web();
+
+// Encerra a personificação (disponível para o usuário personificado em qualquer página).
+Route::post('/impersonate/leave', [ImpersonateController::class, 'leave'])
+    ->middleware('auth')
+    ->name('impersonate.leave');
 
 // Troca de idioma: guarda o locale na sessão e volta para a página anterior.
 Route::get('/locale/{locale}', function (string $locale, Request $request): RedirectResponse {

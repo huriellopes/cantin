@@ -24,6 +24,9 @@ return [
     'export' => 'Exportar',
     'all' => 'Todos',
     'per_page' => 'Por página',
+    'impersonate' => 'Personificar',
+    'impersonating' => 'Você está personificando :name',
+    'stop_impersonating' => 'Voltar ao meu usuário',
     // Estados de carregamento (anti duplo-clique)
     'processing' => 'Processando...',
     'saving' => 'Salvando...',

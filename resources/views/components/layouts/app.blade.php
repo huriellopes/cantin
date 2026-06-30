@@ -93,6 +93,7 @@
 
     {{-- Banner de cookies + Analytics/Ads carregados apenas com consentimento --}}
     <x-cookie-consent />
+    <x-impersonation-banner />
 
     @livewireScripts
     {!! ToastMagic::scripts() !!}
