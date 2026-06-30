@@ -69,7 +69,11 @@ class SyncLocalidades extends Command
                     ?? $municipio['regiao-imediata']['regiao-intermediaria']['UF']['sigla']
                     ?? null;
 
-                if ($sigla === null || !isset($stateIdBySigla[$sigla])) {
+                if ($sigla === null) {
+                    continue;
+                }
+
+                if (!isset($stateIdBySigla[$sigla])) {
                     continue;
                 }
 

@@ -19,24 +19,24 @@ function terreiroRefs(): array
     $type = TypePeople::query()->create(['name' => 'Mulher trans', 'slug' => 'mulher-trans', 'description' => '-']);
     $suggestion = Suggestion::query()->create(['name' => 'Sugestão', 'slug' => 'sugestao', 'description' => '-']);
 
-    return compact('state', 'city', 'nation', 'type', 'suggestion');
+    return ['state' => $state, 'city' => $city, 'nation' => $nation, 'type' => $type, 'suggestion' => $suggestion];
 }
 
-it('lets an admin open the terreiros page', function () {
+it('lets an admin open the terreiros page', function (): void {
     $this->actingAs(userWithRole('admin'))
         ->get('/admin/terreiros')
         ->assertOk()
         ->assertSeeLivewire(Index::class);
 });
 
-it('validates required fields', function () {
+it('validates required fields', function (): void {
     Livewire::actingAs(userWithRole('admin'))->test(Index::class)
         ->call('create')
         ->call('save')
         ->assertHasErrors(['name', 'phone', 'nation_terreiro_id', 'state_id', 'city_id', 'type_people_id']);
 });
 
-it('creates a terreiro with address and questionnaire', function () {
+it('creates a terreiro with address and questionnaire', function (): void {
     $refs = terreiroRefs();
 
     Livewire::actingAs(userWithRole('admin'))->test(Index::class)

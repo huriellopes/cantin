@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 
-it('repairs the legacy super-user slug to super-admin', function () {
+it('repairs the legacy super-user slug to super-admin', function (): void {
     // Simula o dado legado que existia em produção (slug 'super-user').
     DB::table('roles')->delete();
     Role::query()->forceCreate([
@@ -20,7 +20,7 @@ it('repairs the legacy super-user slug to super-admin', function () {
         ->and(Role::query()->where('slug', 'super-user')->exists())->toBeFalse();
 });
 
-it('grants admin access and login redirect to a super-admin user', function () {
+it('grants admin access and login redirect to a super-admin user', function (): void {
     // O slug 'super-admin' é o esperado pelo middleware role, pelo LoginController
     // e pelas policies. Este teste trava esse contrato.
     $user = userWithRole('super-admin');
@@ -32,7 +32,7 @@ it('grants admin access and login redirect to a super-admin user', function () {
     $this->actingAs($user)->get(route('admin.dashboard'))->assertOk();
 });
 
-it('does not recognize the legacy super-user slug as authorized', function () {
+it('does not recognize the legacy super-user slug as authorized', function (): void {
     $user = userWithRole('super-user');
 
     // Garante que o slug legado não concede acesso administrativo.

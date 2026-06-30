@@ -9,7 +9,7 @@ use App\Models\NationsTerreiro;
 use App\Models\StaticPage;
 use Livewire\Livewire;
 
-it('opens each simple resource page', function (string $path) {
+it('opens each simple resource page', function (string $path): void {
     $this->actingAs(userWithRole('admin'))->get($path)->assertOk();
 })->with([
     '/admin/categories',
@@ -21,7 +21,7 @@ it('opens each simple resource page', function (string $path) {
     '/admin/static-pages',
 ]);
 
-it('creates a category with auto slug and active status', function () {
+it('creates a category with auto slug and active status', function (): void {
     Livewire::actingAs(userWithRole('admin'))
         ->test(Index::class)
         ->call('create')
@@ -37,7 +37,7 @@ it('creates a category with auto slug and active status', function () {
         ->and($category->status)->toBe(Status::ACTIVE);
 });
 
-it('validates required fields on simple resources', function () {
+it('validates required fields on simple resources', function (): void {
     Livewire::actingAs(userWithRole('admin'))
         ->test(App\Livewire\Admin\Nations\Index::class)
         ->call('create')
@@ -47,7 +47,7 @@ it('validates required fields on simple resources', function () {
         ->assertHasErrors(['form.name']);
 });
 
-it('toggles a category status', function () {
+it('toggles a category status', function (): void {
     $category = Category::query()->create(['name' => 'X', 'slug' => 'x', 'status' => Status::ACTIVE]);
 
     Livewire::actingAs(userWithRole('admin'))
@@ -57,7 +57,7 @@ it('toggles a category status', function () {
     expect($category->fresh()->status)->toBe(Status::INACTIVE);
 });
 
-it('creates a nation without status', function () {
+it('creates a nation without status', function (): void {
     Livewire::actingAs(userWithRole('admin'))
         ->test(App\Livewire\Admin\Nations\Index::class)
         ->call('create')
@@ -69,7 +69,7 @@ it('creates a nation without status', function () {
     expect(NationsTerreiro::query()->where('slug', 'angola')->exists())->toBeTrue();
 });
 
-it('sets the author when creating a static page', function () {
+it('sets the author when creating a static page', function (): void {
     $admin = userWithRole('super-admin');
 
     Livewire::actingAs($admin)

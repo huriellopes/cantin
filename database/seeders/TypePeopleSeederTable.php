@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
 class TypePeopleSeederTable extends Seeder
@@ -21,36 +21,36 @@ class TypePeopleSeederTable extends Seeder
                     'name' => 'Travesti',
                     'slug' => 'travesti',
                     'description' => '',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
+                    'created_at' => Date::now(),
+                    'updated_at' => Date::now(),
                 ],
                 [
                     'name' => 'Pessoa Trans',
                     'slug' => 'pessoa-trans',
                     'description' => '',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
+                    'created_at' => Date::now(),
+                    'updated_at' => Date::now(),
                 ],
                 [
                     'name' => 'Não Binária',
                     'slug' => 'nao-binaria',
                     'description' => '',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
+                    'created_at' => Date::now(),
+                    'updated_at' => Date::now(),
                 ],
                 [
                     'name' => 'Pessoa Cis',
                     'slug' => 'pessoa-cis',
                     'description' => 'Pessoa que não é trans',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
+                    'created_at' => Date::now(),
+                    'updated_at' => Date::now(),
                 ],
                 [
                     'name' => 'Não se aplica',
                     'slug' => 'nao-se-aplica',
                     'description' => 'Não se aplica o sexo da pessoa',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
+                    'created_at' => Date::now(),
+                    'updated_at' => Date::now(),
                 ],
             ]);
     }

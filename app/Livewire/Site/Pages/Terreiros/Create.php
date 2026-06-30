@@ -16,9 +16,12 @@ use App\Models\TerreiroQuestion;
 use App\Models\TypePeople;
 use App\Traits\Utils;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Sleep;
 use Livewire\Component;
 use Throwable;
 
@@ -88,18 +91,14 @@ class Create extends Component
 
     public function mount(): void
     {
-        $this->nations = Cache::remember('all_nations', 60 * 60 * 24, function () {
-            return NationsTerreiro::query()
-                ->select('id', 'name')
-                ->get();
-        });
+        $this->nations = Cache::remember('all_nations', 60 * 60 * 24, fn () => NationsTerreiro::query()
+            ->select('id', 'name')
+            ->get());
 
-        $this->states = Cache::remember('all_brazilian_states', 60 * 60 * 24, function () {
-            return State::query()
-                ->select('id', 'name')
-                ->orderBy('name')
-                ->get();
-        });
+        $this->states = Cache::remember('all_brazilian_states', 60 * 60 * 24, fn () => State::query()
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->get());
 
         $this->cities = collect();
 
@@ -107,17 +106,13 @@ class Create extends Component
             $this->loadCities($this->state_id);
         }
 
-        $this->typePeoples = Cache::remember('all_type_people', 60 * 60 * 24, function () {
-            return TypePeople::query()
-                ->select('id', 'name')
-                ->get();
-        });
+        $this->typePeoples = Cache::remember('all_type_people', 60 * 60 * 24, fn () => TypePeople::query()
+            ->select('id', 'name')
+            ->get());
 
-        $this->suggestions = Cache::remember('suggestions_cantin_terreiro', 60 * 60 * 24, function () {
-            return Suggestion::query()
-                ->select(['id', 'name', 'slug'])
-                ->get();
-        });
+        $this->suggestions = Cache::remember('suggestions_cantin_terreiro', 60 * 60 * 24, fn () => Suggestion::query()
+            ->select(['id', 'name', 'slug'])
+            ->get());
     }
 
     public function updatedStateId(?int $value): void
@@ -149,7 +144,7 @@ class Create extends Component
         $this->currentStep--;
     }
 
-    public function updatedSuggestionID($option): void
+    public function updatedSuggestionID(string $option): void
     {
         $this->showField = SuggestionID::verifySuggestionId($option);
         $this->suggestion_text = '';
@@ -157,7 +152,7 @@ class Create extends Component
 
     public function searchZipCode(): void
     {
-        $cleanedZipCode = preg_replace('/\D/', '', (string) $this->zipcode);
+        $cleanedZipCode = preg_replace('/\D/', '', $this->zipcode);
 
         if (!preg_match('/^\d{8}$/', (string) $cleanedZipCode)) {
             $this->addError('zipcode', __('Invalid zipcode!'));
@@ -202,7 +197,7 @@ class Create extends Component
                 ->first();
 
             if (!$address) {
-                $address = Address::create([
+                $address = Address::query()->create([
                     'zipcode' => $clearZipCode,
                     'address' => $this->street,
                     'complement' => $this->complement,
@@ -212,7 +207,7 @@ class Create extends Component
                 ]);
             }
 
-            $terreiro = Terreiro::create([
+            $terreiro = Terreiro::query()->create([
                 'name' => $this->name,
                 'nation_terreiro_id' => $this->nation_terreiro_id,
                 'phone' => Utils::clearMask($this->phone),
@@ -221,7 +216,7 @@ class Create extends Component
                 'address_id' => $address->id,
             ]);
 
-            TerreiroQuestion::create([
+            TerreiroQuestion::query()->create([
                 'terreiro_id' => $terreiro->id,
                 'type_people_id' => $this->type_people_id,
                 'number_of_children_of_saint' => $this->number_of_children_of_saint,
@@ -237,7 +232,7 @@ class Create extends Component
             ]);
             DB::commit();
 
-            sleep(3);
+            Sleep::sleep(3);
 
             toastr()
                 ->timeOut(2000)
@@ -246,7 +241,7 @@ class Create extends Component
             $this->redirectRoute('site.terreiros.search');
         } catch (Exception|Throwable $e) {
             DB::rollBack();
-            Utils::webhook('error', $e, 'Error when creating terreiro', null);
+            Utils::webhook('error', $e, 'Error when creating terreiro');
             Log::error($e->getMessage(), [
                 'line' => $e->getLine(),
                 'file' => $e->getFile(),
@@ -258,7 +253,7 @@ class Create extends Component
         }
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         return view('livewire.site.pages.terreiros.create');
     }

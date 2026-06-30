@@ -11,6 +11,8 @@ use App\Models\State;
 use App\Models\TransPeople as Trans;
 use App\Traits\Utils;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -47,12 +49,10 @@ class Transpeople extends Component
 
     public function mount(): void
     {
-        $this->states = Cache::remember('all_brazilian_states', 60 * 60 * 24, function () {
-            return State::query()
-                ->select('id', 'name')
-                ->orderBy('name')
-                ->get();
-        });
+        $this->states = Cache::remember('all_brazilian_states', 60 * 60 * 24, fn () => State::query()
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->get());
 
         $this->cities = collect();
 
@@ -82,7 +82,7 @@ class Transpeople extends Component
 
     public function searchZipCode(): void
     {
-        $cleanedZipCode = preg_replace('/\D/', '', (string) $this->zipcode);
+        $cleanedZipCode = preg_replace('/\D/', '', $this->zipcode);
 
         if (!preg_match('/^\d{8}$/', (string) $cleanedZipCode)) {
             $this->addError('zipcode', __('Invalid zipcode!'));
@@ -125,7 +125,7 @@ class Transpeople extends Component
                 ->first();
 
             if (!$address) {
-                $address = Address::create([
+                $address = Address::query()->create([
                     'zipcode' => $clearZipCode,
                     'address' => $this->street,
                     'complement' => $this->complement,
@@ -147,7 +147,7 @@ class Transpeople extends Component
                 return;
             }
 
-            Trans::create([
+            Trans::query()->create([
                 'name' => $this->name,
                 'email' => $this->email,
                 'phone' => Utils::clearMask($this->phone),
@@ -175,7 +175,7 @@ class Transpeople extends Component
                 ->success(__('Trans people successfully registered!'));
         } catch (Exception|Throwable $e) {
             DB::rollBack();
-            Utils::webhook('error', $e, 'Error when registering trans people', null);
+            Utils::webhook('error', $e, 'Error when registering trans people');
             Log::error($e->getMessage());
             toastr()
                 ->timeOut(2000)
@@ -183,7 +183,7 @@ class Transpeople extends Component
         }
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         return view('livewire.site.pages.transpeople');
     }

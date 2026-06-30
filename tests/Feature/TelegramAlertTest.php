@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-beforeEach(function () {
+beforeEach(function (): void {
     config([
         'services.telegram.token' => 'TEST-TOKEN',
         'services.telegram.chat' => '-1003346127818',
@@ -14,7 +14,7 @@ beforeEach(function () {
     ]);
 });
 
-it('sends an alert to the telegram forum topic with the thread id', function () {
+it('sends an alert to the telegram forum topic with the thread id', function (): void {
     Http::fake(['api.telegram.org/*' => Http::response(['ok' => true])]);
 
     Log::channel('telegram_alerts')->error('Falha de teste', [
@@ -22,16 +22,14 @@ it('sends an alert to the telegram forum topic with the thread id', function () 
         'exception' => 'RuntimeException',
     ]);
 
-    Http::assertSent(function ($request) {
-        return str_contains($request->url(), '/botTEST-TOKEN/sendMessage')
-            && $request['chat_id'] === '-1003346127818'
-            && (int) $request['message_thread_id'] === 951
-            && $request['parse_mode'] === 'HTML'
-            && str_contains($request['text'], 'Falha de teste');
-    });
+    Http::assertSent(fn ($request): bool => str_contains((string) $request->url(), '/botTEST-TOKEN/sendMessage')
+        && $request['chat_id'] === '-1003346127818'
+        && (int) $request['message_thread_id'] === 951
+        && $request['parse_mode'] === 'HTML'
+        && str_contains((string) $request['text'], 'Falha de teste'));
 });
 
-it('does not send when no token is configured', function () {
+it('does not send when no token is configured', function (): void {
     config(['services.telegram.token' => null]);
     Http::fake();
 

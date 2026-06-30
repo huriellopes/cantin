@@ -10,14 +10,14 @@ return new class() extends Migration
 {
     public function up(): void
     {
-        Schema::table('visits', function (Blueprint $table) {
+        Schema::table('visits', function (Blueprint $table): void {
             $table->string('user_agent')->nullable()->change();
         });
     }
 
     public function down(): void
     {
-        Schema::table('visits', function (Blueprint $table) {
+        Schema::table('visits', function (Blueprint $table): void {
             $table->string('user_agent')->change();
         });
     }

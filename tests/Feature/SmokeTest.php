@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-it('serves public pages', function (string $path) {
+it('serves public pages', function (string $path): void {
     $this->get($path)->assertOk();
 })->with([
     '/',
@@ -18,7 +18,7 @@ it('serves public pages', function (string $path) {
     '/diretrizes',
 ]);
 
-it('serves every admin page for a super-admin', function (string $route) {
+it('serves every admin page for a super-admin', function (string $route): void {
     $this->actingAs(userWithRole('super-admin'))
         ->get(route($route))
         ->assertOk();
@@ -42,7 +42,7 @@ it('serves every admin page for a super-admin', function (string $route) {
     'admin.deleted-models.index',
 ]);
 
-it('shows breadcrumbs on admin pages', function () {
+it('shows breadcrumbs on admin pages', function (): void {
     $this->actingAs(userWithRole('super-admin'))
         ->get(route('admin.terreiros.index'))
         ->assertOk()
@@ -50,6 +50,6 @@ it('shows breadcrumbs on admin pages', function () {
         ->assertSee('Terreiros');
 });
 
-it('redirects guests away from the admin', function () {
+it('redirects guests away from the admin', function (): void {
     $this->get('/admin')->assertRedirect(route('site.auth.login'));
 });
