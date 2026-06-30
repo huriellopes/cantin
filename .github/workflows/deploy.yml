@@ -42,17 +42,24 @@ jobs:
             git fetch --all --prune
             git reset --hard "origin/${BRANCH}"
 
-            echo "==> Garantindo certificado para o nginx subir (dummy se ainda não emitido)"
-            CERT_DIR="./.docker/certbot/conf/live/cantinbr.com.br"
-            mkdir -p "$CERT_DIR" ./.docker/certbot/www
-            if [ ! -s "$CERT_DIR/fullchain.pem" ]; then
-              echo "    -> gerando certificado temporário auto-assinado"
-              docker run --rm -v "$(pwd)/.docker/certbot/conf:/etc/letsencrypt" alpine/openssl \
-                req -x509 -nodes -newkey rsa:2048 -days 1 \
-                -keyout "/etc/letsencrypt/live/cantinbr.com.br/privkey.pem" \
-                -out    "/etc/letsencrypt/live/cantinbr.com.br/fullchain.pem" \
-                -subj "/CN=cantinbr.com.br" 2>/dev/null || true
-            fi
+            echo "==> Garantindo certificado para o nginx subir (dummy só se não existir)"
+            mkdir -p ./.docker/certbot/www
+            # A verificação roda como root DENTRO do container: os arquivos do
+            # cert real (live -> archive 0700) pertencem ao root, e checar como
+            # usuário do host falharia, regenerando o dummy e SOBRESCREVENDO o
+            # certificado válido. Aqui só geramos o dummy se realmente não houver.
+            docker run --rm -v "$(pwd)/.docker/certbot/conf:/etc/letsencrypt" \
+              --entrypoint sh certbot/certbot -c '
+                D=/etc/letsencrypt/live/cantinbr.com.br
+                if [ ! -s "$D/fullchain.pem" ]; then
+                  echo "    -> gerando certificado temporário auto-assinado"
+                  mkdir -p "$D"
+                  openssl req -x509 -nodes -newkey rsa:2048 -days 1 \
+                    -keyout "$D/privkey.pem" -out "$D/fullchain.pem" \
+                    -subj "/CN=cantinbr.com.br"
+                else
+                  echo "    -> certificado existente preservado"
+                fi'
 
             echo "==> Subindo containers (build da imagem app)"
             $COMPOSE build app
@@ -75,7 +82,10 @@ jobs:
             echo "==> Reiniciando app para aplicar a config do supervisor/php-fpm"
             $COMPOSE restart app
 
-            echo "==> Recarregando nginx (aplica certificado renovado, se houver)"
-            $COMPOSE exec -T nginx nginx -s reload || $COMPOSE restart nginx
+            echo "==> Reiniciando nginx (carrega o certificado de forma confiável)"
+            # restart (não 'reload'): ao trocar o cert (ex.: dummy -> real ou
+            # após renovação), o reload nem sempre recarrega os symlinks; o
+            # restart garante o cert atual.
+            $COMPOSE restart nginx
 
             echo "==> Deploy concluído"
