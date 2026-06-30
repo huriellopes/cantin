@@ -7,7 +7,7 @@ namespace App\Livewire\Site\Pages\Blog;
 use App\Models\Post;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 use Livewire\Component;
 use Spatie\SchemaOrg\Schema;
 
@@ -117,7 +117,7 @@ class Show extends Component
         $article = Schema::article()
             ->headline($this->post->title)
             ->description(str($this->post->content)->stripTags()->squish()->limit(155)->toString())
-            ->datePublished(Carbon::parse($this->post->published_at))
+            ->datePublished(Date::parse($this->post->published_at))
             ->dateModified($this->post->updated_at)
             ->author(Schema::person()->name($this->post->user->name))
             ->publisher(Schema::organization()->name(config('app.name')))
