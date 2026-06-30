@@ -79,8 +79,14 @@ jobs:
             $COMPOSE exec -T app php artisan migrate --force
             $COMPOSE exec -T app php artisan optimize
 
+            echo "==> Gerando sitemap.xml"
+            $COMPOSE exec -T app php artisan sitemap:generate
+
             echo "==> Permissões de escrita (workers rodam como www-data)"
+            # public/sitemap.xml é regenerado diariamente pelo agendador (www-data):
+            # ele precisa ser dono do arquivo para sobrescrevê-lo (file_put_contents).
             $COMPOSE exec -T -u root app chown -R www-data:www-data storage bootstrap/cache
+            $COMPOSE exec -T -u root app chown www-data:www-data public/sitemap.xml
 
             echo "==> Reiniciando app para aplicar a config do supervisor/php-fpm"
             $COMPOSE restart app

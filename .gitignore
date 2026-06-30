@@ -3,6 +3,12 @@
 /public/build
 /public/hot
 /public/storage
+# sitemap.xml é gerado por `artisan sitemap:generate` (schedule + deploy)
+/public/sitemap.xml
+# Arquivos de IDE helper (gerados por barryvdh/laravel-ide-helper)
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
 /storage/*.key
 /storage/debugbar
 /vendor
