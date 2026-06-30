@@ -3,11 +3,16 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Web\ImpersonateController;
+use App\Http\Controllers\Web\RobotsController;
 use App\Http\Routes\Web\AdminRoute;
 use App\Http\Routes\Web\SiteRoute;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// robots.txt gerado dinamicamente (sensível ao ambiente). O arquivo estático
+// em public/ foi removido para que esta rota assuma o controle.
+Route::get('/robots.txt', RobotsController::class)->name('robots');
 
 SiteRoute::web();
 AdminRoute::web();

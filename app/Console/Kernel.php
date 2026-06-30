@@ -16,7 +16,8 @@ class Kernel extends ConsoleKernel
     #[Override]
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Regenera o sitemap.xml diariamente para refletir novos posts/páginas.
+        $schedule->command('sitemap:generate')->dailyAt('03:00');
     }
 
     /**

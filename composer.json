@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "archtechx/laravel-seo": "^0.10.4",
         "ashallendesign/short-url": "^8.3",
         "devrabiul/laravel-toaster-magic": "^2.0",
         "diglactic/laravel-breadcrumbs": "^10.1",
@@ -23,10 +24,13 @@
         "spatie/laravel-data": "^4.17",
         "spatie/laravel-deleted-models": "^1.2",
         "spatie/laravel-discord-alerts": "^1.5",
+        "spatie/laravel-sitemap": "^8.2",
+        "spatie/schema-org": "^4.0",
         "telegram-bot/api": "^2.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.0",
+        "barryvdh/laravel-ide-helper": "^3.7",
         "driftingly/rector-laravel": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laradumps/laradumps": "^5.0",
