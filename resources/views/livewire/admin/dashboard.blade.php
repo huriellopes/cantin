@@ -71,8 +71,10 @@
                 @else
                     <div class="flex h-28 items-end gap-px">
                         @foreach ($chart['series'] as $point)
-                            <div class="group relative flex-1" title="{{ $point['label'] }}: {{ $point['value'] }}">
-                                <div class="{{ $barColors[$chart['color']] ?? 'bg-slate-400' }} rounded-t transition-all hover:opacity-80"
+                            {{-- A coluna precisa de altura definida (h-full) para a barra
+                                 interna em % renderizar; flex items-end ancora no fundo. --}}
+                            <div class="group relative flex h-full flex-1 items-end" title="{{ $point['label'] }}: {{ $point['value'] }}">
+                                <div class="{{ $barColors[$chart['color']] ?? 'bg-slate-400' }} w-full rounded-t transition-all hover:opacity-80"
                                      style="height: {{ max(2, (int) round($point['value'] / $max * 100)) }}%"></div>
                             </div>
                         @endforeach

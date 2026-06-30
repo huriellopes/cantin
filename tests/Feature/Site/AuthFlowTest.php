@@ -10,6 +10,24 @@ it('redirects an already authenticated user away from login', function (): void 
         ->assertRedirect(route('site.home'));
 });
 
+it('rate limits repeated failed login attempts', function (): void {
+    $user = userWithRole('admin');
+
+    // 5 tentativas com senha errada → erro de credenciais ('message').
+    for ($i = 0; $i < 5; $i++) {
+        $this->post(route('site.auth.login.post'), [
+            'email' => $user->email,
+            'password' => 'senha-errada',
+        ])->assertSessionHasErrors('message');
+    }
+
+    // 6ª tentativa → bloqueada pelo throttle (erro no campo 'email').
+    $this->post(route('site.auth.login.post'), [
+        'email' => $user->email,
+        'password' => 'senha-errada',
+    ])->assertSessionHasErrors('email');
+});
+
 it('records the last login timestamp on a successful login', function (): void {
     $user = userWithRole('admin');
 

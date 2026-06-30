@@ -20,6 +20,7 @@ class TypePeople extends Model
      */
     protected $fillable = [
         'name',
+        'slug',
         'description',
     ];
 

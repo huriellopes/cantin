@@ -54,7 +54,10 @@ class AppServiceProvider extends ServiceProvider
         PartnerEntity::observe(PartnerEntityObserver::class);
         Page::observe(PageObserver::class);
         Paginator::useTailwind();
-        Model::unguard();
+        // Mass-assignment protegido pelo $fillable de cada model (sem unguard).
+        // Fora de produção, qualquer atributo fora do fillable lança erro
+        // (revela mismatch nos testes); em produção é apenas ignorado (não quebra).
+        Model::preventSilentlyDiscardingAttributes(!app()->isProduction());
         //        Model::preventLazyLoading();
 
         $this->bootSeo();
