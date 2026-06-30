@@ -18,7 +18,7 @@ class Visit extends Model
         'url',
         'page',
         'referer',
-        'visit_time',
+        'visited_at',
     ];
 
     /**

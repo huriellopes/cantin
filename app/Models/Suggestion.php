@@ -19,6 +19,7 @@ class Suggestion extends Model
      */
     protected $fillable = [
         'name',
+        'slug',
         'description',
     ];
 

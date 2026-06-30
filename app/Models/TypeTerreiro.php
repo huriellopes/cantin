@@ -25,6 +25,7 @@ class TypeTerreiro extends Model
      */
     protected $fillable = [
         'name',
+        'slug',
         'description',
     ];
 
