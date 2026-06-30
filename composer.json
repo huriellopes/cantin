@@ -35,6 +35,7 @@
         "fakerphp/faker": "^1.9.1",
         "laradumps/laradumps": "^5.0",
         "larastan/larastan": "^3.0",
+        "laravel/dusk": "^8.6",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",

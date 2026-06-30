@@ -48,6 +48,19 @@ services:
                 - '${DB_USERNAME}'
             retries: 3
             timeout: 5s
+    # Browser para testes E2E com Laravel Dusk (sail dusk). O Dusk se conecta via
+    # RemoteWebDriver (DUSK_DRIVER_URL=http://selenium:4444/wd/hub) e o navegador
+    # acessa a app pela rede interna em http://laravel.test.
+    selenium:
+        image: 'selenium/standalone-chromium'
+        profiles:
+            - dusk
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        volumes:
+            - '/dev/shm:/dev/shm'
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge
