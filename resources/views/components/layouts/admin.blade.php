@@ -14,6 +14,10 @@
             document.documentElement.classList.add('sidebar-collapsed');
         }
     </script>
+    {{-- Editor rico Quill (usado nas páginas de criação/edição de posts e páginas). --}}
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
@@ -195,6 +199,15 @@
 </div>
 
 <x-impersonation-banner />
+
+{{-- Toast vindo de um redirect (flash de sessão) — ex.: após salvar em página dedicada. --}}
+@if (session()->has('toast'))
+    <script>
+        setTimeout(function () {
+            window.dispatchEvent(new CustomEvent('toast', { detail: @js(session('toast')) }));
+        }, 200);
+    </script>
+@endif
 
 @livewireScripts
 </body>
