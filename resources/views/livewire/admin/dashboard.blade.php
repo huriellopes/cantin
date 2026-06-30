@@ -29,30 +29,54 @@
         @endforeach
     </div>
 
-    {{-- Gráficos 30 dias --}}
+    {{-- Gráficos por período --}}
     @php
         $barColors = ['sky' => 'bg-sky-500', 'violet' => 'bg-violet-500', 'amber' => 'bg-amber-500'];
     @endphp
+
+    {{-- Filtro de período --}}
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <h3 class="text-sm font-semibold text-slate-600">{{ __('msg_dashboard.charts_heading') }}</h3>
+        <div class="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm" role="group">
+            @foreach ($periodOptions as $days => $label)
+                <button type="button" wire:click="setPeriod({{ $days }})"
+                        class="rounded-md px-3 py-1.5 text-xs font-semibold transition {{ $period === $days ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100' }}">
+                    {{ $label }}
+                </button>
+            @endforeach
+        </div>
+    </div>
+
     <div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
         @foreach ($charts as $chart)
-            @php $max = max(1, $chart['series']->max('value')); @endphp
+            @php
+                $total = $chart['series']->sum('value');
+                $max = max(1, $chart['series']->max('value'));
+            @endphp
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div class="mb-4 flex items-baseline justify-between">
                     <h3 class="text-sm font-semibold text-slate-700">{{ $chart['title'] }}</h3>
-                    <span class="text-xs text-slate-400">{{ __('page_admin_dashboard.chart_total') }} {{ $chart['series']->sum('value') }}</span>
+                    <span class="text-xs text-slate-400">{{ __('page_admin_dashboard.chart_total') }} {{ $total }}</span>
                 </div>
-                <div class="flex h-28 items-end gap-px">
-                    @foreach ($chart['series'] as $point)
-                        <div class="group relative flex-1" title="{{ $point['label'] }}: {{ $point['value'] }}">
-                            <div class="{{ $barColors[$chart['color']] ?? 'bg-slate-400' }} rounded-t transition-all hover:opacity-80"
-                                 style="height: {{ max(2, (int) round($point['value'] / $max * 100)) }}%"></div>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="mt-2 flex justify-between text-[10px] text-slate-400">
-                    <span>{{ $chart['series']->first()['label'] }}</span>
-                    <span>{{ $chart['series']->last()['label'] }}</span>
-                </div>
+                @if ($total === 0)
+                    <div class="flex h-28 flex-col items-center justify-center gap-1 text-slate-300">
+                        @svg('lucide-bar-chart-3', 'h-7 w-7')
+                        <span class="text-xs text-slate-400">{{ __('msg_dashboard.no_data') }}</span>
+                    </div>
+                @else
+                    <div class="flex h-28 items-end gap-px">
+                        @foreach ($chart['series'] as $point)
+                            <div class="group relative flex-1" title="{{ $point['label'] }}: {{ $point['value'] }}">
+                                <div class="{{ $barColors[$chart['color']] ?? 'bg-slate-400' }} rounded-t transition-all hover:opacity-80"
+                                     style="height: {{ max(2, (int) round($point['value'] / $max * 100)) }}%"></div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="mt-2 flex justify-between text-[10px] text-slate-400">
+                        <span>{{ $chart['series']->first()['label'] }}</span>
+                        <span>{{ $chart['series']->last()['label'] }}</span>
+                    </div>
+                @endif
             </div>
         @endforeach
     </div>

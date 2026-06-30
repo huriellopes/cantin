@@ -25,8 +25,18 @@ use Livewire\Component;
 #[Title('Painel')]
 class Dashboard extends Component
 {
+    /** Período (em dias) dos gráficos: 1 (hoje), 7, 15 ou 30. */
+    public int $period = 30;
+
+    public function setPeriod(int $period): void
+    {
+        $this->period = in_array($period, [1, 7, 15, 30], true) ? $period : 30;
+    }
+
     public function render(): Factory|View
     {
+        $days = in_array($this->period, [1, 7, 15, 30], true) ? $this->period : 30;
+
         $stats = [
             ['label' => __('msg_dashboard.stat_visits'), 'value' => Visit::query()->count(), 'icon' => 'eye', 'color' => 'sky'],
             ['label' => __('msg_dashboard.stat_terreiros'), 'value' => Terreiro::query()->count(), 'icon' => 'house', 'color' => 'violet'],
@@ -38,23 +48,30 @@ class Dashboard extends Component
 
         return view('livewire.admin.dashboard', [
             'stats' => $stats,
+            'period' => $days,
+            'periodOptions' => [
+                1 => __('msg_dashboard.period_today'),
+                7 => __('msg_dashboard.period_7'),
+                15 => __('msg_dashboard.period_15'),
+                30 => __('msg_dashboard.period_30'),
+            ],
             'recentTerreiros' => Terreiro::query()->latest()->take(6)->get(['id', 'name', 'created_at']),
             'charts' => [
-                ['title' => __('msg_dashboard.chart_visits'), 'color' => 'sky', 'series' => $this->dailySeries(Visit::query(), 'visited_at')],
-                ['title' => __('msg_dashboard.chart_terreiros'), 'color' => 'violet', 'series' => $this->dailySeries(Terreiro::query(), 'created_at')],
-                ['title' => __('msg_dashboard.chart_posts'), 'color' => 'amber', 'series' => $this->dailySeries(Post::query(), 'created_at')],
+                ['title' => __('msg_dashboard.chart_visits'), 'color' => 'sky', 'series' => $this->dailySeries(Visit::query(), 'visited_at', $days)],
+                ['title' => __('msg_dashboard.chart_terreiros'), 'color' => 'violet', 'series' => $this->dailySeries(Terreiro::query(), 'created_at', $days)],
+                ['title' => __('msg_dashboard.chart_posts'), 'color' => 'amber', 'series' => $this->dailySeries(Post::query(), 'created_at', $days)],
             ],
         ]);
     }
 
     /**
-     * Série diária dos últimos 30 dias (preenchendo dias sem dados com zero).
+     * Série diária dos últimos N dias (preenchendo dias sem dados com zero).
      *
      * @return Collection<int, array{label: string, value: int}>
      */
-    private function dailySeries(Builder $query, string $column): Collection
+    private function dailySeries(Builder $query, string $column, int $days): Collection
     {
-        $start = now()->subDays(29)->startOfDay();
+        $start = now()->subDays($days - 1)->startOfDay();
 
         $counts = $query
             ->where($column, '>=', $start)
@@ -62,7 +79,7 @@ class Dashboard extends Component
             ->groupBy('d')
             ->pluck('c', 'd');
 
-        return collect(range(29, 0))->map(function (int $daysAgo) use ($counts): array {
+        return collect(range($days - 1, 0))->map(function (int $daysAgo) use ($counts): array {
             $date = Date::now()->subDays($daysAgo);
 
             return [
