@@ -307,8 +307,20 @@ parameters:
 			path: app/Http/Resources/StateResource.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between int and App\\Enum\\Status\:\:ACTIVE will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: app/Livewire/Admin/Comments/Index.php
 
@@ -316,7 +328,61 @@ parameters:
 			message: '#^Strict comparison using \=\=\= between int and App\\Enum\\Status\:\:ACTIVE will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Comments/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
 			path: app/Livewire/Admin/ExternalLinks/Index.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/ExternalLinks/Index.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int and App\\Enum\\Status\:\:ACTIVE will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Livewire/Admin/ExternalLinks/Index.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/ExternalLinks/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$city\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$state\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
 
 		-
 			message: '#^Parameter \#1 \$address of method App\\Livewire\\Admin\\PartnerEntities\\Index\:\:fillAddressFrom\(\) expects App\\Models\\Address\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
@@ -331,9 +397,27 @@ parameters:
 			path: app/Livewire/Admin/PartnerEntities/Index.php
 
 		-
+			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>abbr" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/PartnerEntities/Index.php
+
+		-
 			message: '#^Cannot call method format\(\) on string\.$#'
 			identifier: method.nonObject
-			count: 1
+			count: 2
 			path: app/Livewire/Admin/Posts/Index.php
 
 		-
@@ -343,9 +427,27 @@ parameters:
 			path: app/Livewire/Admin/Posts/Index.php
 
 		-
+			message: '#^Using nullsafe method call on non\-nullable type App\\Enum\\StatusPost\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Posts/Index.php
+
+		-
 			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
-			count: 2
+			count: 3
+			path: app/Livewire/Admin/Posts/Index.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Models\\Category\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Posts/Index.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Models\\User\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
 			path: app/Livewire/Admin/Posts/Index.php
 
 		-
@@ -369,11 +471,23 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$address\.$#'
 			identifier: property.notFound
+			count: 2
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$city\.$#'
+			identifier: property.notFound
 			count: 1
 			path: app/Livewire/Admin/Terreiros/Index.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$state\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Livewire/Admin/Terreiros/Index.php
@@ -381,7 +495,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$zipcode\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: app/Livewire/Admin/Terreiros/Index.php
 
 		-
@@ -389,6 +503,42 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>abbr" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>address" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/Terreiros/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$city\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$state\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
 
 		-
 			message: '#^Parameter \#1 \$address of method App\\Livewire\\Admin\\TransPeoples\\Index\:\:fillAddressFrom\(\) expects App\\Models\\Address\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
@@ -403,15 +553,33 @@ parameters:
 			path: app/Livewire/Admin/TransPeoples/Index.php
 
 		-
+			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>abbr" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Admin/TransPeoples/Index.php
+
+		-
 			message: '#^Cannot call method label\(\) on int\.$#'
 			identifier: method.nonObject
-			count: 1
+			count: 2
 			path: app/Livewire/Admin/Users/Index.php
 
 		-
 			message: '#^Cannot call method label\(\) on int\<0, max\>\.$#'
 			identifier: method.nonObject
-			count: 1
+			count: 2
 			path: app/Livewire/Admin/Users/Index.php
 
 		-
@@ -423,13 +591,13 @@ parameters:
 		-
 			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
-			count: 1
+			count: 2
 			path: app/Livewire/Admin/Users/Index.php
 
 		-
 			message: '#^Using nullsafe method call on non\-nullable type int\<0, max\>\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
-			count: 1
+			count: 2
 			path: app/Livewire/Admin/Users/Index.php
 
 		-
@@ -577,6 +745,12 @@ parameters:
 			path: app/Models/User.php
 
 		-
+			message: '#^Call to function in_array\(\) with arguments int\<0, max\>, array\{App\\Enum\\Role\:\:SUPER, App\\Enum\\Role\:\:ADMIN\} and true will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Models/User.php
+
+		-
 			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
 			identifier: property.phpDocType
 			count: 1
@@ -585,6 +759,12 @@ parameters:
 		-
 			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
 			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int\<0, max\> and App\\Enum\\Role\:\:SUPER will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
 			count: 1
 			path: app/Models/User.php
 
