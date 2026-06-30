@@ -46,7 +46,11 @@ services:
       # existente em ./.docker/database (não usar volume nomeado, sob risco
       # de subir o banco vazio e orfanizar os dados atuais).
       - ./.docker/database:/var/lib/postgresql/data
-    # Porta não exposta ao host em produção; acesso apenas pela rede interna.
+    # Porta publicada APENAS no localhost do host (127.0.0.1): inacessível pela
+    # internet; alcançável só por quem já está dentro do servidor — ex.: túnel
+    # SSH do PhpStorm/DataGrip. Não usar 0.0.0.0/"5432:5432" (exporia o banco).
+    ports:
+      - "127.0.0.1:5432:5432"
     networks:
       - cantin
 
