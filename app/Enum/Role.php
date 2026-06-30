@@ -8,12 +8,9 @@ enum Role: int
 {
     public function label(): string
     {
-        return match ($this) {
-            self::SUPER => (string) __('admin.roles.super'),
-            self::ADMIN => (string) __('admin.roles.admin'),
-            self::USER => (string) __('admin.roles.user'),
-            default => (string) __('admin.roles.unknown'),
-        };
+        return $this === self::SUPER
+            ? (string) __('admin.roles.super')
+            : (string) __('admin.roles.admin');
     }
 
     /**
@@ -21,13 +18,8 @@ enum Role: int
      */
     public function getColor(): string|array|null
     {
-        return match ($this) {
-            self::SUPER => 'success',
-            self::ADMIN => 'warning',
-            self::USER => 'primary',
-        };
+        return $this === self::SUPER ? 'success' : 'warning';
     }
     case SUPER = 1;
     case ADMIN = 2;
-    case USER = 3;
 }

@@ -46,7 +46,7 @@ class Index extends Component
     public function create(): void
     {
         $this->reset(['editingId', 'name', 'email', 'role_id']);
-        $this->role_id = Role::query()->where('slug', 'user')->value('id');
+        $this->role_id = Role::query()->where('slug', 'admin')->value('id');
         $this->resetValidation();
         $this->showModal = true;
     }
@@ -69,11 +69,18 @@ class Index extends Component
         if ($this->editingId) {
             User::query()->whereKey($this->editingId)->update($data);
         } else {
-            User::query()->create([
+            $user = User::query()->create([
                 ...$data,
                 'slug' => Str::slug($this->name) . '-' . Str::random(5),
-                'password' => bcrypt(Str::password(12)),
+                // Senha padrão (hasheada pelo cast); o usuário é obrigado a
+                // trocá-la no primeiro login.
+                'password' => User::DEFAULT_PASSWORD,
+                'password_change_required' => true,
             ]);
+
+            // Informa ao super-admin a senha padrão para repassar ao usuário.
+            $this->generatedFor = $user->name;
+            $this->generatedPassword = User::DEFAULT_PASSWORD;
         }
 
         $message = $this->editingId ? __('msg_users.user_updated') : __('msg_users.user_created');

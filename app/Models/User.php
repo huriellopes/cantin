@@ -22,6 +22,12 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, KeepsDeletedModels, Notifiable;
 
     /**
+     * Senha padrão atribuída a usuários criados pelo super-admin. O usuário é
+     * obrigado a trocá-la no primeiro login (password_change_required).
+     */
+    public const string DEFAULT_PASSWORD = 'Cantin#2026';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -34,6 +40,7 @@ class User extends Authenticatable
         'password',
         'role_id',
         'status',
+        'password_change_required',
     ];
 
     /**
@@ -84,6 +91,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'role_id' => RoleEnum::class,
             'status' => Status::class,
+            'password_change_required' => 'boolean',
             'email_verified_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',

@@ -23,10 +23,5 @@ class RoleSeederTable extends Seeder
             'name' => 'Admin',
             'slug' => 'admin',
         ]);
-
-        Role::query()->create([
-            'name' => 'User',
-            'slug' => 'user',
-        ]);
     }
 }

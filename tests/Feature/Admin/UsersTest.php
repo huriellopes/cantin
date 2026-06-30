@@ -6,6 +6,7 @@ use App\Enum\Status;
 use App\Livewire\Admin\Users\Index;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 
 it('forbids non super-admins from the users page', function (): void {
@@ -23,7 +24,7 @@ it('lets a super-admin open the users page', function (): void {
 
 it('creates a user through the component', function (): void {
     $this->actingAs(userWithRole('super-admin'));
-    $roleId = Role::query()->firstOrCreate(['slug' => 'user'], ['name' => 'User'])->id;
+    $roleId = Role::query()->firstOrCreate(['slug' => 'admin'], ['name' => 'Admin'])->id;
 
     Livewire::test(Index::class)
         ->call('create')
@@ -34,7 +35,12 @@ it('creates a user through the component', function (): void {
         ->assertHasNoErrors()
         ->assertSet('showModal', false);
 
-    expect(User::query()->where('email', 'maria@example.com')->exists())->toBeTrue();
+    $user = User::query()->where('email', 'maria@example.com')->first();
+
+    expect($user)->not->toBeNull()
+        // Senha padrão atribuída e troca obrigatória sinalizada.
+        ->and(Hash::check(User::DEFAULT_PASSWORD, $user->password))->toBeTrue()
+        ->and($user->password_change_required)->toBeTrue();
 });
 
 it('validates required fields on save', function (): void {
@@ -51,7 +57,7 @@ it('validates required fields on save', function (): void {
 
 it('toggles status and refuses to disable yourself', function (): void {
     $admin = userWithRole('super-admin');
-    $target = userWithRole('user');
+    $target = userWithRole('admin');
 
     Livewire::actingAs($admin)->test(Index::class)
         ->call('toggleStatus', $target->id);
@@ -65,7 +71,7 @@ it('toggles status and refuses to disable yourself', function (): void {
 
 it('resets a user password', function (): void {
     $admin = userWithRole('super-admin');
-    $target = userWithRole('user');
+    $target = userWithRole('admin');
     $oldHash = $target->password;
 
     Livewire::actingAs($admin)->test(Index::class)

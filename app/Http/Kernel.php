@@ -8,6 +8,7 @@ use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\CheckRoleMiddleware;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\EnsureEmailIsVerified;
+use App\Http\Middleware\EnsurePasswordChanged;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\SetLocale;
@@ -89,6 +90,7 @@ class Kernel extends HttpKernel
         'cache.headers' => SetCacheHeaders::class,
         'can' => Authorize::class,
         'guest' => RedirectIfAuthenticated::class,
+        'password.changed' => EnsurePasswordChanged::class,
         'password.confirm' => RequirePassword::class,
         'precognitive' => HandlePrecognitiveRequests::class,
         'role' => CheckRoleMiddleware::class,
