@@ -35,7 +35,7 @@ it('does not set a null id when creating via the base resource (type_peoples)', 
 });
 
 it('does not set a null id when creating a user', function (): void {
-    Role::query()->firstOrCreate(['slug' => 'user'], ['name' => 'User']);
+    Role::query()->firstOrCreate(['slug' => 'admin'], ['name' => 'Admin']);
 
     $captured = null;
     User::creating(function ($model) use (&$captured): false {
@@ -49,7 +49,7 @@ it('does not set a null id when creating a user', function (): void {
         ->call('create')
         ->set('name', 'Fulano')
         ->set('email', 'fulano@example.com')
-        ->set('role_id', Role::query()->where('slug', 'user')->value('id'))
+        ->set('role_id', Role::query()->where('slug', 'admin')->value('id'))
         ->call('save')
         ->assertHasNoErrors();
 

@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services\Auth;
 
-use App\Enum\Role;
 use App\Enum\Status;
-use App\Http\DTO\Auth\RegisterDTO;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -40,29 +37,6 @@ class LoginService
         }
 
         return $user;
-    }
-
-    public function HasRegister(RegisterDTO $params): ?User
-    {
-        $userAlreadyExists = User::query()
-            ->where('email', '=', $params->email)
-            ->where('status', '=', Status::ACTIVE)
-            ->first();
-
-        if ($userAlreadyExists) {
-            throw ValidationException::withMessages([
-                'email' => [__('Email already exists')],
-            ]);
-        }
-
-        return User::query()->create([
-            'name' => $params->name,
-            'slug' => Str::slug($params->name),
-            'email' => $params->email,
-            'email_verified_at' => Date::now(),
-            'password' => Hash::make($params->password),
-            'role_id' => Role::USER,
-        ]);
     }
 
     private function ensureIsNotRateLimited(LoginRequest $request): void

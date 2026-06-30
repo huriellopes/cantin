@@ -11,7 +11,7 @@ use Livewire\Livewire;
 
 it('opens a confirm modal and only deletes after confirmation', function (): void {
     $admin = userWithRole('super-admin');
-    $target = userWithRole('user');
+    $target = userWithRole('admin');
 
     $component = Livewire::actingAs($admin)->test(UsersIndex::class)
         ->call('confirmDelete', $target->id)
@@ -36,7 +36,7 @@ it('cancels a pending confirmation without acting', function (): void {
 });
 
 it('populates the view modal', function (): void {
-    $user = userWithRole('user');
+    $user = userWithRole('admin');
 
     Livewire::actingAs(userWithRole('super-admin'))->test(UsersIndex::class)
         ->call('view', $user->id)

@@ -6,13 +6,13 @@ use App\Livewire\Admin\Users\Index;
 use App\Models\ImpersonationLog;
 use Livewire\Livewire;
 
-it('lets a super-admin impersonate a regular user (redirects to the site) and audits it', function (): void {
+it('lets a super-admin impersonate a user (to the dashboard) and audits it', function (): void {
     $super = userWithRole('super-admin');
-    $target = userWithRole('user');
+    $target = userWithRole('admin');
 
     Livewire::actingAs($super)->test(Index::class)
         ->call('impersonate', $target->id)
-        ->assertRedirect(route('site.home'));
+        ->assertRedirect(route('admin.dashboard'));
 
     expect(session('impersonator_id'))->toBe($super->id)
         ->and(ImpersonationLog::query()->where([
@@ -22,18 +22,9 @@ it('lets a super-admin impersonate a regular user (redirects to the site) and au
         ])->exists())->toBeTrue();
 });
 
-it('sends an impersonated admin to the dashboard (respecting permissions)', function (): void {
-    $super = userWithRole('super-admin');
-    $admin = userWithRole('admin');
-
-    Livewire::actingAs($super)->test(Index::class)
-        ->call('impersonate', $admin->id)
-        ->assertRedirect(route('admin.dashboard'));
-});
-
 it('returns to the original user when leaving impersonation', function (): void {
     $super = userWithRole('super-admin');
-    $target = userWithRole('user');
+    $target = userWithRole('admin');
 
     $this->actingAs($target)
         ->withSession(['impersonator_id' => $super->id])
