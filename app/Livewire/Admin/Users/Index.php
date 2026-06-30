@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Livewire\Admin\Users;
 
 use App\Enum\Status;
+use App\Exports\UsersExport;
 use App\Livewire\Admin\Support\HasAdminActions;
 use App\Livewire\Admin\Support\WithDataTable;
 use App\Models\ImpersonationLog;
 use App\Models\Role;
 use App\Models\User;
+use App\Support\ExportManager;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -170,30 +172,10 @@ class Index extends Component
         return $this->redirect(route($destination));
     }
 
-    public function exportCsv()
+    public function export(): void
     {
-        $filename = 'usuarios-' . now()->format('Ymd_His') . '.csv';
-
-        return response()->streamDownload(function (): void {
-            $out = fopen('php://output', 'w');
-            fputcsv($out, ['ID', 'Nome', 'E-mail', 'Perfil', 'Status', 'Criado em']);
-
-            User::query()->where('id', '<>', auth()->id())->with('role')->orderBy('id')
-                ->chunk(200, function ($users) use ($out): void {
-                    foreach ($users as $user) {
-                        fputcsv($out, [
-                            $user->id,
-                            $user->name,
-                            $user->email,
-                            $user->role_id?->label(),
-                            $user->status?->label(),
-                            $user->created_at?->format('d/m/Y H:i'),
-                        ]);
-                    }
-                });
-
-            fclose($out);
-        }, $filename, ['Content-Type' => 'text/csv']);
+        ExportManager::dispatch(UsersExport::class, __('crud_users.title'));
+        $this->dispatch('toast', type: 'info', message: __('exports.started'));
     }
 
     public function render(): Factory|View

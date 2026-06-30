@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Admin\Terreiros;
 
 use App\Actions\Address\FillAddressAction;
+use App\Exports\TerreirosExport;
 use App\Livewire\Admin\Support\HasAdminActions;
 use App\Livewire\Admin\Support\WithDataTable;
 use App\Models\Address;
@@ -13,6 +14,7 @@ use App\Models\NationsTerreiro;
 use App\Models\State;
 use App\Models\Terreiro;
 use App\Models\TypePeople;
+use App\Support\ExportManager;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
@@ -199,33 +201,10 @@ class Index extends Component
         $this->notify(__('msg_terreiros.terreiro_deleted'));
     }
 
-    public function exportCsv()
+    public function export(): void
     {
-        $filename = 'terreiros-' . now()->format('Ymd_His') . '.csv';
-
-        return response()->streamDownload(function (): void {
-            $out = fopen('php://output', 'w');
-            fputcsv($out, [__('msg_terreiros.csv_id'), __('msg_terreiros.label_name'), __('msg_terreiros.label_phone'), __('msg_terreiros.label_nation'), __('msg_terreiros.label_zipcode'), __('msg_terreiros.label_address'), __('msg_terreiros.label_leadership'), __('msg_terreiros.label_color_of_leadership'), __('msg_terreiros.csv_created_at')]);
-
-            Terreiro::query()->with(['nation', 'address'])->orderBy('id')
-                ->chunk(200, function ($terreiros) use ($out): void {
-                    foreach ($terreiros as $terreiro) {
-                        fputcsv($out, [
-                            $terreiro->id,
-                            $terreiro->name,
-                            $terreiro->phone,
-                            $terreiro->nation?->name,
-                            $terreiro->address?->zipcode,
-                            $terreiro->address?->address,
-                            $terreiro->leadership_orunko,
-                            $terreiro->color_of_leadership,
-                            $terreiro->created_at?->format('d/m/Y H:i'),
-                        ]);
-                    }
-                });
-
-            fclose($out);
-        }, $filename, ['Content-Type' => 'text/csv']);
+        ExportManager::dispatch(TerreirosExport::class, __('admin.nav.terreiros'));
+        $this->dispatch('toast', type: 'info', message: __('exports.started'));
     }
 
     public function render(): Factory|View
