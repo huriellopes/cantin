@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Pages\Auth;
 
 use Illuminate\Support\Facades\Cache;
@@ -20,7 +22,7 @@ class Login extends Component
 
     public function toggleForm(): void
     {
-        $this->showLogin = ! $this->showLogin;
+        $this->showLogin = !$this->showLogin;
     }
 
     public function render()

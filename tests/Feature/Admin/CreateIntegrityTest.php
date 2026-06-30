@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Admin\TypePeoples\Index;
 use App\Models\Role;
 use App\Models\TypePeople;

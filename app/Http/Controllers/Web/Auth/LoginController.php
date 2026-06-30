@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
@@ -25,7 +27,7 @@ class LoginController extends Controller
 
             $user = resolve(LoginService::class)->HasLogin($request);
 
-            if (! $user) {
+            if (!$user) {
                 return back()
                     ->withInput()
                     ->withErrors(['message' => 'Usuário não encontrado!']);
@@ -44,7 +46,7 @@ class LoginController extends Controller
                 ->withErrors(['message' => 'Credenciais inválidas!']);
         } catch (Exception $e) {
             self::botCantinbr($e);
-            Log::error('Erro durante o login: '.$e->getMessage());
+            Log::error('Erro durante o login: ' . $e->getMessage());
 
             return back()
                 ->withInput()

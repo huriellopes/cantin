@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Override;
 
 class State extends Model
 {
@@ -20,7 +21,7 @@ class State extends Model
     /**
      * @return string[]
      */
-    #[\Override]
+    #[Override]
     public function casts(): array
     {
         return [
@@ -29,7 +30,7 @@ class State extends Model
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function getRouteKeyName(): string
     {
         return 'slug';

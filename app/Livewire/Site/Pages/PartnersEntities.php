@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Pages;
 
 use App\Actions\Address\FillAddressAction;
@@ -60,19 +62,6 @@ class PartnersEntities extends Component
         }
     }
 
-    protected function loadCities(int $stateId): void
-    {
-        $cacheKey = 'cities_of_state_'.$stateId;
-
-        $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
-            return City::query()
-                ->select('id', 'name')
-                ->where('state_id', '=', $stateId)
-                ->orderBy('name')
-                ->get();
-        });
-    }
-
     public function updatedStateId(?int $value): void
     {
         $this->validateOnly('state_id');
@@ -105,7 +94,7 @@ class PartnersEntities extends Component
 
             $cleanedZipCode = str($this->zipcode)->replace('-', '');
 
-            if (! preg_match('/^\d{8}$/', $cleanedZipCode)) {
+            if (!preg_match('/^\d{8}$/', $cleanedZipCode)) {
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
@@ -161,47 +150,6 @@ class PartnersEntities extends Component
         }
     }
 
-    protected function rules(): array
-    {
-        return [
-            'name' => 'required|string',
-            'email' => 'required|email|string',
-            'phone' => 'required|string',
-            'zipcode' => 'required|string',
-            'street' => 'required|string',
-            'complement' => 'nullable|string',
-            'neighborhood' => 'required|string',
-            'state_id' => 'required|integer',
-            'city_id' => 'required|integer',
-            'activity_carried_out' => 'required|string',
-        ];
-    }
-
-    protected function messages(): array
-    {
-        return [
-            'name.required' => __('The name field is required.'),
-            'name.string' => __('The name field only allows characters.'),
-            'email.required' => __('The email field is required.'),
-            'email.string' => __('The email field only allows characters.'),
-            'email.email' => __('The email field is invalid.'),
-            'phone.required' => __('The phone field is required.'),
-            'phone.string' => __('The phone field only allows characters.'),
-            'zipcode.required' => __('The zipcode field is required.'),
-            'zipcode.string' => __('The zipcode field only allows characters.'),
-            'street.required' => __('The address field is required.'),
-            'street.string' => __('The address field only allows characters.'),
-            'complement.string' => __('The complement field only allows characters.'),
-            'neighborhood.required' => __('The neighborhood field is required.'),
-            'neighborhood.string' => __('The neighborhood field only allows characters.'),
-            'state_id.required' => __('The state field is required.'),
-            'state_id.integer' => __('The state field is only allowed numeric characters.'),
-            'city_id.required' => __('The city field is required.'),
-            'city_id.integer' => __('The city field is only allowed numeric characters.'),
-            'activity_carried_out' => __('The activity carried out field is required.'),
-        ];
-    }
-
     public function store(): void
     {
         $this->validate();
@@ -212,7 +160,7 @@ class PartnersEntities extends Component
             ->where('zipcode', '=', $clearZipCode)
             ->first();
 
-        if (! $address) {
+        if (!$address) {
             $address = Address::create([
                 'zipcode' => $clearZipCode,
                 'address' => $this->street,
@@ -268,5 +216,59 @@ class PartnersEntities extends Component
     public function render()
     {
         return view('livewire.site.pages.partners-entities');
+    }
+
+    protected function loadCities(int $stateId): void
+    {
+        $cacheKey = 'cities_of_state_' . $stateId;
+
+        $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
+            return City::query()
+                ->select('id', 'name')
+                ->where('state_id', '=', $stateId)
+                ->orderBy('name')
+                ->get();
+        });
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'name' => 'required|string',
+            'email' => 'required|email|string',
+            'phone' => 'required|string',
+            'zipcode' => 'required|string',
+            'street' => 'required|string',
+            'complement' => 'nullable|string',
+            'neighborhood' => 'required|string',
+            'state_id' => 'required|integer',
+            'city_id' => 'required|integer',
+            'activity_carried_out' => 'required|string',
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'name.required' => __('The name field is required.'),
+            'name.string' => __('The name field only allows characters.'),
+            'email.required' => __('The email field is required.'),
+            'email.string' => __('The email field only allows characters.'),
+            'email.email' => __('The email field is invalid.'),
+            'phone.required' => __('The phone field is required.'),
+            'phone.string' => __('The phone field only allows characters.'),
+            'zipcode.required' => __('The zipcode field is required.'),
+            'zipcode.string' => __('The zipcode field only allows characters.'),
+            'street.required' => __('The address field is required.'),
+            'street.string' => __('The address field only allows characters.'),
+            'complement.string' => __('The complement field only allows characters.'),
+            'neighborhood.required' => __('The neighborhood field is required.'),
+            'neighborhood.string' => __('The neighborhood field only allows characters.'),
+            'state_id.required' => __('The state field is required.'),
+            'state_id.integer' => __('The state field is only allowed numeric characters.'),
+            'city_id.required' => __('The city field is required.'),
+            'city_id.integer' => __('The city field is only allowed numeric characters.'),
+            'activity_carried_out' => __('The activity carried out field is required.'),
+        ];
     }
 }

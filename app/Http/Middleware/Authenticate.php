@@ -6,13 +6,14 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
+use Override;
 
 class Authenticate extends Middleware
 {
-    #[\Override]
+    #[Override]
     protected function redirectTo(Request $request)
     {
-        if (! $request->expectsJson()) {
+        if (!$request->expectsJson()) {
             return route('site.auth.login');
         }
 

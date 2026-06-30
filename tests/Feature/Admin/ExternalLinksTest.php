@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enum\Status;
 use App\Livewire\Admin\ExternalLinks\Index;
 use App\Models\ExternalLink;
@@ -8,7 +10,7 @@ use Livewire\Livewire;
 
 function aLinkType(): TypeExternalLink
 {
-    return TypeExternalLink::query()->create(['name' => 'Apoio', 'slug' => 'apoio-'.uniqid(), 'status' => Status::ACTIVE]);
+    return TypeExternalLink::query()->create(['name' => 'Apoio', 'slug' => 'apoio-' . uniqid(), 'status' => Status::ACTIVE]);
 }
 
 it('lets an admin open the external links page', function () {

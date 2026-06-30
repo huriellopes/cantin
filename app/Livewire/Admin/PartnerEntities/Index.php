@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\PartnerEntities;
 
 use App\Enum\Status;
@@ -37,17 +39,6 @@ class Index extends Component
     public $image;
 
     public ?string $currentImage = null;
-
-    protected function rules(): array
-    {
-        return array_merge([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email'],
-            'phone' => ['required', 'string'],
-            'activity_carried_out' => ['required', 'string'],
-            'image' => [$this->editingId ? 'nullable' : 'required', 'image', 'max:4096'],
-        ], $this->addressRules());
-    }
 
     public function updatingSearch(): void
     {
@@ -95,7 +86,7 @@ class Index extends Component
             $payload['path_image'] = $this->image->store('partners', 'public');
         }
 
-        if (! $this->editingId) {
+        if (!$this->editingId) {
             $payload['status'] = Status::ACTIVE;
             $payload['user_id'] = auth()->id();
         }
@@ -120,7 +111,7 @@ class Index extends Component
             ['label' => 'E-mail', 'value' => $entity->email],
             ['label' => 'Telefone', 'value' => $entity->phone],
             ['label' => 'Atividade', 'value' => $entity->activity_carried_out],
-            ['label' => 'Cidade/UF', 'value' => ($entity->address?->city?->name ?? '').'/'.($entity->address?->state?->abbr ?? '')],
+            ['label' => 'Cidade/UF', 'value' => ($entity->address?->city?->name ?? '') . '/' . ($entity->address?->state?->abbr ?? '')],
             ['label' => 'Status', 'value' => $entity->status?->label()],
         ];
         $this->viewTitle = $entity->name;
@@ -153,5 +144,16 @@ class Index extends Component
             'states' => $this->statesOptions(),
             'cities' => $this->citiesOptions(),
         ]);
+    }
+
+    protected function rules(): array
+    {
+        return array_merge([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email'],
+            'phone' => ['required', 'string'],
+            'activity_carried_out' => ['required', 'string'],
+            'image' => [$this->editingId ? 'nullable' : 'required', 'image', 'max:4096'],
+        ], $this->addressRules());
     }
 }

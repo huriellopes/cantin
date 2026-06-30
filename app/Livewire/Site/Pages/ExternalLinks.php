@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Pages;
 
 use App\Enum\Status;
@@ -53,12 +55,12 @@ class ExternalLinks extends Component
         });
 
         return view('livewire.site.pages.external-links', [
-            'links' => Cache::remember('external_links_cantin'.$this?->selectedLinkType, 60 * 60 * 24, function () {
+            'links' => Cache::remember('external_links_cantin' . $this?->selectedLinkType, 60 * 60 * 24, function () {
                 return ExternalLink::query()
                     ->with(['type', 'user'])
                     ->when($this->search, function ($query) {
-                        $query->where('title', 'like', '%'.$this->search.'%')
-                            ->orWhere('description', 'like', '%'.$this->search.'%');
+                        $query->where('title', 'like', '%' . $this->search . '%')
+                            ->orWhere('description', 'like', '%' . $this->search . '%');
                     })
                     ->where('status', '=', Status::ACTIVE)
                     ->when($this->selectedLinkType, function ($query) {

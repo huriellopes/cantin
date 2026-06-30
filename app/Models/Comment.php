@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enum\Status;
@@ -7,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class Comment extends Model
@@ -24,19 +27,6 @@ class Comment extends Model
         'body',
         'status',
     ];
-
-    /**
-     * @return array<string, string>
-     */
-    #[\Override]
-    protected function casts(): array
-    {
-        return [
-            'status' => Status::class,
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
-    }
 
     public function user(): BelongsTo
     {
@@ -69,5 +59,18 @@ class Comment extends Model
     public function dislikes(): HasMany
     {
         return $this->hasMany(Dislike::class); // Ou belongsToMany(User::class, 'dislikes');
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'status' => Status::class,
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
     }
 }

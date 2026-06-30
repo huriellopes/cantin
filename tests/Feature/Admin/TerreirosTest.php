@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Admin\Terreiros\Index;
 use App\Models\City;
 use App\Models\NationsTerreiro;

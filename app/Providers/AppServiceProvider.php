@@ -21,18 +21,19 @@ use App\Services\BotWebhook\TelegramService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->app->singleton(
             IAddressService::class,
-            ViaCepService::class
+            ViaCepService::class,
         );
 
         $this->app->singleton(

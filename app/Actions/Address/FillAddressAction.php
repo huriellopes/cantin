@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Address;
 
 use App\Models\City;
@@ -10,6 +12,7 @@ use Exception;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
+use stdClass;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -20,7 +23,7 @@ final class FillAddressAction
     /**
      * @throws Exception
      */
-    public static function exec(string $zipcode): \stdClass
+    public static function exec(string $zipcode): stdClass
     {
         try {
             if ($zipcode === '' || $zipcode === '0') {
@@ -47,7 +50,7 @@ final class FillAddressAction
             $longitude = null;
 
             try {
-                $street = $address->address.','.str($address->zipcode)->replace('-', '').','.$address->neighborhood.','.$address->state.', Brasil';
+                $street = $address->address . ',' . str($address->zipcode)->replace('-', '') . ',' . $address->neighborhood . ',' . $address->state . ', Brasil';
                 $result = Geocoder::geocode($street)->get();
 
                 if ($result->isNotEmpty()) {

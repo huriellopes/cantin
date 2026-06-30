@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\Comments;
 
 use App\Enum\Status;
@@ -27,13 +29,6 @@ class Index extends Component
     public string $originalBody = '';
 
     public string $body = '';
-
-    protected function rules(): array
-    {
-        return [
-            'body' => ['required', 'string', 'min:1', 'max:500'],
-        ];
-    }
 
     public function updatingSearch(): void
     {
@@ -104,5 +99,12 @@ class Index extends Component
         return view('livewire.admin.comments.index', [
             'comments' => $comments,
         ]);
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'body' => ['required', 'string', 'min:1', 'max:500'],
+        ];
     }
 }

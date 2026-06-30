@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class ViaCepService implements IAddressService
 {
@@ -22,21 +23,19 @@ class ViaCepService implements IAddressService
     {
         $zipcode = preg_replace('/\D/', '', $zipcode);
 
-        if (strlen((string) $zipcode) !== 8) {
+        if (mb_strlen((string) $zipcode) !== 8) {
             throw new Exception(__('Invalid zipcode!'), Response::HTTP_BAD_REQUEST);
         }
 
-        return Cache::remember('cep-'.$zipcode, 60 * 60 * 24, function () use ($zipcode): AddressResultDTO {
-            return $this->fromViaCep($zipcode)
-                ?? $this->fromBrasilApi($zipcode)
-                ?? throw new Exception(__('Zip code not found!'), Response::HTTP_BAD_REQUEST);
-        });
+        return Cache::remember('cep-' . $zipcode, 60 * 60 * 24, fn (): AddressResultDTO => $this->fromViaCep($zipcode)
+            ?? $this->fromBrasilApi($zipcode)
+            ?? throw new Exception(__('Zip code not found!'), Response::HTTP_BAD_REQUEST));
     }
 
     private function fromViaCep(string $zipcode): ?AddressResultDTO
     {
         try {
-            $endpoint = rtrim((string) config('services.viacep.endpoint'), '/');
+            $endpoint = mb_rtrim((string) config('services.viacep.endpoint'), '/');
             $response = Http::timeout(5)->acceptJson()->get("{$endpoint}/{$zipcode}/json");
 
             if ($response->failed() || $response->json('erro')) {
@@ -53,7 +52,7 @@ class ViaCepService implements IAddressService
                 city: $data['localidade'] ?? '',
                 state: $data['uf'] ?? '',
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Log::warning('ViaCEP indisponível, tentando fallback (BrasilAPI).', ['cep' => $zipcode, 'error' => $e->getMessage()]);
 
             return null;
@@ -63,7 +62,7 @@ class ViaCepService implements IAddressService
     private function fromBrasilApi(string $zipcode): ?AddressResultDTO
     {
         try {
-            $endpoint = rtrim((string) config('services.brasilapi.cep_endpoint'), '/');
+            $endpoint = mb_rtrim((string) config('services.brasilapi.cep_endpoint'), '/');
             $response = Http::timeout(5)->acceptJson()->get("{$endpoint}/{$zipcode}");
 
             if ($response->failed()) {
@@ -80,7 +79,7 @@ class ViaCepService implements IAddressService
                 city: $data['city'] ?? '',
                 state: $data['state'] ?? '',
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Log::warning('BrasilAPI indisponível.', ['cep' => $zipcode, 'error' => $e->getMessage()]);
 
             return null;

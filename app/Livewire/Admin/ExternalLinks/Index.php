@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\ExternalLinks;
 
 use App\Enum\Status;
@@ -36,17 +38,6 @@ class Index extends Component
     public string $url = '';
 
     public string $description = '';
-
-    protected function rules(): array
-    {
-        return [
-            'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', Rule::unique('external_links', 'slug')->ignore($this->editingId)],
-            'type_external_link_id' => ['required', 'exists:type_external_links,id'],
-            'url' => ['required', 'url'],
-            'description' => ['required', 'string', 'max:255'],
-        ];
-    }
 
     public function updatingSearch(): void
     {
@@ -85,7 +76,7 @@ class Index extends Component
             'description' => $this->description,
         ];
 
-        if (! $this->editingId) {
+        if (!$this->editingId) {
             $payload['user_id'] = auth()->id();
             $payload['status'] = Status::ACTIVE;
         }
@@ -141,5 +132,16 @@ class Index extends Component
             'links' => $links,
             'types' => TypeExternalLink::query()->orderBy('name')->pluck('name', 'id'),
         ]);
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', Rule::unique('external_links', 'slug')->ignore($this->editingId)],
+            'type_external_link_id' => ['required', 'exists:type_external_links,id'],
+            'url' => ['required', 'url'],
+            'description' => ['required', 'string', 'max:255'],
+        ];
     }
 }

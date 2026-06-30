@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class Suggestion extends Model
@@ -24,7 +25,7 @@ class Suggestion extends Model
     /**
      * @return string[]
      */
-    #[\Override]
+    #[Override]
     public function casts(): array
     {
         return [

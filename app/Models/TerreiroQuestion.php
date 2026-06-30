@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class TerreiroQuestion extends Model
@@ -31,18 +34,6 @@ class TerreiroQuestion extends Model
         'suggestion_text',
     ];
 
-    /**
-     * @return string[]
-     */
-    #[\Override]
-    protected function casts(): array
-    {
-        return [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
-    }
-
     public function terreiro(): HasOne
     {
         return $this->hasOne(Terreiro::class);
@@ -51,5 +42,17 @@ class TerreiroQuestion extends Model
     public function typePeople(): BelongsTo
     {
         return $this->belongsTo(TypePeople::class);
+    }
+
+    /**
+     * @return string[]
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
     }
 }

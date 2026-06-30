@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\Users;
 
 use App\Enum\Status;
@@ -38,15 +40,6 @@ class Index extends Component
 
     public ?string $generatedFor = null;
 
-    protected function rules(): array
-    {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($this->editingId)],
-            'role_id' => ['required', Rule::exists('roles', 'id')],
-        ];
-    }
-
     public function updatingSearch(): void
     {
         $this->resetPage();
@@ -80,7 +73,7 @@ class Index extends Component
         } else {
             User::query()->create([
                 ...$data,
-                'slug' => Str::slug($this->name).'-'.Str::random(5),
+                'slug' => Str::slug($this->name) . '-' . Str::random(5),
                 'password' => bcrypt(Str::password(12)),
             ]);
         }
@@ -147,7 +140,7 @@ class Index extends Component
 
     public function exportCsv()
     {
-        $filename = 'usuarios-'.now()->format('Ymd_His').'.csv';
+        $filename = 'usuarios-' . now()->format('Ymd_His') . '.csv';
 
         return response()->streamDownload(function (): void {
             $out = fopen('php://output', 'w');
@@ -177,7 +170,7 @@ class Index extends Component
             ->where('id', '<>', auth()->id())
             ->when($this->search, fn ($q) => $q->where(
                 fn ($q) => $q->where('name', 'like', "%{$this->search}%")
-                    ->orWhere('email', 'like', "%{$this->search}%")
+                    ->orWhere('email', 'like', "%{$this->search}%"),
             ))
             ->orderByDesc('id')
             ->paginate(10);
@@ -186,5 +179,14 @@ class Index extends Component
             'users' => $users,
             'roles' => Role::query()->orderBy('name')->pluck('name', 'id'),
         ]);
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($this->editingId)],
+            'role_id' => ['required', Rule::exists('roles', 'id')],
+        ];
     }
 }

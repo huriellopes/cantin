@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\DeletedModels;
 
 use App\Livewire\Admin\Support\HasAdminActions;
@@ -10,6 +12,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\DeletedModels\Models\DeletedModel;
+use Throwable;
 
 #[Layout('components.layouts.admin')]
 #[Title('Modelos Excluídos')]
@@ -57,7 +60,7 @@ class Index extends Component
         try {
             $record->model::restore($record->key);
             $this->notify('Registro restaurado com sucesso.');
-        } catch (\Throwable) {
+        } catch (Throwable) {
             $this->notify('Não foi possível restaurar o registro.', 'error');
         }
     }

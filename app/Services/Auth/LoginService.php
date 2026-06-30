@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Auth;
 
 use App\Enum\Role;
@@ -31,7 +33,7 @@ class LoginService
 
         $this->ensureIsNotRateLimited($request);
 
-        if (! $user && ! Hash::check($request->get('password'), $user->password)) {
+        if (!$user && !Hash::check($request->get('password'), $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -65,7 +67,7 @@ class LoginService
 
     private function ensureIsNotRateLimited(LoginRequest $request): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -83,6 +85,6 @@ class LoginService
 
     private function throttleKey(): string
     {
-        return Str::transliterate(Str::lower(request()->email).'|'.request()->ip);
+        return Str::transliterate(Str::lower(request()->email) . '|' . request()->ip);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Admin\Terreiros\Index as TerreirosIndex;
 use App\Livewire\Admin\Users\Index as UsersIndex;
 use Livewire\Livewire;

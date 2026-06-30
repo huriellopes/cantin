@@ -51,7 +51,7 @@ trait HasAdminActions
         $confirm = $this->confirm;
         $this->confirm = [];
 
-        if (! empty($confirm['method']) && method_exists($this, $confirm['method'])) {
+        if (!empty($confirm['method']) && method_exists($this, $confirm['method'])) {
             $this->{$confirm['method']}(...array_values($confirm['args'] ?? []));
         }
     }

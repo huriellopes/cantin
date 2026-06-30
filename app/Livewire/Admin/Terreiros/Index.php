@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\Terreiros;
 
 use App\Actions\Address\FillAddressAction;
@@ -17,6 +19,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Throwable;
 
 #[Layout('components.layouts.admin')]
 #[Title('Terreiros')]
@@ -81,33 +84,6 @@ class Index extends Component
 
     public ?string $suggestion_text = null;
 
-    protected function rules(): array
-    {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string'],
-            'nation_terreiro_id' => ['required', 'exists:nations_terreiros,id'],
-            'leadership_orunko' => ['required', 'string', 'max:255'],
-            'color_of_leadership' => ['required', 'string'],
-            'zipcode' => ['required', 'string'],
-            'address' => ['required', 'string'],
-            'neighborhood' => ['required', 'string'],
-            'state_id' => ['required', 'exists:states,id'],
-            'city_id' => ['required', 'exists:cities,id'],
-            'type_people_id' => ['required', 'exists:type_peoples,id'],
-            'number_of_children_of_saint' => ['required'],
-            'number_of_children_of_saint_trans' => ['required'],
-            'trans_men_and_women' => ['required'],
-            'name_gender' => ['required'],
-            'fully_welcomes' => ['required'],
-            'respect_for_trans_people' => ['required'],
-            'suffered_aggregation' => ['required'],
-            'inclusion_of_the_name_of_the_land' => ['required'],
-            'suggestion_id' => ['required'],
-            'suggestion_text' => ['nullable', 'string', 'max:255'],
-        ];
-    }
-
     public function updatingSearch(): void
     {
         $this->resetPage();
@@ -124,7 +100,7 @@ class Index extends Component
             $this->city_id = $data->city ?? $this->city_id;
             $this->latitude = $data->latitude ?? null;
             $this->longitude = $data->longitude ?? null;
-        } catch (\Throwable) {
+        } catch (Throwable) {
             $this->addError('zipcode', 'Não foi possível buscar o CEP.');
         }
     }
@@ -176,7 +152,7 @@ class Index extends Component
                     'city_id' => $this->city_id,
                     'latitude' => $this->latitude,
                     'longitude' => $this->longitude,
-                ]
+                ],
             );
 
             $terreiroData = [
@@ -197,7 +173,7 @@ class Index extends Component
 
             $terreiro->question()->updateOrCreate(
                 ['terreiro_id' => $terreiro->id],
-                $this->only(array_keys($this->questionFields()))
+                $this->only(array_keys($this->questionFields())),
             );
 
             $this->editingId = $terreiro->id;
@@ -216,7 +192,7 @@ class Index extends Component
             ['label' => 'Liderança', 'value' => $terreiro->leadership_orunko],
             ['label' => 'Nação', 'value' => $terreiro->nation?->name],
             ['label' => 'Cor da liderança', 'value' => $terreiro->color_of_leadership],
-            ['label' => 'Endereço', 'value' => trim(($terreiro->address?->address ?? '').' — '.($terreiro->address?->city?->name ?? '').'/'.($terreiro->address?->state?->abbr ?? ''))],
+            ['label' => 'Endereço', 'value' => mb_trim(($terreiro->address?->address ?? '') . ' — ' . ($terreiro->address?->city?->name ?? '') . '/' . ($terreiro->address?->state?->abbr ?? ''))],
             ['label' => 'CEP', 'value' => $terreiro->address?->zipcode],
         ];
         $this->viewTitle = $terreiro->name;
@@ -231,7 +207,7 @@ class Index extends Component
 
     public function exportCsv()
     {
-        $filename = 'terreiros-'.now()->format('Ymd_His').'.csv';
+        $filename = 'terreiros-' . now()->format('Ymd_His') . '.csv';
 
         return response()->streamDownload(function (): void {
             $out = fopen('php://output', 'w');
@@ -258,6 +234,53 @@ class Index extends Component
         }, $filename, ['Content-Type' => 'text/csv']);
     }
 
+    public function render(): Factory|View
+    {
+        $terreiros = Terreiro::query()
+            ->with(['nation:id,name', 'address.state:id,name', 'address.city:id,name'])
+            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->orderByDesc('id')
+            ->paginate(10);
+
+        return view('livewire.admin.terreiros.index', [
+            'terreiros' => $terreiros,
+            'nations' => NationsTerreiro::query()->orderBy('name')->pluck('name', 'id'),
+            'typePeoples' => TypePeople::query()->orderBy('name')->pluck('name', 'id'),
+            'states' => State::query()->orderBy('name')->pluck('name', 'id'),
+            'cities' => $this->state_id
+                ? City::query()->where('state_id', $this->state_id)->orderBy('name')->pluck('name', 'id')
+                : collect(),
+            'config' => config('terreiro'),
+        ]);
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string'],
+            'nation_terreiro_id' => ['required', 'exists:nations_terreiros,id'],
+            'leadership_orunko' => ['required', 'string', 'max:255'],
+            'color_of_leadership' => ['required', 'string'],
+            'zipcode' => ['required', 'string'],
+            'address' => ['required', 'string'],
+            'neighborhood' => ['required', 'string'],
+            'state_id' => ['required', 'exists:states,id'],
+            'city_id' => ['required', 'exists:cities,id'],
+            'type_people_id' => ['required', 'exists:type_peoples,id'],
+            'number_of_children_of_saint' => ['required'],
+            'number_of_children_of_saint_trans' => ['required'],
+            'trans_men_and_women' => ['required'],
+            'name_gender' => ['required'],
+            'fully_welcomes' => ['required'],
+            'respect_for_trans_people' => ['required'],
+            'suffered_aggregation' => ['required'],
+            'inclusion_of_the_name_of_the_land' => ['required'],
+            'suggestion_id' => ['required'],
+            'suggestion_text' => ['nullable', 'string', 'max:255'],
+        ];
+    }
+
     private function questionFields(): array
     {
         return [
@@ -282,25 +305,5 @@ class Index extends Component
             'color_of_leadership' => '', 'zipcode' => '', 'address' => '', 'complement' => '',
             'neighborhood' => '', 'state_id' => null, 'city_id' => null, 'latitude' => null, 'longitude' => null,
         ], $this->questionFields());
-    }
-
-    public function render(): Factory|View
-    {
-        $terreiros = Terreiro::query()
-            ->with(['nation:id,name', 'address.state:id,name', 'address.city:id,name'])
-            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
-            ->orderByDesc('id')
-            ->paginate(10);
-
-        return view('livewire.admin.terreiros.index', [
-            'terreiros' => $terreiros,
-            'nations' => NationsTerreiro::query()->orderBy('name')->pluck('name', 'id'),
-            'typePeoples' => TypePeople::query()->orderBy('name')->pluck('name', 'id'),
-            'states' => State::query()->orderBy('name')->pluck('name', 'id'),
-            'cities' => $this->state_id
-                ? City::query()->where('state_id', $this->state_id)->orderBy('name')->pluck('name', 'id')
-                : collect(),
-            'config' => config('terreiro'),
-        ]);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exceptions;
 
 use Exception;
@@ -7,6 +9,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Override;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Throwable;
@@ -27,7 +30,7 @@ class Handler extends ExceptionHandler
     /**
      * Register the exception handling callbacks for the application.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->reportable(function (Throwable $e): void {
@@ -35,7 +38,7 @@ class Handler extends ExceptionHandler
         });
     }
 
-    #[\Override]
+    #[Override]
     public function report(Throwable $e): void
     {
         if ($this->shouldReport($e)) {
@@ -47,11 +50,11 @@ class Handler extends ExceptionHandler
                 $message = "🚨 **Erro na Aplicação CaNTIn Produção ** 🚨\n\n";
             }
 
-            $message .= 'Caminho: '.request()->fullUrl()."\n";
-            $message .= 'Mensagem: '.$e->getMessage()."\n";
-            $message .= 'IP: '.request()->ip()."\n";
-            $message .= 'Navegador: '.request()->header('User-Agent')."\n";
-            $message .= 'Arquivo: '.$e->getFile().' (Linha: '.$e->getLine().")\n";
+            $message .= 'Caminho: ' . request()->fullUrl() . "\n";
+            $message .= 'Mensagem: ' . $e->getMessage() . "\n";
+            $message .= 'IP: ' . request()->ip() . "\n";
+            $message .= 'Navegador: ' . request()->header('User-Agent') . "\n";
+            $message .= 'Arquivo: ' . $e->getFile() . ' (Linha: ' . $e->getLine() . ")\n";
 
             try {
                 Telegram::sendMessage([
@@ -69,7 +72,7 @@ class Handler extends ExceptionHandler
 
     }
 
-    #[\Override]
+    #[Override]
     public function render($request, Exception|Throwable $e): Response|JsonResponse|HTTPResponse
     {
         return parent::render($request, $e);

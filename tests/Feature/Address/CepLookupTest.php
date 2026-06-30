@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Services\Address\ViaCepService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;

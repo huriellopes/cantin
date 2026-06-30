@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\TypeExternalLinks;
 use App\Livewire\Admin\Support\ResourceComponent;
 use App\Models\TypeExternalLink;
 use Livewire\Attributes\Title;
+use Override;
 
 #[Title('Tipos de Link')]
 class Index extends ResourceComponent
@@ -34,13 +35,13 @@ class Index extends ResourceComponent
         return 'Tipo de Link';
     }
 
-    #[\Override]
+    #[Override]
     protected function searchable(): array
     {
         return ['name', 'slug'];
     }
 
-    #[\Override]
+    #[Override]
     protected function hasStatus(): bool
     {
         return true;

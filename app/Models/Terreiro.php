@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class Terreiro extends Model
@@ -24,7 +27,7 @@ class Terreiro extends Model
     /**
      * @return string[]
      */
-    #[\Override]
+    #[Override]
     public function casts(): array
     {
         return [

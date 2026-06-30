@@ -1,13 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enum;
 
 enum StatusPost: int
 {
-    case PUBLISHED = 1;
-    case PENDING = 2;
-    case INACTIVE = 3;
-
     public function label(): string
     {
         return match ($this) {
@@ -25,4 +23,7 @@ enum StatusPost: int
             self::INACTIVE => 'danger',
         };
     }
+    case PUBLISHED = 1;
+    case PENDING = 2;
+    case INACTIVE = 3;
 }

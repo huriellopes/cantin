@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Pages\Terreiros;
 
 use App\Actions\Address\FillAddressAction;
@@ -153,19 +155,6 @@ class Create extends Component
         $this->suggestion_text = '';
     }
 
-    protected function loadCities(int $stateId): void
-    {
-        $cacheKey = 'cities_of_state_'.$stateId;
-
-        $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
-            return City::query()
-                ->select('id', 'name')
-                ->where('state_id', '=', $stateId)
-                ->orderBy('name')
-                ->get();
-        });
-    }
-
     public function searchZipCode(): void
     {
         try {
@@ -179,7 +168,7 @@ class Create extends Component
 
             $cleanedZipCode = str($this->zipcode)->replace('-', '');
 
-            if (! preg_match('/^\d{8}$/', $cleanedZipCode)) {
+            if (!preg_match('/^\d{8}$/', $cleanedZipCode)) {
                 toastr()
                     ->timeOut(2000)
                     ->error(__('Invalid zipcode!'));
@@ -233,6 +222,93 @@ class Create extends Component
                 ->timeOut(2000)
                 ->error(__('Error when searching for zip code!'));
         }
+    }
+
+    public function store(): void
+    {
+        try {
+            DB::beginTransaction();
+            $this->validate();
+
+            $clearZipCode = str($this->zipcode)->replace('-', '');
+
+            $address = Address::query()
+                ->where('zipcode', '=', $clearZipCode)
+                ->first();
+
+            if (!$address) {
+                $address = Address::create([
+                    'zipcode' => $clearZipCode,
+                    'address' => $this->street,
+                    'complement' => $this->complement,
+                    'neighborhood' => $this->neighborhood,
+                    'state_id' => $this->state_id,
+                    'city_id' => $this->city_id,
+                ]);
+            }
+
+            $terreiro = Terreiro::create([
+                'name' => $this->name,
+                'nation_terreiro_id' => $this->nation_terreiro_id,
+                'phone' => Utils::clearMask($this->phone),
+                'leadership_orunko' => $this->leadership_orunko,
+                'color_of_leadership' => $this->color_of_leadership,
+                'address_id' => $address->id,
+            ]);
+
+            TerreiroQuestion::create([
+                'terreiro_id' => $terreiro->id,
+                'type_people_id' => $this->type_people_id,
+                'number_of_children_of_saint' => $this->number_of_children_of_saint,
+                'number_of_children_of_saint_trans' => $this->number_of_children_of_saint_trans,
+                'trans_men_and_women' => $this->trans_men_and_women,
+                'name_gender' => $this->name_gender,
+                'fully_welcomes' => $this->fully_welcomes,
+                'respect_for_trans_people' => $this->respect_for_trans_people,
+                'suffered_aggregation' => $this->suffered_aggregation,
+                'inclusion_of_the_name_of_the_land' => $this->inclusion_of_the_name_of_the_land,
+                'suggestion_id' => $this->suggestion_id,
+                'suggestion_text' => $this->suggestion_text,
+            ]);
+            DB::commit();
+
+            sleep(3);
+
+            toastr()
+                ->timeOut(2000)
+                ->success(__('Terreiro successfully registered!'));
+
+            $this->redirectRoute('site.terreiros.search');
+        } catch (Exception|Throwable $e) {
+            DB::rollBack();
+            Utils::webhook('error', $e, 'Error when creating terreiro', null);
+            Log::error($e->getMessage(), [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ]);
+
+            toastr()
+                ->timeOut(2000)
+                ->error(__('Error when creating terreiro!'));
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.site.pages.terreiros.create');
+    }
+
+    protected function loadCities(int $stateId): void
+    {
+        $cacheKey = 'cities_of_state_' . $stateId;
+
+        $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
+            return City::query()
+                ->select('id', 'name')
+                ->where('state_id', '=', $stateId)
+                ->orderBy('name')
+                ->get();
+        });
     }
 
     /**
@@ -314,79 +390,5 @@ class Create extends Component
             'suggestion_id.integer' => __('The suggestion field is only allowed numeric characters.'),
             'suggestion_text.string' => __('The suggestion_text field only allows characters.'),
         ];
-    }
-
-    public function store(): void
-    {
-        try {
-            DB::beginTransaction();
-            $this->validate();
-
-            $clearZipCode = str($this->zipcode)->replace('-', '');
-
-            $address = Address::query()
-                ->where('zipcode', '=', $clearZipCode)
-                ->first();
-
-            if (! $address) {
-                $address = Address::create([
-                    'zipcode' => $clearZipCode,
-                    'address' => $this->street,
-                    'complement' => $this->complement,
-                    'neighborhood' => $this->neighborhood,
-                    'state_id' => $this->state_id,
-                    'city_id' => $this->city_id,
-                ]);
-            }
-
-            $terreiro = Terreiro::create([
-                'name' => $this->name,
-                'nation_terreiro_id' => $this->nation_terreiro_id,
-                'phone' => Utils::clearMask($this->phone),
-                'leadership_orunko' => $this->leadership_orunko,
-                'color_of_leadership' => $this->color_of_leadership,
-                'address_id' => $address->id,
-            ]);
-
-            TerreiroQuestion::create([
-                'terreiro_id' => $terreiro->id,
-                'type_people_id' => $this->type_people_id,
-                'number_of_children_of_saint' => $this->number_of_children_of_saint,
-                'number_of_children_of_saint_trans' => $this->number_of_children_of_saint_trans,
-                'trans_men_and_women' => $this->trans_men_and_women,
-                'name_gender' => $this->name_gender,
-                'fully_welcomes' => $this->fully_welcomes,
-                'respect_for_trans_people' => $this->respect_for_trans_people,
-                'suffered_aggregation' => $this->suffered_aggregation,
-                'inclusion_of_the_name_of_the_land' => $this->inclusion_of_the_name_of_the_land,
-                'suggestion_id' => $this->suggestion_id,
-                'suggestion_text' => $this->suggestion_text,
-            ]);
-            DB::commit();
-
-            sleep(3);
-
-            toastr()
-                ->timeOut(2000)
-                ->success(__('Terreiro successfully registered!'));
-
-            $this->redirectRoute('site.terreiros.search');
-        } catch (Exception|Throwable $e) {
-            DB::rollBack();
-            Utils::webhook('error', $e, 'Error when creating terreiro', null);
-            Log::error($e->getMessage(), [
-                'line' => $e->getLine(),
-                'file' => $e->getFile(),
-            ]);
-
-            toastr()
-                ->timeOut(2000)
-                ->error(__('Error when creating terreiro!'));
-        }
-    }
-
-    public function render()
-    {
-        return view('livewire.site.pages.terreiros.create');
     }
 }

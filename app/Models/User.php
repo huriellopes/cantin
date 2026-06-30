@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -11,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class User extends Authenticatable
@@ -43,22 +46,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * @return array<string, string>
-     */
-    #[\Override]
-    protected function casts(): array
-    {
-        return [
-            'password' => 'hashed',
-            'role_id' => RoleEnum::class,
-            'status' => Status::class,
-            'email_verified_at' => 'datetime',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
-    }
-
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
@@ -85,5 +72,21 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return in_array($this->role_id, [RoleEnum::SUPER, RoleEnum::ADMIN], true);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+            'role_id' => RoleEnum::class,
+            'status' => Status::class,
+            'email_verified_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
     }
 }

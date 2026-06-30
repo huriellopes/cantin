@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enum\Status;
 use App\Livewire\Admin\Comments\Index;
 use App\Models\Comment;

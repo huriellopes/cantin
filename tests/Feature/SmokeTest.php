@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 it('serves public pages', function (string $path) {
     $this->get($path)->assertOk();
 })->with([

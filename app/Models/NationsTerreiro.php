@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class NationsTerreiro extends Model
@@ -19,7 +20,7 @@ class NationsTerreiro extends Model
         'slug',
     ];
 
-    #[\Override]
+    #[Override]
     public function getRouteKeyName(): string
     {
         return 'slug';
@@ -28,7 +29,7 @@ class NationsTerreiro extends Model
     /**
      * @return string[]
      */
-    #[\Override]
+    #[Override]
     public function casts(): array
     {
         return [

@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\Categories;
 use App\Livewire\Admin\Support\ResourceComponent;
 use App\Models\Category;
 use Livewire\Attributes\Title;
+use Override;
 
 #[Title('Categorias')]
 class Index extends ResourceComponent
@@ -34,13 +35,13 @@ class Index extends ResourceComponent
         return 'Categoria';
     }
 
-    #[\Override]
+    #[Override]
     protected function searchable(): array
     {
         return ['name', 'slug'];
     }
 
-    #[\Override]
+    #[Override]
     protected function hasStatus(): bool
     {
         return true;

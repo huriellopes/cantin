@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Site\Pages\About;
 use Livewire\Livewire;
 

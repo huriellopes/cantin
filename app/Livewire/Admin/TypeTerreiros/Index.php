@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\TypeTerreiros;
 use App\Livewire\Admin\Support\ResourceComponent;
 use App\Models\TypeTerreiro;
 use Livewire\Attributes\Title;
+use Override;
 
 #[Title('Tipos de Terreiro')]
 class Index extends ResourceComponent
@@ -34,7 +35,7 @@ class Index extends ResourceComponent
         return 'Tipo de Terreiro';
     }
 
-    #[\Override]
+    #[Override]
     protected function searchable(): array
     {
         return ['name', 'slug'];

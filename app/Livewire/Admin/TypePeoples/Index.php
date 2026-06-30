@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\TypePeoples;
 use App\Livewire\Admin\Support\ResourceComponent;
 use App\Models\TypePeople;
 use Livewire\Attributes\Title;
+use Override;
 
 #[Title('Gêneros')]
 class Index extends ResourceComponent
@@ -35,7 +36,7 @@ class Index extends ResourceComponent
         return 'Gênero';
     }
 
-    #[\Override]
+    #[Override]
     protected function searchable(): array
     {
         return ['name', 'slug'];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Traits;
 
 use App\Models\User;
@@ -46,6 +48,7 @@ trait Utils
         $dateEnd = new DateTime($end_date);
 
         $rangeDate = [];
+
         while ($dateStart <= $dateEnd) {
             $rangeDate[] = $dateStart->format($format);
             $dateStart = $dateStart->modify($slep);
@@ -63,14 +66,14 @@ trait Utils
             preg_match('/^(\d{2})(\d{4,5})(\d{4})$/', (string) $formatedPhone, $matches);
 
             if ($matches !== []) {
-                return '('.$matches[1].') '.$matches[2].'-'.$matches[3];
+                return '(' . $matches[1] . ') ' . $matches[2] . '-' . $matches[3];
             }
         }
 
         preg_match('/^(\d{2})(\d{4,5})(\d{4})$/', (string) $formatedPhone, $matches);
 
         if ($matches !== []) {
-            return '('.$matches[1].') 9 '.$matches[2].'-'.$matches[3];
+            return '(' . $matches[1] . ') 9 ' . $matches[2] . '-' . $matches[3];
         }
 
         return $phone;
@@ -78,7 +81,7 @@ trait Utils
 
     public function validateInt($param): bool
     {
-        return ! is_int($param);
+        return !is_int($param);
     }
 
     /**
@@ -88,6 +91,7 @@ trait Utils
     {
         $response['success'] = $success;
         $response['status'] = $status;
+
         if ($total) {
             $response['total'] = $total;
         }
@@ -109,14 +113,14 @@ trait Utils
      */
     public function validateEmail(string $email): bool
     {
-        $user = new User;
+        $user = new User();
 
         $pattern = '/^[0-9a-z]([-_.]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,3}$/';
 
         $getUserName = $this->getOFModel($user, 'username', '=', $email)->first();
         $getUserEmail = $this->getOFModel($user, 'email', '=', $email)->first();
 
-        if (! (empty($getUserName) || empty($getUserEmail) || (bool) preg_match($pattern, $email))) {
+        if (!(empty($getUserName) || empty($getUserEmail) || (bool) preg_match($pattern, $email))) {
             throw ValidationException::withMessages([
                 'username' => 'Credenciais inválidas, por favor verifique novamente.',
             ]);
@@ -140,13 +144,13 @@ trait Utils
         $response['data'] = $data;
 
         if ((auth()->user() & ($type === 'info' || $type === 'error')) !== 0) {
-            $response['user'] = 'User: '.auth()->user()->id;
+            $response['user'] = 'User: ' . auth()->user()->id;
         }
 
         if ($type === 'info') {
             Log::channel($channel)
                 ->info(response()->json([$response,
-                    'DateTime' => Date::now()->format('Y-m-d H:i:s')]).PHP_EOL);
+                    'DateTime' => Date::now()->format('Y-m-d H:i:s')]) . PHP_EOL);
         }
 
         if ($exception && $type === 'error') {
@@ -159,7 +163,7 @@ trait Utils
                 $response['dateTime'] = Date::now()->format('Y-m-d H:i:s');
             }
 
-            Log::channel($channel)->error(response()->json($response).PHP_EOL);
+            Log::channel($channel)->error(response()->json($response) . PHP_EOL);
         }
     }
 
@@ -169,7 +173,7 @@ trait Utils
             $string = implode('', range('A', 'Z')); // ABCDEFGHIJKLMNOPQRSTUVWXYZ
             $nums = implode('', range(0, 9)); // 0123456789
 
-            $password = $string.$nums.$string.$nums; // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
+            $password = $string . $nums . $string . $nums; // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
         }
 
         if ($NumberOrString === 'string') {
@@ -185,7 +189,7 @@ trait Utils
         $pass = '';
 
         for ($i = 0; $i < $length; $i++) {
-            $pass .= $password[random_int(0, strlen($password) - 1)];
+            $pass .= $password[random_int(0, mb_strlen($password) - 1)];
         }
 
         return $pass; // ex: q02TAq3
@@ -200,7 +204,7 @@ trait Utils
         $firstName = array_shift($parts);
         $lastName = array_pop($parts);
 
-        return strtolower($firstName.' '.$lastName); // ex.: fulanosilva
+        return mb_strtolower($firstName . ' ' . $lastName); // ex.: fulanosilva
     }
 
     public function loggingDatabase(string $action, string $type, $exception = null): bool
@@ -261,12 +265,12 @@ trait Utils
         if ($method === 'GET') {
             return Http::acceptJson()->withHeaders([
                 'Content-Type' => 'application/json',
-            ])->get($endpoint.$params)->json();
+            ])->get($endpoint . $params)->json();
         }
 
         return Http::acceptJson()->withHeaders([
             'Content-Type' => 'application/json',
-        ])->post($endpoint.$params, $data)->json();
+        ])->post($endpoint . $params, $data)->json();
     }
 
     /**
@@ -298,12 +302,12 @@ trait Utils
         $chatId = config('telegram.bots.cantinbrBot.chatID');
 
         $message = "🚨 **Erro na Aplicação Laravel** 🚨\n\n";
-        $message .= 'Caminho: '.request()->fullUrl()."\n";
-        $message .= 'Mensagem: '.$e->getMessage()."\n";
-        $message .= 'Usuário logado: '.(auth()->check() ? auth()->user()->id.'-'.auth()->user()->name : 'Não foi usuário logado')."\n";
-        $message .= 'Data e hora: '.Date::now()->format('Y-m-d H:i:s')."\n";
-        $message .= 'Dados: '.json_encode($data, JSON_THROW_ON_ERROR)."\n";
-        $message .= 'Arquivo: '.$e->getFile().' (Linha: '.$e->getLine().")\n";
+        $message .= 'Caminho: ' . request()->fullUrl() . "\n";
+        $message .= 'Mensagem: ' . $e->getMessage() . "\n";
+        $message .= 'Usuário logado: ' . (auth()->check() ? auth()->user()->id . '-' . auth()->user()->name : 'Não foi usuário logado') . "\n";
+        $message .= 'Data e hora: ' . Date::now()->format('Y-m-d H:i:s') . "\n";
+        $message .= 'Dados: ' . json_encode($data, JSON_THROW_ON_ERROR) . "\n";
+        $message .= 'Arquivo: ' . $e->getFile() . ' (Linha: ' . $e->getLine() . ")\n";
 
         try {
             Telegram::sendMessage([

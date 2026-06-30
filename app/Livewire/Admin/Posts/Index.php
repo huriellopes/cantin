@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\Posts;
 
 use App\Enum\StatusPost;
@@ -42,18 +44,6 @@ class Index extends Component
     public $image;
 
     public ?string $currentImage = null;
-
-    protected function rules(): array
-    {
-        return [
-            'titleField' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', Rule::unique('posts', 'slug')->ignore($this->editingId)],
-            'category_id' => ['required', Rule::exists('categories', 'id')],
-            'published_at' => ['required', 'date'],
-            'content' => ['required', 'string'],
-            'image' => ['nullable', 'image', 'max:4096'],
-        ];
-    }
 
     public function updatingSearch(): void
     {
@@ -102,7 +92,7 @@ class Index extends Component
             $payload['main_image'] = $this->image->store('posts', 'public');
         }
 
-        if (! $this->editingId) {
+        if (!$this->editingId) {
             $payload['user_id'] = auth()->id();
         }
 
@@ -173,5 +163,17 @@ class Index extends Component
             'posts' => $posts,
             'categories' => Category::query()->orderBy('name')->pluck('name', 'id'),
         ]);
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'titleField' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', Rule::unique('posts', 'slug')->ignore($this->editingId)],
+            'category_id' => ['required', Rule::exists('categories', 'id')],
+            'published_at' => ['required', 'date'],
+            'content' => ['required', 'string'],
+            'image' => ['nullable', 'image', 'max:4096'],
+        ];
     }
 }

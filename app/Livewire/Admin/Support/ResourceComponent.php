@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\Support;
 
 use App\Enum\Status;
@@ -27,6 +29,115 @@ abstract class ResourceComponent extends Component
 
     /** @var array<string, mixed> */
     public array $form = [];
+
+    public function updatingSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function create(): void
+    {
+        $this->editingId = null;
+        $this->form = array_fill_keys(array_keys($this->fields()), '');
+        $this->resetValidation();
+        $this->showModal = true;
+    }
+
+    public function edit(int $id): void
+    {
+        $record = $this->model()::query()->findOrFail($id);
+        $this->editingId = $record->id;
+        $this->form = collect(array_keys($this->fields()))
+            ->mapWithKeys(fn ($field): array => [$field => $record->{$field}])
+            ->all();
+        $this->resetValidation();
+        $this->showModal = true;
+    }
+
+    public function save(): void
+    {
+        $this->validate();
+
+        $data = $this->form;
+
+        // slug automático a partir do nome quando vazio
+        if (array_key_exists('slug', $this->fields()) && blank($data['slug'] ?? null) && filled($data['name'] ?? null)) {
+            $data['slug'] = Str::slug($data['name']);
+        }
+
+        if (!$this->editingId) {
+            if ($this->hasStatus()) {
+                $data['status'] = Status::ACTIVE;
+            }
+
+            $data = array_merge($data, $this->onCreate());
+        }
+
+        $editing = (bool) $this->editingId;
+
+        if ($editing) {
+            $this->model()::query()->whereKey($this->editingId)->update($data);
+        } else {
+            $this->model()::query()->create($data);
+        }
+
+        $this->showModal = false;
+        $this->notify($editing ? "{$this->singular()} atualizado(a)." : "{$this->singular()} criado(a).");
+    }
+
+    public function view(int $id): void
+    {
+        $record = $this->model()::query()->findOrFail($id);
+
+        $this->viewData = collect($this->fields())
+            ->map(fn (array $cfg, string $name): array => [
+                'label' => $cfg['label'] ?? Str::headline($name),
+                'value' => strip_tags((string) $record->{$name}),
+            ])
+            ->values()
+            ->all();
+
+        $this->viewTitle = $this->singular();
+        $this->showView = true;
+    }
+
+    public function toggleStatus(int $id): void
+    {
+        if (!$this->hasStatus()) {
+            return;
+        }
+
+        $record = $this->model()::query()->findOrFail($id);
+        $record->update(['status' => $record->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
+        $this->notify('Status atualizado.');
+    }
+
+    public function delete(int $id): void
+    {
+        $this->model()::query()->findOrFail($id)->delete();
+        $this->notify("{$this->singular()} excluído(a).");
+    }
+
+    public function render()
+    {
+        $query = $this->model()::query();
+
+        if ($this->search !== '' && $this->search !== '0') {
+            $query->where(function ($q): void {
+                foreach ($this->searchable() as $col) {
+                    $q->orWhere($col, 'like', "%{$this->search}%");
+                }
+            });
+        }
+
+        return view('livewire.admin.resource', [
+            'records' => $query->orderByDesc('id')->paginate(10),
+            'fields' => $this->fields(),
+            'heading' => $this->heading(),
+            'singular' => $this->singular(),
+            'hasStatus' => $this->hasStatus(),
+        ]);
+    }
 
     /** @return class-string<Model> */
     abstract protected function model(): string;
@@ -85,114 +196,5 @@ abstract class ResourceComponent extends Component
         }
 
         return $rules;
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function create(): void
-    {
-        $this->editingId = null;
-        $this->form = array_fill_keys(array_keys($this->fields()), '');
-        $this->resetValidation();
-        $this->showModal = true;
-    }
-
-    public function edit(int $id): void
-    {
-        $record = $this->model()::query()->findOrFail($id);
-        $this->editingId = $record->id;
-        $this->form = collect(array_keys($this->fields()))
-            ->mapWithKeys(fn ($field): array => [$field => $record->{$field}])
-            ->all();
-        $this->resetValidation();
-        $this->showModal = true;
-    }
-
-    public function save(): void
-    {
-        $this->validate();
-
-        $data = $this->form;
-
-        // slug automático a partir do nome quando vazio
-        if (array_key_exists('slug', $this->fields()) && blank($data['slug'] ?? null) && filled($data['name'] ?? null)) {
-            $data['slug'] = Str::slug($data['name']);
-        }
-
-        if (! $this->editingId) {
-            if ($this->hasStatus()) {
-                $data['status'] = Status::ACTIVE;
-            }
-
-            $data = array_merge($data, $this->onCreate());
-        }
-
-        $editing = (bool) $this->editingId;
-
-        if ($editing) {
-            $this->model()::query()->whereKey($this->editingId)->update($data);
-        } else {
-            $this->model()::query()->create($data);
-        }
-
-        $this->showModal = false;
-        $this->notify($editing ? "{$this->singular()} atualizado(a)." : "{$this->singular()} criado(a).");
-    }
-
-    public function view(int $id): void
-    {
-        $record = $this->model()::query()->findOrFail($id);
-
-        $this->viewData = collect($this->fields())
-            ->map(fn (array $cfg, string $name): array => [
-                'label' => $cfg['label'] ?? Str::headline($name),
-                'value' => strip_tags((string) $record->{$name}),
-            ])
-            ->values()
-            ->all();
-
-        $this->viewTitle = $this->singular();
-        $this->showView = true;
-    }
-
-    public function toggleStatus(int $id): void
-    {
-        if (! $this->hasStatus()) {
-            return;
-        }
-
-        $record = $this->model()::query()->findOrFail($id);
-        $record->update(['status' => $record->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
-        $this->notify('Status atualizado.');
-    }
-
-    public function delete(int $id): void
-    {
-        $this->model()::query()->findOrFail($id)->delete();
-        $this->notify("{$this->singular()} excluído(a).");
-    }
-
-    public function render()
-    {
-        $query = $this->model()::query();
-
-        if ($this->search !== '' && $this->search !== '0') {
-            $query->where(function ($q): void {
-                foreach ($this->searchable() as $col) {
-                    $q->orWhere($col, 'like', "%{$this->search}%");
-                }
-            });
-        }
-
-        return view('livewire.admin.resource', [
-            'records' => $query->orderByDesc('id')->paginate(10),
-            'fields' => $this->fields(),
-            'heading' => $this->heading(),
-            'singular' => $this->singular(),
-            'hasStatus' => $this->hasStatus(),
-        ]);
     }
 }

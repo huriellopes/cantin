@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Enum\Role as RoleEnum;
@@ -16,7 +18,7 @@ class UserSeederTable extends Seeder
     public function run(): void
     {
         // Usuários fictícios apenas fora de produção (apoio a desenvolvimento/testes).
-        if (! app()->isProduction()) {
+        if (!app()->isProduction()) {
             User::factory()->count(100)->create();
         }
 
@@ -49,12 +51,12 @@ class UserSeederTable extends Seeder
                 ['email' => $admin['email']],
                 [
                     'name' => $admin['name'],
-                    'slug' => Str::slug($admin['name']).'-'.Str::random(5),
+                    'slug' => Str::slug($admin['name']) . '-' . Str::random(5),
                     'email_verified_at' => now(),
                     'password' => bcrypt($admin['password']),
                     'role_id' => $admin['role_id'],
                     'status' => Status::ACTIVE,
-                ]
+                ],
             );
         }
     }

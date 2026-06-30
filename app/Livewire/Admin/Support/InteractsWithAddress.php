@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\Support;
 
 use App\Actions\Address\FillAddressAction;
@@ -7,6 +9,7 @@ use App\Models\Address;
 use App\Models\City;
 use App\Models\State;
 use Illuminate\Support\Collection;
+use Throwable;
 
 /**
  * Lógica de endereço (busca por CEP + persistência) compartilhada pelos
@@ -30,6 +33,22 @@ trait InteractsWithAddress
 
     public ?string $longitude = null;
 
+    public function buscarCep(): void
+    {
+        try {
+            $data = FillAddressAction::exec(preg_replace('/\D/', '', $this->zipcode));
+            $this->address = $data->address ?? $this->address;
+            $this->neighborhood = $data->neighborhood ?? $this->neighborhood;
+            $this->complement = $data->complement ?? $this->complement;
+            $this->state_id = $data->state ?? $this->state_id;
+            $this->city_id = $data->city ?? $this->city_id;
+            $this->latitude = $data->latitude ?? null;
+            $this->longitude = $data->longitude ?? null;
+        } catch (Throwable) {
+            $this->addError('zipcode', 'Não foi possível buscar o CEP.');
+        }
+    }
+
     /** @return array<string, array<int, string>> */
     protected function addressRules(): array
     {
@@ -42,25 +61,9 @@ trait InteractsWithAddress
         ];
     }
 
-    public function buscarCep(): void
-    {
-        try {
-            $data = FillAddressAction::exec(preg_replace('/\D/', '', $this->zipcode));
-            $this->address = $data->address ?? $this->address;
-            $this->neighborhood = $data->neighborhood ?? $this->neighborhood;
-            $this->complement = $data->complement ?? $this->complement;
-            $this->state_id = $data->state ?? $this->state_id;
-            $this->city_id = $data->city ?? $this->city_id;
-            $this->latitude = $data->latitude ?? null;
-            $this->longitude = $data->longitude ?? null;
-        } catch (\Throwable) {
-            $this->addError('zipcode', 'Não foi possível buscar o CEP.');
-        }
-    }
-
     protected function fillAddressFrom(?Address $address): void
     {
-        if (! $address instanceof Address) {
+        if (!$address instanceof Address) {
             return;
         }
 
@@ -81,7 +84,7 @@ trait InteractsWithAddress
                 'city_id' => $this->city_id,
                 'latitude' => $this->latitude,
                 'longitude' => $this->longitude,
-            ]
+            ],
         );
     }
 

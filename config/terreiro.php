@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'color_of_leadership' => [
         'amarela' => 'Amarela',

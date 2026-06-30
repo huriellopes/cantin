@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enum\StatusPost;
@@ -8,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 /**
@@ -44,22 +47,7 @@ class Post extends Model
         'category_id',
     ];
 
-    /**
-     * @return string[]
-     */
-    #[\Override]
-    protected function casts(): array
-    {
-        return [
-            'status' => StatusPost::class,
-            'views' => 'integer',
-            'published_at' => 'datetime',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
-    }
-
-    #[\Override]
+    #[Override]
     public function getRouteKeyName(): string
     {
         return 'slug';
@@ -68,25 +56,6 @@ class Post extends Model
     public function scopePublished()
     {
         return $this->where('status', '=', StatusPost::PUBLISHED);
-    }
-
-    protected function scopeSearch($query, ?string $search = null): void
-    {
-        if (! in_array($search, [null, '', '0'], true)) {
-            collect(explode(' ', $search))
-                ->filter()
-                ->each(function (string $term) use ($query): void {
-                    $term .= '%';
-
-                    $query->where(function ($query) use ($term): void {
-                        $query->where('title', 'like', $term)
-                            ->orWhere('content', 'like', $term)
-                            ->orWhereIn('category_id', Category::query()
-                                ->where('slug', 'like', $term)
-                                ->pluck('id'));
-                    });
-                });
-        }
     }
 
     public function user(): BelongsTo
@@ -116,5 +85,39 @@ class Post extends Model
     public function dislikes(): HasMany
     {
         return $this->hasMany(Dislike::class); // Ou belongsToMany(User::class, 'dislikes');
+    }
+
+    /**
+     * @return string[]
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'status' => StatusPost::class,
+            'views' => 'integer',
+            'published_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
+
+    protected function scopeSearch($query, ?string $search = null): void
+    {
+        if (!in_array($search, [null, '', '0'], true)) {
+            collect(explode(' ', $search))
+                ->filter()
+                ->each(function (string $term) use ($query): void {
+                    $term .= '%';
+
+                    $query->where(function ($query) use ($term): void {
+                        $query->where('title', 'like', $term)
+                            ->orWhere('content', 'like', $term)
+                            ->orWhereIn('category_id', Category::query()
+                                ->where('slug', 'like', $term)
+                                ->pluck('id'));
+                    });
+                });
+        }
     }
 }

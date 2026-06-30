@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\StaticPages;
 
 use App\Livewire\Admin\Support\ResourceComponent;
 use App\Models\StaticPage;
 use Livewire\Attributes\Title;
+use Override;
 
 #[Title('Páginas Estáticas')]
 class Index extends ResourceComponent
@@ -33,19 +36,19 @@ class Index extends ResourceComponent
         return 'Página Estática';
     }
 
-    #[\Override]
+    #[Override]
     protected function searchable(): array
     {
         return ['name', 'slug'];
     }
 
-    #[\Override]
+    #[Override]
     protected function hasStatus(): bool
     {
         return true;
     }
 
-    #[\Override]
+    #[Override]
     protected function onCreate(): array
     {
         return ['user_id' => auth()->id()];

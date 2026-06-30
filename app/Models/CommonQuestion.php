@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enum\Status;
 use Illuminate\Database\Eloquent\Model;
+use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 /**
@@ -27,10 +30,15 @@ class CommonQuestion extends Model
         'status',
     ];
 
+    public function scopeActive()
+    {
+        return $this->where('status', '=', Status::ACTIVE);
+    }
+
     /**
      * @return string[]
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -38,10 +46,5 @@ class CommonQuestion extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-    }
-
-    public function scopeActive()
-    {
-        return $this->where('status', '=', Status::ACTIVE);
     }
 }

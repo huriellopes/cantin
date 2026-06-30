@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -12,6 +14,6 @@ class CitySeederTable extends Seeder
      */
     public function run(): void
     {
-        DB::unprepared(file_get_contents(__DIR__.'/CitySeeder.sql'));
+        DB::unprepared(file_get_contents(__DIR__ . '/CitySeeder.sql'));
     }
 }

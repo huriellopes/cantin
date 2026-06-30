@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Http\Requests\CityRequest;
@@ -11,7 +13,7 @@ class CityService
 {
     public function list(CityRequest $request): Collection
     {
-        return Cache::remember('cities_'.$request->get('state'), 60 * 60 * 24, fn () => City::query()
+        return Cache::remember('cities_' . $request->get('state'), 60 * 60 * 24, fn () => City::query()
             ->unless(empty($request->get('state')), function ($query) use ($request): void {
                 $query->where('state_id', '=', $request->get('state'));
             })->get());

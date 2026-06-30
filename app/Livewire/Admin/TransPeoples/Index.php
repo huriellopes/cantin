@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Admin\TransPeoples;
 
 use App\Enum\Status;
@@ -30,15 +32,6 @@ class Index extends Component
     public string $email = '';
 
     public string $phone = '';
-
-    protected function rules(): array
-    {
-        return array_merge([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email'],
-            'phone' => ['required', 'string'],
-        ], $this->addressRules());
-    }
 
     public function updatingSearch(): void
     {
@@ -78,7 +71,7 @@ class Index extends Component
             'address_id' => $address->id,
         ];
 
-        if (! $this->editingId) {
+        if (!$this->editingId) {
             $payload['status'] = Status::ACTIVE;
         }
 
@@ -101,7 +94,7 @@ class Index extends Component
             ['label' => 'Nome', 'value' => $person->name],
             ['label' => 'E-mail', 'value' => $person->email],
             ['label' => 'Telefone', 'value' => $person->phone],
-            ['label' => 'Cidade/UF', 'value' => ($person->address?->city?->name ?? '').'/'.($person->address?->state?->abbr ?? '')],
+            ['label' => 'Cidade/UF', 'value' => ($person->address?->city?->name ?? '') . '/' . ($person->address?->state?->abbr ?? '')],
             ['label' => 'Status', 'value' => $person->status?->label()],
         ];
         $this->viewTitle = $person->name;
@@ -134,5 +127,14 @@ class Index extends Component
             'states' => $this->statesOptions(),
             'cities' => $this->citiesOptions(),
         ]);
+    }
+
+    protected function rules(): array
+    {
+        return array_merge([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email'],
+            'phone' => ['required', 'string'],
+        ], $this->addressRules());
     }
 }

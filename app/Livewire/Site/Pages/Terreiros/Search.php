@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Pages\Terreiros;
 
 use App\Models\Terreiro;
@@ -30,13 +32,13 @@ class Search extends Component
         return view('livewire.site.pages.terreiros.search', [
             'terreiros' => Terreiro::query()
                 ->when($this->search, function ($query) {
-                    $query->where('name', 'like', '%'.trim($this->search).'%')
+                    $query->where('name', 'like', '%' . mb_trim($this->search) . '%')
                         ->orWhereHas('address', function ($queryAddress) {
                             $queryAddress->whereHas('state', function ($queryState) {
-                                $queryState->where('name', 'like', '%'.trim($this->search).'%')
-                                    ->orWhere('slug', '=', trim($this->search));
+                                $queryState->where('name', 'like', '%' . mb_trim($this->search) . '%')
+                                    ->orWhere('slug', '=', mb_trim($this->search));
                             })->orWhereHas('city', function ($queryCity) {
-                                $queryCity->where('name', 'like', '%'.trim($this->search).'%');
+                                $queryCity->where('name', 'like', '%' . mb_trim($this->search) . '%');
                             });
                         });
                 })->paginate(10),

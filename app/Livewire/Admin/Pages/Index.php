@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\Pages;
 use App\Livewire\Admin\Support\ResourceComponent;
 use App\Models\Page;
 use Livewire\Attributes\Title;
+use Override;
 
 #[Title('Páginas')]
 class Index extends ResourceComponent
@@ -35,13 +36,13 @@ class Index extends ResourceComponent
         return 'Página';
     }
 
-    #[\Override]
+    #[Override]
     protected function searchable(): array
     {
         return ['name', 'slug'];
     }
 
-    #[\Override]
+    #[Override]
     protected function hasStatus(): bool
     {
         return true;

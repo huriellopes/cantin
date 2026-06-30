@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Models\User;
@@ -28,9 +30,9 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         // Super-admin tem acesso total — passa em qualquer verificação de policy/gate.
-        Gate::before(fn (User $user) => $user->isSuperAdmin() ? true : null);
+        Gate::before(fn (User $user): ?true => $user->isSuperAdmin() ? true : null);
 
-        ResetPassword::createUrlUsing(fn (object $notifiable, string $token) => config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}");
+        ResetPassword::createUrlUsing(fn (object $notifiable, string $token): string => config('app.frontend_url') . "/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}");
 
         //
     }

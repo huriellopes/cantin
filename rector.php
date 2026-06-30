@@ -8,16 +8,16 @@ use RectorLaravel\Set\LaravelSetList;
 
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__.'/app',
-        __DIR__.'/config',
-        __DIR__.'/database',
-        __DIR__.'/routes',
-        __DIR__.'/tests',
+        __DIR__ . '/app',
+        __DIR__ . '/config',
+        __DIR__ . '/database',
+        __DIR__ . '/routes',
+        __DIR__ . '/tests',
     ])
     ->withSkip([
         // Código morto a ser removido na refatoração — não vale processar
-        __DIR__.'/app/Livewire/Site',
-        __DIR__.'/app/Http/Routes/Web/SiteRoute.php',
+        __DIR__ . '/app/Livewire/Site',
+        __DIR__ . '/app/Http/Routes/Web/SiteRoute.php',
     ])
     // Regras de qualidade de código PHP
     ->withPhpSets(php83: true)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Site\Components\Blog;
 
 use App\Enum\StatusPost;
@@ -45,23 +47,6 @@ class Comments extends Component
         $this->userDisliked = $this->post->dislikes()->where('user_id', '=', auth()->id())->exists();
     }
 
-    protected function rules(): array
-    {
-        return [
-            'name' => Auth::check() ? 'nullable' : 'required|min:3',
-            'email' => Auth::check() ? 'nullable' : 'required|email',
-            'newComment' => 'required|min:3',
-            'replies.*' => 'required|min:3',
-        ];
-    }
-
-    protected function messages(): array
-    {
-        return [
-            'newComment.required' => 'O campos comentário é obrigatório.',
-        ];
-    }
-
     public function store(): void
     {
         $post = Post::query()
@@ -96,8 +81,8 @@ class Comments extends Component
     public function postReply(Comment $parentComment)
     {
         try {
-            $this->validateOnly('replies.'.$parentComment->id, [
-                'replies.'.$parentComment->id => 'required|string|max:1000',
+            $this->validateOnly('replies.' . $parentComment->id, [
+                'replies.' . $parentComment->id => 'required|string|max:1000',
             ]);
         } catch (ValidationException $e) {
             throw $e;
@@ -115,14 +100,14 @@ class Comments extends Component
                     'parent_id' => $reply->id,
                 ]);
 
-                Log::info('User '.auth()->user()->id.' replied to comment '.$parentComment->id.' successfully.');
+                Log::info('User ' . auth()->user()->id . ' replied to comment ' . $parentComment->id . ' successfully.');
                 session()->flash('success', 'Sua resposta foi enviada com sucesso!');
             } else {
-                Log::error('User '.auth()->user()->id.' tried to reply to comment '.$parentComment->id.' without admin or super-user role.');
+                Log::error('User ' . auth()->user()->id . ' tried to reply to comment ' . $parentComment->id . ' without admin or super-user role.');
                 session()->flash('error', 'Você não tem permissão para responder a este comentário.');
             }
         } else {
-            Log::error('User tried to reply to comment '.$parentComment->id.' without being logged in.');
+            Log::error('User tried to reply to comment ' . $parentComment->id . ' without being logged in.');
             session()->flash('error', 'É necessário estar logado como administrador para responder a este comentário.');
         }
 
@@ -133,7 +118,7 @@ class Comments extends Component
 
     public function toggleReplyForm(int $commentId)
     {
-        $this->showReplyForm[$commentId] = ! ($this->showReplyForm[$commentId] ?? false);
+        $this->showReplyForm[$commentId] = !($this->showReplyForm[$commentId] ?? false);
     }
 
     public function likeComment(Comment $comment)
@@ -206,5 +191,22 @@ class Comments extends Component
         return view('livewire.site.components.blog.comments', [
             'comments' => $comments,
         ]);
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'name' => Auth::check() ? 'nullable' : 'required|min:3',
+            'email' => Auth::check() ? 'nullable' : 'required|email',
+            'newComment' => 'required|min:3',
+            'replies.*' => 'required|min:3',
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'newComment.required' => 'O campos comentário é obrigatório.',
+        ];
     }
 }

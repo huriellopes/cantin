@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\Nations;
 use App\Livewire\Admin\Support\ResourceComponent;
 use App\Models\NationsTerreiro;
 use Livewire\Attributes\Title;
+use Override;
 
 #[Title('Nações')]
 class Index extends ResourceComponent
@@ -34,7 +35,7 @@ class Index extends ResourceComponent
         return 'Nação';
     }
 
-    #[\Override]
+    #[Override]
     protected function searchable(): array
     {
         return ['name', 'slug'];

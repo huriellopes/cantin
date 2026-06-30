@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enum\Status;
 use App\Livewire\Admin\TransPeoples\Index;
 use App\Models\City;
@@ -12,8 +14,8 @@ use Livewire\Livewire;
 
 function addressPair(): array
 {
-    $state = State::query()->create(['name' => 'São Paulo', 'abbr' => 'SP', 'slug' => 'sp-'.uniqid()]);
-    $city = City::query()->create(['name' => 'São Paulo', 'state_id' => $state->id, 'slug' => 'sp-'.uniqid()]);
+    $state = State::query()->create(['name' => 'São Paulo', 'abbr' => 'SP', 'slug' => 'sp-' . uniqid()]);
+    $city = City::query()->create(['name' => 'São Paulo', 'state_id' => $state->id, 'slug' => 'sp-' . uniqid()]);
 
     return [$state, $city];
 }

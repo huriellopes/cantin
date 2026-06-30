@@ -625,15 +625,51 @@ parameters:
 			path: app/Livewire/Site/Pages/PartnersEntities.php
 
 		-
+			message: '#^Parameter \#1 \$zipcode of static method App\\Actions\\Address\\FillAddressAction\:\:exec\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/PartnersEntities.php
+
+		-
+			message: '#^Parameter \#2 \$subject of function preg_match expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/PartnersEntities.php
+
+		-
 			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
 			identifier: catch.neverThrown
 			count: 2
 			path: app/Livewire/Site/Pages/Terreiros/Create.php
 
 		-
+			message: '#^Parameter \#1 \$zipcode of static method App\\Actions\\Address\\FillAddressAction\:\:exec\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/Terreiros/Create.php
+
+		-
+			message: '#^Parameter \#2 \$subject of function preg_match expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/Terreiros/Create.php
+
+		-
 			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
 			identifier: catch.neverThrown
 			count: 2
+			path: app/Livewire/Site/Pages/Transpeople.php
+
+		-
+			message: '#^Parameter \#1 \$zipcode of static method App\\Actions\\Address\\FillAddressAction\:\:exec\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Site/Pages/Transpeople.php
+
+		-
+			message: '#^Parameter \#2 \$subject of function preg_match expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
 			path: app/Livewire/Site/Pages/Transpeople.php
 
 		-

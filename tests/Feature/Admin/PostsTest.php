@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enum\Status;
 use App\Enum\StatusPost;
 use App\Livewire\Admin\Posts\Index;
@@ -9,7 +11,7 @@ use Livewire\Livewire;
 
 function aCategory(): Category
 {
-    return Category::query()->create(['name' => 'Geral', 'slug' => 'geral-'.uniqid(), 'status' => Status::ACTIVE]);
+    return Category::query()->create(['name' => 'Geral', 'slug' => 'geral-' . uniqid(), 'status' => Status::ACTIVE]);
 }
 
 it('lets an admin open the posts page', function () {
