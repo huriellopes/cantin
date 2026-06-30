@@ -1,7 +1,7 @@
 <div class="space-y-8">
     <div>
-        <h2 class="text-2xl font-bold text-slate-800">Olá, {{ auth()->user()->name }} 👋</h2>
-        <p class="mt-1 text-sm text-slate-500">Aqui está um resumo do CaNTIn hoje.</p>
+        <h2 class="text-2xl font-bold text-slate-800">{{ __('page_admin_dashboard.greeting', ['name' => auth()->user()->name]) }}</h2>
+        <p class="mt-1 text-sm text-slate-500">{{ __('page_admin_dashboard.summary_subtitle') }}</p>
     </div>
 
     {{-- Stat cards --}}
@@ -39,7 +39,7 @@
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div class="mb-4 flex items-baseline justify-between">
                     <h3 class="text-sm font-semibold text-slate-700">{{ $chart['title'] }}</h3>
-                    <span class="text-xs text-slate-400">total {{ $chart['series']->sum('value') }}</span>
+                    <span class="text-xs text-slate-400">{{ __('page_admin_dashboard.chart_total') }} {{ $chart['series']->sum('value') }}</span>
                 </div>
                 <div class="flex h-28 items-end gap-px">
                     @foreach ($chart['series'] as $point)
@@ -60,7 +60,7 @@
     {{-- Terreiros recentes --}}
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 px-6 py-4">
-            <h3 class="font-semibold text-slate-700">Terreiros recentes</h3>
+            <h3 class="font-semibold text-slate-700">{{ __('page_admin_dashboard.recent_terreiros') }}</h3>
         </div>
         <ul class="divide-y divide-slate-100">
             @forelse ($recentTerreiros as $terreiro)
@@ -69,7 +69,7 @@
                     <span class="text-slate-400">{{ $terreiro->created_at?->format('d/m/Y') }}</span>
                 </li>
             @empty
-                <li class="px-6 py-8 text-center text-sm text-slate-400">Nenhum terreiro cadastrado ainda.</li>
+                <li class="px-6 py-8 text-center text-sm text-slate-400">{{ __('page_admin_dashboard.no_terreiros') }}</li>
             @endforelse
         </ul>
     </div>

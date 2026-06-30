@@ -5,13 +5,13 @@
         </div>
         <button wire:click="create" class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
             @svg('lucide-plus', 'h-4 w-4')
-            Novo(a) {{ $singular }}
+            {{ __('crud_resource.new') }} {{ $singular }}
         </button>
     </div>
 
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
-            <input wire:model.live.debounce.400ms="search" type="search" placeholder="Buscar..."
+            <input wire:model.live.debounce.400ms="search" type="search" placeholder="{{ __('crud_resource.search_placeholder') }}"
                    class="w-full max-w-sm rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
         </div>
 
@@ -23,8 +23,8 @@
                         @foreach ($fields as $name => $cfg)
                             <th class="px-4 py-3">{{ $cfg['label'] ?? \Illuminate\Support\Str::headline($name) }}</th>
                         @endforeach
-                        @if ($hasStatus)<th class="px-4 py-3">Status</th>@endif
-                        <th class="px-4 py-3 text-right">Ações</th>
+                        @if ($hasStatus)<th class="px-4 py-3">{{ __('common.status') }}</th>@endif
+                        <th class="px-4 py-3 text-right">{{ __('common.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -41,20 +41,20 @@
                             @endif
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-1">
-                                    <x-admin.action icon="view" color="sky" label="Visualizar" wire:click="view({{ $record->id }})" />
-                                    <x-admin.action icon="edit" color="violet" label="Editar" wire:click="edit({{ $record->id }})" />
+                                    <x-admin.action icon="view" color="sky" label="{{ __('common.view') }}" wire:click="view({{ $record->id }})" />
+                                    <x-admin.action icon="edit" color="violet" label="{{ __('common.edit') }}" wire:click="edit({{ $record->id }})" />
                                     @if ($hasStatus)
                                         <x-admin.action icon="toggle"
                                             :color="$record->status === \App\Enum\Status::ACTIVE ? 'amber' : 'emerald'"
-                                            :label="$record->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar'"
+                                            :label="$record->status === \App\Enum\Status::ACTIVE ? __('common.deactivate') : __('common.activate')"
                                             wire:click="confirmToggle({{ $record->id }})" />
                                     @endif
-                                    <x-admin.action icon="delete" color="rose" label="Excluir" wire:click="confirmDelete({{ $record->id }})" />
+                                    <x-admin.action icon="delete" color="rose" label="{{ __('common.delete') }}" wire:click="confirmDelete({{ $record->id }})" />
                                 </div>
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="{{ count($fields) + ($hasStatus ? 3 : 2) }}" class="px-4 py-10 text-center text-slate-400">Nenhum registro encontrado.</td></tr>
+                        <tr><td colspan="{{ count($fields) + ($hasStatus ? 3 : 2) }}" class="px-4 py-10 text-center text-slate-400">{{ __('crud_resource.empty') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -63,7 +63,7 @@
         <div class="border-t border-slate-100 p-4">{{ $records->links() }}</div>
     </div>
 
-    <x-admin.modal title="{{ $editingId ? 'Editar '.$singular : 'Novo(a) '.$singular }}">
+    <x-admin.modal title="{{ $editingId ? __('crud_resource.edit_title', ['singular' => $singular]) : __('crud_resource.new_title', ['singular' => $singular]) }}">
         <form wire:submit="save" class="space-y-4">
             @foreach ($fields as $name => $cfg)
                 <div class="space-y-1">
@@ -78,8 +78,8 @@
             @endforeach
 
             <div class="flex justify-end gap-2 pt-2">
-                <button type="button" @click="$wire.showModal = false" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">Cancelar</button>
-                <button type="submit" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-700">Salvar</button>
+                <button type="button" @click="$wire.showModal = false" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">{{ __('common.cancel') }}</button>
+                <button type="submit" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-700">{{ __('common.save') }}</button>
             </div>
         </form>
     </x-admin.modal>

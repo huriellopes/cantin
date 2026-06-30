@@ -4,7 +4,7 @@
 @endphp
 
 <fieldset class="rounded-2xl border border-slate-200 p-5">
-    <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Informações pessoais</legend>
+    <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">{{ __('comp_address_phone.personal_info') }}</legend>
     <div class="grid grid-cols-1 gap-4">
         <div>
             <label for="name" class="mb-1 block text-sm font-medium text-slate-700">{{ __('Name') }}</label>
@@ -27,7 +27,7 @@
 </fieldset>
 
 <fieldset class="mt-5 rounded-2xl border border-slate-200 p-5">
-    <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Endereço</legend>
+    <legend class="px-2 text-sm font-semibold uppercase tracking-wide text-slate-500">{{ __('comp_address_phone.address') }}</legend>
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
             <label for="zipcode" class="mb-1 block text-sm font-medium text-slate-700">{{ __('Zip Code') }}</label>
@@ -35,7 +35,7 @@
                 <input type="text" id="zipcode" maxlength="9" wire:model.live="zipcode" x-mask="99999-999" class="{{ $field }}" />
                 <button type="button" wire:click="searchZipCode" wire:loading.attr="disabled" wire:target="searchZipCode"
                         class="shrink-0 rounded-lg bg-slate-100 px-3 text-sm font-medium text-slate-600 hover:bg-slate-200">
-                    <span wire:loading.remove wire:target="searchZipCode">Buscar</span>
+                    <span wire:loading.remove wire:target="searchZipCode">{{ __('common.search') }}</span>
                     <span wire:loading wire:target="searchZipCode">...</span>
                 </button>
             </div>

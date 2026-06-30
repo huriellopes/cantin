@@ -18,7 +18,7 @@
     <div x-show="open" x-cloak @click.outside="open = false" x-transition.opacity
          class="absolute {{ $align === 'right' ? 'right-0' : 'left-0' }} top-10 z-50 w-36 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 text-slate-700 shadow-lg">
         @foreach ($locales as $code => $name)
-            <a href="{{ route('locale.switch', $code) }}"
+            <a href="{{ route('locale.switch', $code) }}" wire:navigate
                class="flex items-center justify-between px-3 py-2 text-sm hover:bg-slate-50 {{ $code === $current ? 'font-semibold text-violet-600' : '' }}">
                 {{ $name }}
                 @if ($code === $current)
