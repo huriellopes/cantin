@@ -20,6 +20,12 @@ class StaticPage extends Component
             ->where('status', '=', Status::ACTIVE)
             ->first());
 
+        if ($page !== null) {
+            seo()
+                ->title(str($page->name)->ucfirst()->toString())
+                ->description(str($page->content)->stripTags()->squish()->limit(155)->toString());
+        }
+
         return view('livewire.site.pages.static-page', [
             'page' => $page,
         ]);

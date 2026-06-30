@@ -1,4 +1,8 @@
 <div>
+    @push('jsonld')
+        {!! $articleJsonLd !!}
+    @endpush
+
     {{-- Cabeçalho --}}
     <header class="bg-gradient-to-br from-violet-50 to-pink-50">
         <div class="mx-auto max-w-3xl px-6 py-14 text-center">

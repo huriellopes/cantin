@@ -7,7 +7,9 @@ namespace App\Livewire\Site\Pages\Blog;
 use App\Models\Post;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 use Livewire\Component;
+use Spatie\SchemaOrg\Schema;
 
 class Show extends Component
 {
@@ -30,6 +32,12 @@ class Show extends Component
         $this->userDisliked = $post->dislikes()->where('user_id', '=', auth()->id())->exists();
 
         $this->postUrl = url()->current();
+
+        seo()
+            ->title($this->post->title)
+            ->description(str($this->post->content)->stripTags()->squish()->limit(155)->toString())
+            ->image($this->post->main_image ? asset($this->post->main_image) : asset('assets/images/CANTIn.png'))
+            ->type('article');
     }
 
     public function like(): void
@@ -106,6 +114,21 @@ class Show extends Component
     {
         $this->post->increment('views');
 
-        return view('livewire.site.pages.blog.show');
+        $article = Schema::article()
+            ->headline($this->post->title)
+            ->description(str($this->post->content)->stripTags()->squish()->limit(155)->toString())
+            ->datePublished(Carbon::parse($this->post->published_at))
+            ->dateModified($this->post->updated_at)
+            ->author(Schema::person()->name($this->post->user->name))
+            ->publisher(Schema::organization()->name(config('app.name')))
+            ->mainEntityOfPage($this->postUrl);
+
+        if ($this->post->main_image) {
+            $article->image(asset($this->post->main_image));
+        }
+
+        return view('livewire.site.pages.blog.show', [
+            'articleJsonLd' => $article->toScript(),
+        ]);
     }
 }
