@@ -157,70 +157,35 @@ class Create extends Component
 
     public function searchZipCode(): void
     {
+        $cleanedZipCode = preg_replace('/\D/', '', (string) $this->zipcode);
+
+        if (!preg_match('/^\d{8}$/', (string) $cleanedZipCode)) {
+            $this->addError('zipcode', __('Invalid zipcode!'));
+
+            return;
+        }
+
+        // Mesma lógica robusta do dashboard (InteractsWithAddress::buscarCep):
+        // o FillAddressAction já retorna state_id/city_id resolvidos.
         try {
-            if (empty($this->zipcode)) {
-                toastr()
-                    ->timeOut(2000)
-                    ->error(__('Invalid zipcode!'));
+            $data = FillAddressAction::exec($cleanedZipCode);
 
-                return;
-            }
+            $this->street = $data->address ?? '';
+            $this->neighborhood = $data->neighborhood ?? '';
+            $this->complement = $data->complement ?? '';
+            $this->latitude = $data->latitude ?? null;
+            $this->longitude = $data->longitude ?? null;
+            $this->state_id = $data->state;
 
-            $cleanedZipCode = str($this->zipcode)->replace('-', '');
-
-            if (!preg_match('/^\d{8}$/', $cleanedZipCode)) {
-                toastr()
-                    ->timeOut(2000)
-                    ->error(__('Invalid zipcode!'));
-
-                return;
-            }
-
-            $addressExists = FillAddressAction::exec($cleanedZipCode);
-
-            $this->street = $addressExists->address ?? '';
-            $this->neighborhood = $addressExists->neighborhood ?? '';
-            $this->complement = $addressExists->complement ?? '';
-            $this->latitude = $addressExists->latitude ?? null;
-            $this->longitude = $addressExists->longitude ?? null;
-
-            $stateModel = State::query()
-                ->select('id', 'name', 'abbr')
-                ->where('id', '=', $addressExists->state)
-                ->first();
-
-            if ($stateModel) {
-                $this->state_id = $stateModel->id;
+            if ($this->state_id) {
                 $this->loadCities($this->state_id);
-
-                $cityModel = City::query()
-                    ->select('id', 'name')
-                    ->where('id', '=', $addressExists->city)
-                    ->where('state_id', '=', $this->state_id)
-                    ->first();
-
-                if ($cityModel) {
-                    $this->city_id = $cityModel->id;
-                } else {
-                    $this->city_id = null;
-                }
-            } else {
-                $this->state_id = null;
-                $this->city_id = null;
-                $this->cities = collect();
             }
 
-        } catch (Exception|Throwable $e) {
-            Utils::webhook('error', $e, 'Cep not found', null);
-
-            Log::error($e->getMessage(), [
-                'line' => $e->getLine(),
-                'file' => $e->getFile(),
-            ]);
-
-            toastr()
-                ->timeOut(2000)
-                ->error(__('Error when searching for zip code!'));
+            $this->city_id = $data->city;
+        } catch (Throwable $e) {
+            // Reporta ao Telegram (canal de log) e avisa o usuário no campo.
+            Log::error('Erro na busca de CEP (site): ' . $e->getMessage(), ['zipcode' => $cleanedZipCode]);
+            $this->addError('zipcode', __('Error when searching for zip code!'));
         }
     }
 
@@ -300,15 +265,13 @@ class Create extends Component
 
     protected function loadCities(int $stateId): void
     {
-        $cacheKey = 'cities_of_state_' . $stateId;
-
-        $this->cities = Cache::remember($cacheKey, 60 * 60 * 24, function () use ($stateId) {
-            return City::query()
-                ->select('id', 'name')
-                ->where('state_id', '=', $stateId)
-                ->orderBy('name')
-                ->get();
-        });
+        // Sem cache: o conjunto de cidades pode mudar (re-seed IBGE) e o cache
+        // por state_id ficaria obsoleto.
+        $this->cities = City::query()
+            ->select('id', 'name')
+            ->where('state_id', '=', $stateId)
+            ->orderBy('name')
+            ->get();
     }
 
     /**
