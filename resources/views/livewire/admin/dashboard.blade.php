@@ -36,7 +36,12 @@
 
     {{-- Filtro de período --}}
     <div class="flex flex-wrap items-center justify-between gap-3">
-        <h3 class="text-sm font-semibold text-slate-600">{{ __('msg_dashboard.charts_heading') }}</h3>
+        <div>
+            <h3 class="text-sm font-semibold text-slate-600">{{ __('msg_dashboard.charts_heading') }}</h3>
+            @isset($updatedAt)
+                <p class="text-[11px] text-slate-400">{{ __('msg_dashboard.updated_at', ['time' => $updatedAt->translatedFormat('d/m/Y H:i')]) }}</p>
+            @endisset
+        </div>
         <div class="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm" role="group">
             @foreach ($periodOptions as $days => $label)
                 <button type="button" wire:click="setPeriod({{ $days }})"

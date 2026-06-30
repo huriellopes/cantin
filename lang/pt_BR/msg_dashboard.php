@@ -10,6 +10,7 @@ return [
     'stat_partner_entities' => 'Entidades parceiras',
     'stat_trans_people' => 'Pessoas trans',
     'charts_heading' => 'Evolução no período',
+    'updated_at' => 'Atualizado em :time',
     'chart_visits' => 'Visitas',
     'chart_terreiros' => 'Terreiros',
     'chart_posts' => 'Posts',
