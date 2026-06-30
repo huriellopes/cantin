@@ -33,13 +33,15 @@ final class FillAddressAction
             $address = resolve(ViaCepService::class)
                 ->getAddressInfoFromZipCode($zipcode);
 
+            // Comparação case-insensitive: o ViaCEP/BrasilAPI retorna nomes em
+            // caixa mista, mas a base os armazena em CAIXA ALTA (ex.: "SÃO PAULO").
             $state_id = State::query()
-                ->where('abbr', $address->state)
+                ->whereRaw('UPPER(abbr) = UPPER(?)', [$address->state])
                 ->pluck('id')
                 ->first();
 
             $city_id = City::query()
-                ->where('name', $address->city)
+                ->whereRaw('UPPER(name) = UPPER(?)', [$address->city])
                 ->where('state_id', $state_id)
                 ->pluck('id')
                 ->first();
