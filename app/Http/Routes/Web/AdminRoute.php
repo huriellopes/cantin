@@ -16,6 +16,7 @@ use App\Livewire\Admin\Nations\Index as NationsIndex;
 use App\Livewire\Admin\Pages\Index as PagesIndex;
 use App\Livewire\Admin\Pages\Manage as PagesManage;
 use App\Livewire\Admin\PartnerEntities\Index as PartnerEntitiesIndex;
+use App\Livewire\Admin\PasswordChange;
 use App\Livewire\Admin\Posts\Index as PostsIndex;
 use App\Livewire\Admin\Posts\Manage as PostsManage;
 use App\Livewire\Admin\Profile\Index as ProfileIndex;
@@ -36,9 +37,12 @@ class AdminRoute
     {
         Route::name('admin.')
             ->prefix('admin')
-            ->middleware(['auth', 'role:admin,super-admin'])
+            ->middleware(['auth', 'role:admin,super-admin', 'password.changed'])
             ->group(function (): void {
                 Route::get('/', Dashboard::class)->name('dashboard');
+
+                // Troca obrigatória de senha (senha padrão); liberada pelo middleware.
+                Route::get('/change-password', PasswordChange::class)->name('password.change');
 
                 Route::get('/profile', ProfileIndex::class)->name('profile');
 
