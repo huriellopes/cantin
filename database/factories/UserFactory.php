@@ -34,8 +34,8 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'role_id' => Role::query()->inRandomOrder()->first()?->id
-                ?? Role::query()->create(['name' => 'User', 'slug' => 'user'])->id,
+            'role_id' => Role::query()->where('slug', '<>', 'user')->inRandomOrder()->first()?->id
+                ?? Role::query()->firstOrCreate(['slug' => 'admin'], ['name' => 'Admin'])->id,
         ];
     }
 
