@@ -8,10 +8,11 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Override;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
-use Telegram\Bot\Laravel\Facades\Telegram;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -41,40 +42,72 @@ class Handler extends ExceptionHandler
     #[Override]
     public function report(Throwable $e): void
     {
-        if ($this->shouldReport($e)) {
-            $chatId = config('telegram.bots.cantinbrBot.chatID');
-
-            if (app()->isLocal()) {
-                $message = "🚨 **Erro na Aplicação CaNTIn Local ** 🚨\n\n";
-            } else {
-                $message = "🚨 **Erro na Aplicação CaNTIn Produção ** 🚨\n\n";
-            }
-
-            $message .= 'Caminho: ' . request()->fullUrl() . "\n";
-            $message .= 'Mensagem: ' . $e->getMessage() . "\n";
-            $message .= 'IP: ' . request()->ip() . "\n";
-            $message .= 'Navegador: ' . request()->header('User-Agent') . "\n";
-            $message .= 'Arquivo: ' . $e->getFile() . ' (Linha: ' . $e->getLine() . ")\n";
-
-            try {
-                Telegram::sendMessage([
-                    'chat_id' => $chatId,
-                    'text' => $message,
-                    'parse_mode' => 'Markdown',
-                ]);
-            } catch (Exception $e) {
-                Log::channel('telegram')->error('Erro ao enviar mensagem para o Telegram:', [
-                    'message' => $message,
-                    'error' => $e->getMessage(),
-                ]);
-            }
+        if (!$this->shouldReport($e)) {
+            return;
         }
 
+        $context = $this->contextFor($e);
+
+        // Histórico sempre persistido em arquivo.
+        Log::channel('daily')->error($e->getMessage(), $context);
+
+        // Ruído de scanners/crawlers (404 em caminhos típicos de varredura) não alerta.
+        if ($this->isScannerNoise($e)) {
+            return;
+        }
+
+        // Throttle: no máximo 1 alerta por assinatura de erro a cada 5 minutos.
+        $signature = 'tg-alert:' . md5($e::class . $e->getFile() . $e->getLine());
+
+        if (!Cache::add($signature, true, now()->addMinutes(5))) {
+            return;
+        }
+
+        try {
+            Log::channel('telegram_alerts')->error($e->getMessage(), $context);
+        } catch (Throwable $ex) {
+            Log::channel('telegram')->error('Falha ao enviar alerta ao Telegram', [
+                'error' => $ex->getMessage(),
+            ]);
+        }
     }
 
     #[Override]
     public function render($request, Exception|Throwable $e): Response|JsonResponse|HTTPResponse
     {
         return parent::render($request, $e);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function contextFor(Throwable $e): array
+    {
+        $user = auth()->user();
+
+        return [
+            'endpoint' => request()->method() . ' ' . request()->fullUrl(),
+            'user' => $user ? "#{$user->id} - {$user->name}" : 'visitante',
+            'ip' => (string) request()->ip(),
+            'exception' => $e::class,
+            'file' => basename($e->getFile()) . ':' . $e->getLine(),
+        ];
+    }
+
+    private function isScannerNoise(Throwable $e): bool
+    {
+        if (!$e instanceof NotFoundHttpException) {
+            return false;
+        }
+
+        $path = mb_strtolower(request()->path());
+
+        foreach (['wp-', '.env', '.git', 'phpmyadmin', 'xmlrpc', 'vendor/', '.php', 'wp/'] as $needle) {
+            if (str_contains($path, $needle)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

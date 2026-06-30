@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Logging\Telegram\TelegramLoggerFactory;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -72,6 +73,15 @@ return [
             'path' => storage_path('logs/telegram-alerts-' . date('Y-m-d') . '.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
+        ],
+
+        // Envia alertas/erros para o Telegram (tópico do fórum). Cai em silêncio
+        // se TELEGRAM_BOT_TOKEN/CHAT_ID não estiverem definidos.
+        'telegram_alerts' => [
+            'driver' => 'custom',
+            'via' => TelegramLoggerFactory::class,
+            'level' => env('TELEGRAM_LOG_LEVEL', 'warning'),
+            'thread' => env('TELEGRAM_THREAD_ALERTS'),
         ],
 
         'info-log' => [

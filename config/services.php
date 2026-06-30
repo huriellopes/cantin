@@ -46,6 +46,13 @@ return [
         'chat_id' => env('TELEGRAM_CHAT_ID'),
     ],
 
+    // Alertas/erros enviados ao Telegram (tópico do fórum via message_thread_id).
+    'telegram' => [
+        'token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat' => env('TELEGRAM_CHAT_ID'),
+        'thread_alerts' => env('TELEGRAM_THREAD_ALERTS'),
+    ],
+
     // Analytics/Ads — carregados somente após consentimento de cookies.
     'ga' => [
         'id' => env('GA_MEASUREMENT_ID', 'G-4VSY21XL8V'),
