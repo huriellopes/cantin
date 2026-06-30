@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,14 +15,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Estados e cidades vêm da API oficial do IBGE (fonte canônica).
+        // Pulado em testes para não depender de rede.
+        if (!app()->runningUnitTests()) {
+            Artisan::call('localidades:sync');
+        }
+
         $this->call([
             RoleSeederTable::class,
             UserSeederTable::class,
             TypePeopleSeederTable::class,
             TypeTerreiroSeederTable::class,
             NationsTerreirosSeederTable::class,
-            StateSeederTable::class,
-            CitySeederTable::class,
             AddressSeeder::class,
             SuggestionSeederTable::class,
             CommonQuestionsSeederTable::class,

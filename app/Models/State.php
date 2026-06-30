@@ -16,6 +16,7 @@ class State extends Model
         'name',
         'abbr',
         'slug',
+        'ibge_code',
     ];
 
     /**
