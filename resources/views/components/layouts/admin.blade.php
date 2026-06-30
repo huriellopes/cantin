@@ -123,6 +123,8 @@
                     {{ __('admin.header.view_site') }}
                 </a>
 
+                <livewire:admin.support.exports-manager />
+
                 <x-lang-switcher />
 
                 <div class="relative" x-data="{ open: false }">

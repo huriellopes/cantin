@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Livewire\Admin\ImpersonationLogs;
 
+use App\Exports\ImpersonationLogsExport;
 use App\Livewire\Admin\Support\WithDataTable;
 use App\Models\ImpersonationLog;
+use App\Support\ExportManager;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
@@ -18,6 +20,12 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithDataTable, WithPagination;
+
+    public function export(): void
+    {
+        ExportManager::dispatch(ImpersonationLogsExport::class, __('crud_impersonation_logs.title'));
+        $this->dispatch('toast', type: 'info', message: __('exports.started'));
+    }
 
     public function render(): Factory|View
     {

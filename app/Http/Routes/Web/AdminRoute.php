@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Routes\Web;
 
+use App\Http\Controllers\Web\ExportDownloadController;
 use App\Livewire\Admin\Categories\Index as CategoriesIndex;
 use App\Livewire\Admin\Comments\Index as CommentsIndex;
 use App\Livewire\Admin\Dashboard;
@@ -36,6 +37,8 @@ class AdminRoute
                 Route::get('/', Dashboard::class)->name('dashboard');
 
                 Route::get('/profile', ProfileIndex::class)->name('profile');
+
+                Route::get('/exports/{export}/download', [ExportDownloadController::class, 'download'])->name('exports.download');
 
                 Route::get('/terreiros', TerreirosIndex::class)->name('terreiros.index');
                 Route::get('/comments', CommentsIndex::class)->name('comments.index');

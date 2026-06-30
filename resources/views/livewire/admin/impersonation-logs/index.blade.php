@@ -4,6 +4,12 @@
             <h2 class="text-xl font-bold text-slate-800">{{ __('crud_impersonation_logs.title') }}</h2>
             <p class="mt-1 text-sm text-slate-500">{{ __('crud_impersonation_logs.subtitle') }}</p>
         </div>
+        <button type="button" wire:click="export" wire:loading.attr="disabled" wire:target="export"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-70">
+            @svg('lucide-file-spreadsheet', 'h-4 w-4')
+            <span wire:loading.remove wire:target="export">{{ __('exports.export') }}</span>
+            <span wire:loading wire:target="export">{{ __('common.exporting') }}</span>
+        </button>
     </div>
 
     <x-admin.card>

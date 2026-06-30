@@ -115,6 +115,60 @@ parameters:
 			path: app/Enum/StatusPost.php
 
 		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Exports/ImpersonationLogsExport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Exports/ImpersonationLogsExport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Exports/TerreirosExport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Exports/TerreirosExport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$zipcode\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Exports/TerreirosExport.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Exports/UsersExport.php
+
+		-
+			message: '#^Cannot call method label\(\) on int\<0, max\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Exports/UsersExport.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Exports/UsersExport.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type int\<0, max\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Exports/UsersExport.php
+
+		-
 			message: '#^Call to an undefined method App\\Http\\Requests\\Auth\\LoginRequest\:\:authenticate\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -197,12 +251,6 @@ parameters:
 			identifier: variable.undefined
 			count: 2
 			path: app/Http/Controllers/Web/Auth/LoginController.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: app/Http/Middleware/RedirectIfAuthenticated.php
 
 		-
 			message: '#^Method App\\Http\\Requests\\CityRequest\:\:rules\(\) should return array\<string\> but returns array\<string, array\<int, string\>\>\.$#'
@@ -305,6 +353,18 @@ parameters:
 			identifier: property.notFound
 			count: 1
 			path: app/Http/Resources/StateResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/FinalizeExport.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/FinalizeExport.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
@@ -471,7 +531,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$address\.$#'
 			identifier: property.notFound
-			count: 2
+			count: 1
 			path: app/Livewire/Admin/Terreiros/Index.php
 
 		-
@@ -483,7 +543,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 2
+			count: 1
 			path: app/Livewire/Admin/Terreiros/Index.php
 
 		-
@@ -495,7 +555,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$zipcode\.$#'
 			identifier: property.notFound
-			count: 2
+			count: 1
 			path: app/Livewire/Admin/Terreiros/Index.php
 
 		-
@@ -573,13 +633,13 @@ parameters:
 		-
 			message: '#^Cannot call method label\(\) on int\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: app/Livewire/Admin/Users/Index.php
 
 		-
 			message: '#^Cannot call method label\(\) on int\<0, max\>\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: app/Livewire/Admin/Users/Index.php
 
 		-
@@ -591,13 +651,13 @@ parameters:
 		-
 			message: '#^Using nullsafe method call on non\-nullable type int\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
-			count: 2
+			count: 1
 			path: app/Livewire/Admin/Users/Index.php
 
 		-
 			message: '#^Using nullsafe method call on non\-nullable type int\<0, max\>\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
-			count: 2
+			count: 1
 			path: app/Livewire/Admin/Users/Index.php
 
 		-
