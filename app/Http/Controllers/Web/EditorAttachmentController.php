@@ -30,9 +30,13 @@ class EditorAttachmentController extends Controller
         $file = $request->file('file');
         $isVideo = str_starts_with((string) $file->getMimeType(), 'video/');
 
+        // Extensão derivada do MIME (não da enviada pelo cliente) para evitar
+        // spoofing de extensão (ex.: gravar .php/.svg).
+        $extension = $file->extension() ?: 'bin';
+
         $path = $file->storeAs(
             config('editor.upload_path'),
-            Str::uuid() . '.' . $file->getClientOriginalExtension(),
+            Str::uuid() . '.' . $extension,
             config('editor.upload_disk'),
         );
 

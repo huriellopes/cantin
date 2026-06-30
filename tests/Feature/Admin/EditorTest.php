@@ -34,6 +34,16 @@ it('rejects an editor upload of a disallowed type', function (): void {
         ->assertStatus(422);
 });
 
+it('rejects an SVG upload (stored XSS vector)', function (): void {
+    Storage::fake('public');
+
+    $this->actingAs(userWithRole('admin'))
+        ->post(route('admin.editor.attachments.store'), [
+            'file' => UploadedFile::fake()->create('x.svg', 5, 'image/svg+xml'),
+        ], ['Accept' => 'application/json'])
+        ->assertStatus(422);
+});
+
 it('blocks guests from the editor upload route', function (): void {
     $this->post(route('admin.editor.attachments.store'))->assertRedirect();
 });

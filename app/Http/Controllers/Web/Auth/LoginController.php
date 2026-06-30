@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Web\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\Auth\LoginService;
+use App\Traits\ThrottlesLogins;
 use App\Traits\Utils;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -14,26 +15,35 @@ use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
-    use Utils;
+    use ThrottlesLogins, Utils;
 
     public function login(LoginRequest $request): ?RedirectResponse
     {
-        try {
-            if (empty($request->email) || empty($request->password)) {
-                return back()
-                    ->withInput()
-                    ->withErrors(['message' => 'Preencha todos os campos!']);
-            }
+        // Anti força-bruta: bloqueia após muitas tentativas (lança e o Laravel
+        // redireciona com a mensagem de throttle).
+        $this->ensureIsNotRateLimited($request);
 
+        if (empty($request->email) || empty($request->password)) {
+            return back()
+                ->withInput()
+                ->withErrors(['message' => 'Preencha todos os campos!']);
+        }
+
+        try {
             $user = resolve(LoginService::class)->HasLogin($request);
 
             if (!$user) {
+                $this->incrementLoginAttempts($request);
+
                 return back()
                     ->withInput()
-                    ->withErrors(['message' => 'Usuário não encontrado!']);
+                    ->withErrors(['message' => 'Usuário não encontrado!']);
             }
 
             if (auth()->attempt(['email' => $request->email, 'password' => $request->password], $request->boolean('remember'))) {
+                // Sucesso: zera o contador de tentativas.
+                $this->clearLoginAttempts($request);
+
                 // Registra o último acesso.
                 auth()->user()->forceFill(['last_login_at' => now()])->save();
 
@@ -48,6 +58,9 @@ class LoginController extends Controller
 
                 return to_route('site.home');
             }
+
+            // Credenciais inválidas: conta a tentativa.
+            $this->incrementLoginAttempts($request);
 
             return back()
                 ->withInput()
