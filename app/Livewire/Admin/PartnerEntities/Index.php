@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\PartnerEntities;
 
 use App\Enum\Status;
+use App\Livewire\Admin\Support\HasAdminActions;
 use App\Livewire\Admin\Support\InteractsWithAddress;
 use App\Models\PartnerEntity;
 use Illuminate\Contracts\View\Factory;
@@ -17,7 +18,7 @@ use Livewire\WithPagination;
 #[Title('Entidades Parceiras')]
 class Index extends Component
 {
-    use InteractsWithAddress, WithFileUploads, WithPagination;
+    use HasAdminActions, InteractsWithAddress, WithFileUploads, WithPagination;
 
     public string $search = '';
 
@@ -99,22 +100,39 @@ class Index extends Component
             $payload['user_id'] = auth()->id();
         }
 
+        $editing = (bool) $this->editingId;
         PartnerEntity::query()->updateOrCreate(['id' => $this->editingId], $payload);
 
         $this->showModal = false;
-        session()->flash('status', $this->editingId ? 'Entidade atualizada.' : 'Entidade criada.');
+        $this->notify($editing ? 'Entidade atualizada.' : 'Entidade criada.');
+    }
+
+    public function view(int $id): void
+    {
+        $entity = PartnerEntity::query()->with(['address.state', 'address.city'])->findOrFail($id);
+        $this->viewData = [
+            ['label' => 'Nome', 'value' => $entity->name],
+            ['label' => 'E-mail', 'value' => $entity->email],
+            ['label' => 'Telefone', 'value' => $entity->phone],
+            ['label' => 'Atividade', 'value' => $entity->activity_carried_out],
+            ['label' => 'Cidade/UF', 'value' => ($entity->address?->city?->name ?? '').'/'.($entity->address?->state?->abbr ?? '')],
+            ['label' => 'Status', 'value' => $entity->status?->label()],
+        ];
+        $this->viewTitle = $entity->name;
+        $this->showView = true;
     }
 
     public function toggleStatus(int $id): void
     {
         $entity = PartnerEntity::query()->findOrFail($id);
         $entity->update(['status' => $entity->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
+        $this->notify('Status atualizado.');
     }
 
     public function delete(int $id): void
     {
         PartnerEntity::query()->findOrFail($id)->delete();
-        session()->flash('status', 'Entidade excluída.');
+        $this->notify('Entidade excluída.');
     }
 
     public function render(): Factory|View

@@ -9,10 +9,6 @@
         </button>
     </div>
 
-    @if (session('status'))
-        <div class="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ session('status') }}</div>
-    @endif
-
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
             <input wire:model.live.debounce.400ms="search" type="search" placeholder="Buscar..."
@@ -44,14 +40,16 @@
                                 </td>
                             @endif
                             <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-2 text-xs">
-                                    <button wire:click="edit({{ $record->id }})" class="rounded px-2 py-1 text-violet-600 hover:bg-violet-50">Editar</button>
+                                <div class="flex items-center justify-end gap-1">
+                                    <x-admin.action icon="view" color="sky" label="Visualizar" wire:click="view({{ $record->id }})" />
+                                    <x-admin.action icon="edit" color="violet" label="Editar" wire:click="edit({{ $record->id }})" />
                                     @if ($hasStatus)
-                                        <button wire:click="toggleStatus({{ $record->id }})" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-100">
-                                            {{ $record->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar' }}
-                                        </button>
+                                        <x-admin.action icon="toggle"
+                                            :color="$record->status === \App\Enum\Status::ACTIVE ? 'amber' : 'emerald'"
+                                            :label="$record->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar'"
+                                            wire:click="confirmToggle({{ $record->id }})" />
                                     @endif
-                                    <button wire:click="delete({{ $record->id }})" wire:confirm="Confirmar exclusão?" class="rounded px-2 py-1 text-rose-600 hover:bg-rose-50">Excluir</button>
+                                    <x-admin.action icon="delete" color="rose" label="Excluir" wire:click="confirmDelete({{ $record->id }})" />
                                 </div>
                             </td>
                         </tr>
@@ -85,4 +83,7 @@
             </div>
         </form>
     </x-admin.modal>
+
+    <x-admin.view :show="$showView" :title="$viewTitle" :data="$viewData" />
+    <x-admin.confirm :confirm="$confirm" />
 </div>

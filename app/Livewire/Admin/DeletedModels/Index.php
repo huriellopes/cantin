@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\DeletedModels;
 
+use App\Livewire\Admin\Support\HasAdminActions;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
@@ -14,7 +15,7 @@ use Spatie\DeletedModels\Models\DeletedModel;
 #[Title('Modelos Excluídos')]
 class Index extends Component
 {
-    use WithPagination;
+    use HasAdminActions, WithPagination;
 
     public string $search = '';
 
@@ -30,22 +31,41 @@ class Index extends Component
         $this->viewingId = $this->viewingId === $id ? null : $id;
     }
 
+    public function confirmRestore(int $id): void
+    {
+        $this->requestConfirm('restore', [$id], [
+            'title' => 'Restaurar registro',
+            'message' => 'Deseja restaurar este registro excluído?',
+            'label' => 'Restaurar',
+        ]);
+    }
+
+    public function confirmForceDelete(int $id): void
+    {
+        $this->requestConfirm('forceDelete', [$id], [
+            'title' => 'Excluir permanentemente',
+            'message' => 'Esta ação remove o registro definitivamente e não pode ser desfeita.',
+            'label' => 'Excluir permanentemente',
+            'danger' => true,
+        ]);
+    }
+
     public function restore(int $id): void
     {
         $record = DeletedModel::query()->findOrFail($id);
 
         try {
             $record->model::restore($record->key);
-            session()->flash('status', 'Registro restaurado com sucesso.');
+            $this->notify('Registro restaurado com sucesso.');
         } catch (\Throwable) {
-            session()->flash('status', 'Não foi possível restaurar o registro.');
+            $this->notify('Não foi possível restaurar o registro.', 'error');
         }
     }
 
     public function forceDelete(int $id): void
     {
         DeletedModel::query()->findOrFail($id)->delete();
-        session()->flash('status', 'Registro removido permanentemente.');
+        $this->notify('Registro removido permanentemente.');
     }
 
     public function render(): Factory|View

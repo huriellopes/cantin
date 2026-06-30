@@ -4,9 +4,6 @@
         <p class="text-sm text-slate-500">Restaure registros excluídos ou remova-os permanentemente.</p>
     </div>
 
-    @if (session('status'))
-        <div class="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ session('status') }}</div>
-    @endif
 
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
@@ -31,10 +28,10 @@
                             <td class="px-4 py-3 text-slate-500">{{ $record->key }}</td>
                             <td class="px-4 py-3 text-slate-500">{{ $record->created_at?->format('d/m/Y H:i') }}</td>
                             <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-2 text-xs">
-                                    <button wire:click="toggleView({{ $record->id }})" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-100">Dados</button>
-                                    <button wire:click="restore({{ $record->id }})" class="rounded px-2 py-1 text-emerald-600 hover:bg-emerald-50">Restaurar</button>
-                                    <button wire:click="forceDelete({{ $record->id }})" wire:confirm="Remover permanentemente? Esta ação não pode ser desfeita." class="rounded px-2 py-1 text-rose-600 hover:bg-rose-50">Excluir</button>
+                                <div class="flex items-center justify-end gap-1">
+                                    <x-admin.action icon="view" color="slate" label="Ver dados" wire:click="toggleView({{ $record->id }})" />
+                                    <x-admin.action icon="restore" color="emerald" label="Restaurar" wire:click="confirmRestore({{ $record->id }})" />
+                                    <x-admin.action icon="delete" color="rose" label="Excluir permanentemente" wire:click="confirmForceDelete({{ $record->id }})" />
                                 </div>
                             </td>
                         </tr>
@@ -54,4 +51,6 @@
 
         <div class="border-t border-slate-100 p-4">{{ $records->links() }}</div>
     </div>
+
+    <x-admin.confirm :confirm="$confirm" />
 </div>

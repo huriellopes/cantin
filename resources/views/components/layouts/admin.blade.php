@@ -164,6 +164,30 @@
     </div>
 </div>
 
+{{-- Toaster --}}
+<div
+    x-data="{ toasts: [] }"
+    @toast.window="
+        const id = Date.now() + Math.random();
+        toasts.push({ id, type: ($event.detail.type || 'success'), message: $event.detail.message });
+        setTimeout(() => toasts = toasts.filter(t => t.id !== id), 4000)
+    "
+    class="fixed bottom-4 right-4 z-[80] flex w-80 max-w-[calc(100vw-2rem)] flex-col gap-2"
+>
+    <template x-for="t in toasts" :key="t.id">
+        <div x-transition.opacity.duration.300ms
+             class="flex items-start gap-3 rounded-xl border bg-white p-4 shadow-lg"
+             :class="{ 'border-emerald-200': t.type === 'success', 'border-rose-200': t.type === 'error', 'border-amber-200': t.type === 'warning', 'border-sky-200': t.type === 'info' }">
+            <span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-full"
+                  :class="{ 'bg-emerald-500': t.type === 'success', 'bg-rose-500': t.type === 'error', 'bg-amber-500': t.type === 'warning', 'bg-sky-500': t.type === 'info' }"></span>
+            <p class="flex-1 text-sm text-slate-700" x-text="t.message"></p>
+            <button @click="toasts = toasts.filter(x => x.id !== t.id)" class="text-slate-400 hover:text-slate-600">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+    </template>
+</div>
+
 @livewireScripts
 </body>
 </html>

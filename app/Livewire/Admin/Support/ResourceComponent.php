@@ -17,7 +17,7 @@ use Livewire\WithPagination;
 #[Layout('components.layouts.admin')]
 abstract class ResourceComponent extends Component
 {
-    use WithPagination;
+    use HasAdminActions, WithPagination;
 
     public string $search = '';
 
@@ -130,10 +130,27 @@ abstract class ResourceComponent extends Component
             $data = array_merge($data, $this->onCreate());
         }
 
+        $editing = (bool) $this->editingId;
         $this->model()::query()->updateOrCreate(['id' => $this->editingId], $data);
 
         $this->showModal = false;
-        session()->flash('status', $this->editingId ? "{$this->singular()} atualizado(a)." : "{$this->singular()} criado(a).");
+        $this->notify($editing ? "{$this->singular()} atualizado(a)." : "{$this->singular()} criado(a).");
+    }
+
+    public function view(int $id): void
+    {
+        $record = $this->model()::query()->findOrFail($id);
+
+        $this->viewData = collect($this->fields())
+            ->map(fn (array $cfg, string $name): array => [
+                'label' => $cfg['label'] ?? Str::headline($name),
+                'value' => strip_tags((string) $record->{$name}),
+            ])
+            ->values()
+            ->all();
+
+        $this->viewTitle = $this->singular();
+        $this->showView = true;
     }
 
     public function toggleStatus(int $id): void
@@ -144,12 +161,13 @@ abstract class ResourceComponent extends Component
 
         $record = $this->model()::query()->findOrFail($id);
         $record->update(['status' => $record->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
+        $this->notify('Status atualizado.');
     }
 
     public function delete(int $id): void
     {
         $this->model()::query()->findOrFail($id)->delete();
-        session()->flash('status', "{$this->singular()} excluído(a).");
+        $this->notify("{$this->singular()} excluído(a).");
     }
 
     public function render()

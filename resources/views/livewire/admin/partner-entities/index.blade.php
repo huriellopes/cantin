@@ -9,9 +9,6 @@
         </button>
     </div>
 
-    @if (session('status'))
-        <div class="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ session('status') }}</div>
-    @endif
 
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
@@ -42,12 +39,14 @@
                             <td class="px-4 py-3 text-slate-600">{{ $entity->address?->city?->name }}{{ $entity->address?->state ? ' / '.$entity->address->state->name : '' }}</td>
                             <td class="px-4 py-3"><x-admin.badge :color="$entity->status?->getColor() ?? 'slate'">{{ $entity->status?->label() }}</x-admin.badge></td>
                             <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-2 text-xs">
-                                    <button wire:click="edit({{ $entity->id }})" class="rounded px-2 py-1 text-violet-600 hover:bg-violet-50">Editar</button>
-                                    <button wire:click="toggleStatus({{ $entity->id }})" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-100">
-                                        {{ $entity->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar' }}
-                                    </button>
-                                    <button wire:click="delete({{ $entity->id }})" wire:confirm="Excluir esta entidade?" class="rounded px-2 py-1 text-rose-600 hover:bg-rose-50">Excluir</button>
+                                <div class="flex items-center justify-end gap-1">
+                                    <x-admin.action icon="view" color="sky" label="Visualizar" wire:click="view({{ $entity->id }})" />
+                                    <x-admin.action icon="edit" color="violet" label="Editar" wire:click="edit({{ $entity->id }})" />
+                                    <x-admin.action icon="toggle"
+                                        :color="$entity->status === \App\Enum\Status::ACTIVE ? 'amber' : 'emerald'"
+                                        :label="$entity->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar'"
+                                        wire:click="confirmToggle({{ $entity->id }})" />
+                                    <x-admin.action icon="delete" color="rose" label="Excluir" wire:click="confirmDelete({{ $entity->id }})" />
                                 </div>
                             </td>
                         </tr>
@@ -92,4 +91,7 @@
             </div>
         </form>
     </x-admin.modal>
+
+    <x-admin.view :show="$showView" :title="$viewTitle" :data="$viewData" />
+    <x-admin.confirm :confirm="$confirm" />
 </div>

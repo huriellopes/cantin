@@ -4,9 +4,6 @@
         <p class="text-sm text-slate-500">Modere e responda os comentários do blog.</p>
     </div>
 
-    @if (session('status'))
-        <div class="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ session('status') }}</div>
-    @endif
 
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
@@ -37,14 +34,18 @@
                                 <x-admin.badge :color="$comment->status?->getColor() ?? 'slate'">{{ $comment->status?->label() }}</x-admin.badge>
                             </td>
                             <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-2 text-xs">
+                                <div class="flex items-center justify-end gap-1">
+                                    <x-admin.action icon="view" color="sky" label="Visualizar" wire:click="view({{ $comment->id }})" />
                                     @if ($comment->post)
-                                        <a href="{{ route('site.blog.show', $comment->post->slug) }}" target="_blank" class="rounded px-2 py-1 text-sky-600 hover:bg-sky-50">Ver post</a>
+                                        <a href="{{ route('site.blog.show', $comment->post->slug) }}" target="_blank" title="Ver no site" aria-label="Ver no site" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100">
+                                            <svg class="h-[18px] w-[18px]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                                        </a>
                                     @endif
-                                    <button wire:click="reply({{ $comment->id }})" class="rounded px-2 py-1 text-violet-600 hover:bg-violet-50">Responder</button>
-                                    <button wire:click="toggleStatus({{ $comment->id }})" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-100">
-                                        {{ $comment->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar' }}
-                                    </button>
+                                    <x-admin.action icon="reply" color="violet" label="Responder" wire:click="reply({{ $comment->id }})" />
+                                    <x-admin.action icon="toggle"
+                                        :color="$comment->status === \App\Enum\Status::ACTIVE ? 'amber' : 'emerald'"
+                                        :label="$comment->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar'"
+                                        wire:click="confirmToggle({{ $comment->id }})" />
                                 </div>
                             </td>
                         </tr>
@@ -76,4 +77,7 @@
             </div>
         </form>
     </x-admin.modal>
+
+    <x-admin.view :show="$showView" :title="$viewTitle" :data="$viewData" />
+    <x-admin.confirm :confirm="$confirm" />
 </div>

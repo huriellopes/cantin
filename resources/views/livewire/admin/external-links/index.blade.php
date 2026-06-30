@@ -9,9 +9,6 @@
         </button>
     </div>
 
-    @if (session('status'))
-        <div class="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ session('status') }}</div>
-    @endif
 
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
@@ -40,12 +37,14 @@
                             <td class="px-4 py-3 text-slate-600">{{ $link->type?->name }}</td>
                             <td class="px-4 py-3"><x-admin.badge :color="$link->status?->getColor() ?? 'slate'">{{ $link->status?->label() }}</x-admin.badge></td>
                             <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-2 text-xs">
-                                    <button wire:click="edit({{ $link->id }})" class="rounded px-2 py-1 text-violet-600 hover:bg-violet-50">Editar</button>
-                                    <button wire:click="toggleStatus({{ $link->id }})" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-100">
-                                        {{ $link->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar' }}
-                                    </button>
-                                    <button wire:click="delete({{ $link->id }})" wire:confirm="Excluir este link?" class="rounded px-2 py-1 text-rose-600 hover:bg-rose-50">Excluir</button>
+                                <div class="flex items-center justify-end gap-1">
+                                    <x-admin.action icon="view" color="sky" label="Visualizar" wire:click="view({{ $link->id }})" />
+                                    <x-admin.action icon="edit" color="violet" label="Editar" wire:click="edit({{ $link->id }})" />
+                                    <x-admin.action icon="toggle"
+                                        :color="$link->status === \App\Enum\Status::ACTIVE ? 'amber' : 'emerald'"
+                                        :label="$link->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar'"
+                                        wire:click="confirmToggle({{ $link->id }})" />
+                                    <x-admin.action icon="delete" color="rose" label="Excluir" wire:click="confirmDelete({{ $link->id }})" />
                                 </div>
                             </td>
                         </tr>
@@ -80,4 +79,7 @@
             </div>
         </form>
     </x-admin.modal>
+
+    <x-admin.view :show="$showView" :title="$viewTitle" :data="$viewData" />
+    <x-admin.confirm :confirm="$confirm" />
 </div>

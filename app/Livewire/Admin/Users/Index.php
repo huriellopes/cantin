@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Users;
 
 use App\Enum\Status;
+use App\Livewire\Admin\Support\HasAdminActions;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
@@ -19,7 +20,7 @@ use Livewire\WithPagination;
 #[Title('Usuários')]
 class Index extends Component
 {
-    use WithPagination;
+    use HasAdminActions, WithPagination;
 
     public string $search = '';
 
@@ -81,8 +82,32 @@ class Index extends Component
                 : [...$data, 'slug' => Str::slug($this->name).'-'.Str::random(5), 'password' => bcrypt(Str::password(12))]
         );
 
+        $message = $this->editingId ? 'Usuário atualizado.' : 'Usuário criado.';
         $this->showModal = false;
-        session()->flash('status', $this->editingId ? 'Usuário atualizado.' : 'Usuário criado.');
+        $this->notify($message);
+    }
+
+    public function view(int $id): void
+    {
+        $user = User::query()->findOrFail($id);
+        $this->viewData = [
+            ['label' => 'Nome', 'value' => $user->name],
+            ['label' => 'E-mail', 'value' => $user->email],
+            ['label' => 'Perfil', 'value' => $user->role_id?->label()],
+            ['label' => 'Status', 'value' => $user->status?->label()],
+            ['label' => 'Criado em', 'value' => $user->created_at?->format('d/m/Y H:i')],
+        ];
+        $this->viewTitle = $user->name;
+        $this->showView = true;
+    }
+
+    public function confirmReset(int $id): void
+    {
+        $this->requestConfirm('resetPassword', [$id], [
+            'title' => 'Resetar senha',
+            'message' => 'Gerar uma nova senha aleatória para este usuário?',
+            'label' => 'Gerar senha',
+        ]);
     }
 
     public function toggleStatus(int $id): void
@@ -93,6 +118,7 @@ class Index extends Component
 
         $user = User::query()->findOrFail($id);
         $user->update(['status' => $user->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
+        $this->notify('Status atualizado.');
     }
 
     public function delete(int $id): void
@@ -102,7 +128,7 @@ class Index extends Component
         }
 
         User::query()->findOrFail($id)->delete();
-        session()->flash('status', 'Usuário excluído.');
+        $this->notify('Usuário excluído.');
     }
 
     public function resetPassword(int $id): void
@@ -113,6 +139,7 @@ class Index extends Component
 
         $this->generatedFor = $user->name;
         $this->generatedPassword = $newPassword;
+        $this->notify('Senha redefinida com sucesso.');
     }
 
     public function exportCsv()

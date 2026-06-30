@@ -10,9 +10,6 @@
         </button>
     </div>
 
-    @if (session('status'))
-        <div class="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ session('status') }}</div>
-    @endif
 
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
@@ -45,15 +42,18 @@
                             <td class="px-4 py-3 text-slate-600">{{ $post->user?->name }}</td>
                             <td class="px-4 py-3"><x-admin.badge :color="$post->status?->getColor() ?? 'slate'">{{ $post->status?->label() }}</x-admin.badge></td>
                             <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-2 text-xs">
-                                    <a href="{{ route('site.blog.show', $post->slug) }}" target="_blank" class="rounded px-2 py-1 text-sky-600 hover:bg-sky-50">Ver</a>
-                                    <button wire:click="edit({{ $post->id }})" class="rounded px-2 py-1 text-violet-600 hover:bg-violet-50">Editar</button>
+                                <div class="flex items-center justify-end gap-1">
+                                    <x-admin.action icon="view" color="sky" label="Visualizar" wire:click="view({{ $post->id }})" />
+                                    <a href="{{ route('site.blog.show', $post->slug) }}" target="_blank" title="Ver no site" aria-label="Ver no site" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100">
+                                        <svg class="h-[18px] w-[18px]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                                    </a>
+                                    <x-admin.action icon="edit" color="violet" label="Editar" wire:click="edit({{ $post->id }})" />
                                     @if ($post->status === \App\Enum\StatusPost::PUBLISHED)
-                                        <button wire:click="unpublish({{ $post->id }})" class="rounded px-2 py-1 text-amber-600 hover:bg-amber-50">Despublicar</button>
+                                        <x-admin.action icon="unpublish" color="amber" label="Despublicar" wire:click="unpublish({{ $post->id }})" />
                                     @else
-                                        <button wire:click="publish({{ $post->id }})" class="rounded px-2 py-1 text-emerald-600 hover:bg-emerald-50">Publicar</button>
+                                        <x-admin.action icon="publish" color="emerald" label="Publicar" wire:click="publish({{ $post->id }})" />
                                     @endif
-                                    <button wire:click="delete({{ $post->id }})" wire:confirm="Excluir este post?" class="rounded px-2 py-1 text-rose-600 hover:bg-rose-50">Excluir</button>
+                                    <x-admin.action icon="delete" color="rose" label="Excluir" wire:click="confirmDelete({{ $post->id }})" />
                                 </div>
                             </td>
                         </tr>
@@ -111,4 +111,7 @@
             </div>
         </form>
     </x-admin.modal>
+
+    <x-admin.view :show="$showView" :title="$viewTitle" :data="$viewData" />
+    <x-admin.confirm :confirm="$confirm" />
 </div>

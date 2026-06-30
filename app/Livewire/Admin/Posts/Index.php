@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Posts;
 
 use App\Enum\StatusPost;
+use App\Livewire\Admin\Support\HasAdminActions;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Contracts\View\Factory;
@@ -20,7 +21,7 @@ use Livewire\WithPagination;
 #[Title('Posts')]
 class Index extends Component
 {
-    use WithFileUploads, WithPagination;
+    use HasAdminActions, WithFileUploads, WithPagination;
 
     public string $search = '';
 
@@ -105,10 +106,27 @@ class Index extends Component
             $payload['user_id'] = auth()->id();
         }
 
+        $editing = (bool) $this->editingId;
         Post::query()->updateOrCreate(['id' => $this->editingId], $payload);
 
         $this->showModal = false;
-        session()->flash('status', $this->editingId ? 'Post atualizado.' : 'Post criado.');
+        $this->notify($editing ? 'Post atualizado.' : 'Post criado.');
+    }
+
+    public function view(int $id): void
+    {
+        $post = Post::query()->with(['user:id,name', 'category:id,name'])->findOrFail($id);
+        $this->viewData = [
+            ['label' => 'Título', 'value' => $post->title],
+            ['label' => 'Categoria', 'value' => $post->category?->name],
+            ['label' => 'Autor', 'value' => $post->user?->name],
+            ['label' => 'Publicação', 'value' => $post->published_at?->format('d/m/Y')],
+            ['label' => 'Status', 'value' => $post->status?->label()],
+            ['label' => 'Views', 'value' => $post->views],
+            ['label' => 'Conteúdo', 'value' => strip_tags((string) $post->content)],
+        ];
+        $this->viewTitle = $post->title;
+        $this->showView = true;
     }
 
     public function publish(int $id): void
@@ -116,23 +134,25 @@ class Index extends Component
         $post = Post::query()->findOrFail($id);
 
         if ($post->published_at?->startOfDay()->gt(today())) {
-            session()->flash('status', 'A data de publicação ainda é futura.');
+            $this->notify('A data de publicação ainda é futura.', 'warning');
 
             return;
         }
 
         $post->update(['status' => StatusPost::PUBLISHED]);
+        $this->notify('Post publicado.');
     }
 
     public function unpublish(int $id): void
     {
         Post::query()->findOrFail($id)->update(['status' => StatusPost::PENDING]);
+        $this->notify('Post despublicado.');
     }
 
     public function delete(int $id): void
     {
         Post::query()->findOrFail($id)->delete();
-        session()->flash('status', 'Post excluído.');
+        $this->notify('Post excluído.');
     }
 
     public function render(): Factory|View

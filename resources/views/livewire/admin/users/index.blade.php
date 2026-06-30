@@ -15,10 +15,6 @@
         </div>
     </div>
 
-    @if (session('status'))
-        <div class="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ session('status') }}</div>
-    @endif
-
     @if ($generatedPassword)
         <div class="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
             Nova senha de <strong>{{ $generatedFor }}</strong>:
@@ -56,13 +52,17 @@
                                 <x-admin.badge :color="$user->status?->getColor() ?? 'slate'">{{ $user->status?->label() }}</x-admin.badge>
                             </td>
                             <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-2 text-xs">
-                                    <button wire:click="edit({{ $user->id }})" class="rounded px-2 py-1 text-violet-600 hover:bg-violet-50">Editar</button>
-                                    <button wire:click="toggleStatus({{ $user->id }})" class="rounded px-2 py-1 text-slate-600 hover:bg-slate-100">
-                                        {{ $user->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar' }}
-                                    </button>
-                                    <button wire:click="resetPassword({{ $user->id }})" wire:confirm="Gerar uma nova senha para este usuário?" class="rounded px-2 py-1 text-amber-600 hover:bg-amber-50">Resetar senha</button>
-                                    <button wire:click="delete({{ $user->id }})" wire:confirm="Excluir este usuário?" class="rounded px-2 py-1 text-rose-600 hover:bg-rose-50">Excluir</button>
+                                <div class="flex items-center justify-end gap-1">
+                                    <x-admin.action icon="view" color="sky" label="Visualizar" wire:click="view({{ $user->id }})" />
+                                    <x-admin.action icon="edit" color="violet" label="Editar" wire:click="edit({{ $user->id }})" />
+                                    @if ($user->id !== auth()->id())
+                                        <x-admin.action icon="toggle"
+                                            :color="$user->status === \App\Enum\Status::ACTIVE ? 'amber' : 'emerald'"
+                                            :label="$user->status === \App\Enum\Status::ACTIVE ? 'Inativar' : 'Ativar'"
+                                            wire:click="confirmToggle({{ $user->id }})" />
+                                        <x-admin.action icon="reset" color="amber" label="Resetar senha" wire:click="confirmReset({{ $user->id }})" />
+                                        <x-admin.action icon="delete" color="rose" label="Excluir" wire:click="confirmDelete({{ $user->id }})" />
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -104,4 +104,7 @@
             </div>
         </form>
     </x-admin.modal>
+
+    <x-admin.view :show="$showView" :title="$viewTitle" :data="$viewData" />
+    <x-admin.confirm :confirm="$confirm" />
 </div>

@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\TransPeoples;
 
 use App\Enum\Status;
+use App\Livewire\Admin\Support\HasAdminActions;
 use App\Livewire\Admin\Support\InteractsWithAddress;
 use App\Models\TransPeople;
 use Illuminate\Contracts\View\Factory;
@@ -16,7 +17,7 @@ use Livewire\WithPagination;
 #[Title('Pessoas Trans')]
 class Index extends Component
 {
-    use InteractsWithAddress, WithPagination;
+    use HasAdminActions, InteractsWithAddress, WithPagination;
 
     public string $search = '';
 
@@ -81,22 +82,38 @@ class Index extends Component
             $payload['status'] = Status::ACTIVE;
         }
 
+        $editing = (bool) $this->editingId;
         TransPeople::query()->updateOrCreate(['id' => $this->editingId], $payload);
 
         $this->showModal = false;
-        session()->flash('status', $this->editingId ? 'Cadastro atualizado.' : 'Pessoa cadastrada.');
+        $this->notify($editing ? 'Cadastro atualizado.' : 'Pessoa cadastrada.');
+    }
+
+    public function view(int $id): void
+    {
+        $person = TransPeople::query()->with(['address.state', 'address.city'])->findOrFail($id);
+        $this->viewData = [
+            ['label' => 'Nome', 'value' => $person->name],
+            ['label' => 'E-mail', 'value' => $person->email],
+            ['label' => 'Telefone', 'value' => $person->phone],
+            ['label' => 'Cidade/UF', 'value' => ($person->address?->city?->name ?? '').'/'.($person->address?->state?->abbr ?? '')],
+            ['label' => 'Status', 'value' => $person->status?->label()],
+        ];
+        $this->viewTitle = $person->name;
+        $this->showView = true;
     }
 
     public function toggleStatus(int $id): void
     {
         $person = TransPeople::query()->findOrFail($id);
         $person->update(['status' => $person->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE]);
+        $this->notify('Status atualizado.');
     }
 
     public function delete(int $id): void
     {
         TransPeople::query()->findOrFail($id)->delete();
-        session()->flash('status', 'Cadastro excluído.');
+        $this->notify('Cadastro excluído.');
     }
 
     public function render(): Factory|View

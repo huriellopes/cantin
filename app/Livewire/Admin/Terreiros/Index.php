@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Terreiros;
 
 use App\Actions\Address\FillAddressAction;
+use App\Livewire\Admin\Support\HasAdminActions;
 use App\Models\Address;
 use App\Models\City;
 use App\Models\NationsTerreiro;
@@ -21,7 +22,7 @@ use Livewire\WithPagination;
 #[Title('Terreiros')]
 class Index extends Component
 {
-    use WithPagination;
+    use HasAdminActions, WithPagination;
 
     public string $search = '';
 
@@ -199,13 +200,29 @@ class Index extends Component
         });
 
         $this->showModal = false;
-        session()->flash('status', 'Terreiro salvo com sucesso.');
+        $this->notify('Terreiro salvo com sucesso.');
+    }
+
+    public function view(int $id): void
+    {
+        $terreiro = Terreiro::query()->with(['nation', 'address.state', 'address.city'])->findOrFail($id);
+        $this->viewData = [
+            ['label' => 'Nome', 'value' => $terreiro->name],
+            ['label' => 'Telefone', 'value' => $terreiro->phone],
+            ['label' => 'Liderança', 'value' => $terreiro->leadership_orunko],
+            ['label' => 'Nação', 'value' => $terreiro->nation?->name],
+            ['label' => 'Cor da liderança', 'value' => $terreiro->color_of_leadership],
+            ['label' => 'Endereço', 'value' => trim(($terreiro->address?->address ?? '').' — '.($terreiro->address?->city?->name ?? '').'/'.($terreiro->address?->state?->abbr ?? ''))],
+            ['label' => 'CEP', 'value' => $terreiro->address?->zipcode],
+        ];
+        $this->viewTitle = $terreiro->name;
+        $this->showView = true;
     }
 
     public function delete(int $id): void
     {
         Terreiro::query()->findOrFail($id)->delete();
-        session()->flash('status', 'Terreiro excluído.');
+        $this->notify('Terreiro excluído.');
     }
 
     public function exportCsv()

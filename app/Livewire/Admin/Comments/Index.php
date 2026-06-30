@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Comments;
 
 use App\Enum\Status;
+use App\Livewire\Admin\Support\HasAdminActions;
 use App\Models\Comment;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -15,7 +16,7 @@ use Livewire\WithPagination;
 #[Title('Comentários')]
 class Index extends Component
 {
-    use WithPagination;
+    use HasAdminActions, WithPagination;
 
     public string $search = '';
 
@@ -65,7 +66,21 @@ class Index extends Component
         ]);
 
         $this->showModal = false;
-        session()->flash('status', 'Resposta publicada.');
+        $this->notify('Resposta publicada.');
+    }
+
+    public function view(int $id): void
+    {
+        $comment = Comment::query()->with(['user:id,name', 'post:id,title'])->findOrFail($id);
+        $this->viewData = [
+            ['label' => 'Autor', 'value' => $comment->user?->name ?? $comment->name],
+            ['label' => 'Post', 'value' => $comment->post?->title],
+            ['label' => 'Comentário', 'value' => $comment->body],
+            ['label' => 'Status', 'value' => $comment->status?->label()],
+            ['label' => 'Data', 'value' => $comment->created_at?->format('d/m/Y H:i')],
+        ];
+        $this->viewTitle = 'Comentário';
+        $this->showView = true;
     }
 
     public function toggleStatus(int $id): void
@@ -74,6 +89,7 @@ class Index extends Component
         $comment->update([
             'status' => $comment->status === Status::ACTIVE ? Status::INACTIVE : Status::ACTIVE,
         ]);
+        $this->notify('Status atualizado.');
     }
 
     public function render(): Factory|View
