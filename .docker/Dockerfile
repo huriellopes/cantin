@@ -58,6 +58,9 @@ RUN apk add --no-cache \
 # Adiciona o arquivo de configuração do OPcache
 COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
+# Limites de upload do PHP (editor rico). Alinhado ao nginx e ao config/editor.php.
+COPY uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+
 # Configuração do Supervisor
 RUN mkdir -p /etc/supervisor/conf.d
 COPY supervisord.conf /etc/supervisor/supervisord.conf
