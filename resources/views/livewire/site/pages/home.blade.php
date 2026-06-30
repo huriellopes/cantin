@@ -81,11 +81,11 @@
                 @foreach ($commons as $i => $common)
                     <div class="overflow-hidden rounded-2xl border border-slate-200">
                         <button @click="open = (open === {{ $i }} ? null : {{ $i }})" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-medium text-slate-800 hover:bg-slate-50">
-                            <span>{{ $common->question }}</span>
+                            <span>{{ $common['question'] }}</span>
                             <span class="shrink-0 text-violet-500 transition-transform" :class="open === {{ $i }} && 'rotate-180'">@svg('lucide-chevron-down', 'h-5 w-5')</span>
                         </button>
                         <div x-show="open === {{ $i }}" x-transition x-cloak class="max-w-none px-5 pb-5 text-slate-600">
-                            {!! $common->answer !!}
+                            {!! $common['answer'] !!}
                         </div>
                     </div>
                 @endforeach
