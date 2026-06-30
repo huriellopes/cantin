@@ -18,6 +18,9 @@ class Kernel extends ConsoleKernel
     {
         // Regenera o sitemap.xml diariamente para refletir novos posts/páginas.
         $schedule->command('sitemap:generate')->dailyAt('03:00');
+
+        // Atualiza as estatísticas/gráficos do dashboard (cache) de hora em hora.
+        $schedule->command('dashboard:refresh')->hourly();
     }
 
     /**
