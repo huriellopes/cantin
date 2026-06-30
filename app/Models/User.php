@@ -12,10 +12,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
+/**
+ * @property bool $password_change_required
+ * @property Carbon|null $last_login_at
+ */
 class User extends Authenticatable
 {
     /* @use HasFactory<\Database\Factories\UserFactory> */
@@ -41,6 +46,7 @@ class User extends Authenticatable
         'role_id',
         'status',
         'password_change_required',
+        'last_login_at',
     ];
 
     /**
@@ -92,6 +98,7 @@ class User extends Authenticatable
             'role_id' => RoleEnum::class,
             'status' => Status::class,
             'password_change_required' => 'boolean',
+            'last_login_at' => 'datetime',
             'email_verified_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',

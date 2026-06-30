@@ -15,7 +15,6 @@ use App\Support\ExportManager;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
@@ -96,6 +95,7 @@ class Index extends Component
             ['label' => __('msg_users.label_email'), 'value' => $user->email],
             ['label' => __('msg_users.label_role'), 'value' => $user->role_id?->label()],
             ['label' => __('msg_users.label_status'), 'value' => $user->status?->label()],
+            ['label' => __('msg_users.label_last_login'), 'value' => $user->last_login_at?->format('d/m/Y H:i') ?? __('crud_users.never_logged_in')],
             ['label' => __('msg_users.label_created_at'), 'value' => $user->created_at?->format('d/m/Y H:i')],
         ];
         $this->viewTitle = $user->name;
@@ -135,11 +135,15 @@ class Index extends Component
     public function resetPassword(int $id): void
     {
         $user = User::query()->findOrFail($id);
-        $newPassword = Str::password(12);
-        $user->update(['password' => Hash::make($newPassword)]);
+        // Redefine para a senha padrão (hasheada pelo cast) e força a troca no
+        // próximo login.
+        $user->update([
+            'password' => User::DEFAULT_PASSWORD,
+            'password_change_required' => true,
+        ]);
 
         $this->generatedFor = $user->name;
-        $this->generatedPassword = $newPassword;
+        $this->generatedPassword = User::DEFAULT_PASSWORD;
         $this->notify(__('msg_users.password_reset_success'));
     }
 
@@ -200,7 +204,7 @@ class Index extends Component
 
     protected function sortableColumns(): array
     {
-        return ['id', 'name', 'email', 'status', 'created_at'];
+        return ['id', 'name', 'email', 'status', 'last_login_at', 'created_at'];
     }
 
     protected function rules(): array
