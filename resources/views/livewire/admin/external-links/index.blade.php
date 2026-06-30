@@ -12,19 +12,18 @@
 
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
-            <input wire:model.live.debounce.400ms="search" type="search" placeholder="{{ __('crud_external_links.search_placeholder') }}"
-                   class="w-full max-w-sm rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
+            <x-admin.table-toolbar :options="$this->perPageOptions()" />
         </div>
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-100 text-sm">
                 <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                     <tr>
-                        <th class="px-4 py-3">#</th>
-                        <th class="px-4 py-3">{{ __('crud_external_links.column_title') }}</th>
-                        <th class="px-4 py-3">{{ __('crud_external_links.column_url') }}</th>
+                        <x-admin.th column="id" :sort-field="$sortField" :sort-direction="$sortDirection">#</x-admin.th>
+                        <x-admin.th column="title" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_external_links.column_title') }}</x-admin.th>
+                        <x-admin.th column="url" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_external_links.column_url') }}</x-admin.th>
                         <th class="px-4 py-3">{{ __('crud_external_links.column_type') }}</th>
-                        <th class="px-4 py-3">{{ __('common.status') }}</th>
+                        <x-admin.th column="status" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('common.status') }}</x-admin.th>
                         <th class="px-4 py-3 text-right">{{ __('common.actions') }}</th>
                     </tr>
                 </thead>

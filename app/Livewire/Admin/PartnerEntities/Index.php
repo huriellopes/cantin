@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\PartnerEntities;
 use App\Enum\Status;
 use App\Livewire\Admin\Support\HasAdminActions;
 use App\Livewire\Admin\Support\InteractsWithAddress;
+use App\Livewire\Admin\Support\WithDataTable;
 use App\Models\PartnerEntity;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -20,9 +21,7 @@ use Livewire\WithPagination;
 #[Title('Entidades Parceiras')]
 class Index extends Component
 {
-    use HasAdminActions, InteractsWithAddress, WithFileUploads, WithPagination;
-
-    public string $search = '';
+    use HasAdminActions, InteractsWithAddress, WithDataTable, WithFileUploads, WithPagination;
 
     public bool $showModal = false;
 
@@ -39,11 +38,6 @@ class Index extends Component
     public $image;
 
     public ?string $currentImage = null;
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
 
     public function create(): void
     {
@@ -133,17 +127,24 @@ class Index extends Component
 
     public function render(): Factory|View
     {
-        $entities = PartnerEntity::query()
-            ->with(['address.city:id,name', 'address.state:id,name'])
-            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%")->orWhere('email', 'like', "%{$this->search}%"))
-            ->orderByDesc('id')
-            ->paginate(10);
+        $queryBase = PartnerEntity::query()
+            ->with(['address.city:id,name', 'address.state:id,name']);
+
+        $entities = $this->applyTable($queryBase, ['name', 'email']);
 
         return view('livewire.admin.partner-entities.index', [
             'entities' => $entities,
             'states' => $this->statesOptions(),
             'cities' => $this->citiesOptions(),
         ]);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function sortableColumns(): array
+    {
+        return ['id', 'name', 'email', 'phone', 'status', 'created_at'];
     }
 
     protected function rules(): array

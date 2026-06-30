@@ -6,6 +6,7 @@ namespace App\Livewire\Admin\Posts;
 
 use App\Enum\StatusPost;
 use App\Livewire\Admin\Support\HasAdminActions;
+use App\Livewire\Admin\Support\WithDataTable;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Contracts\View\Factory;
@@ -23,9 +24,7 @@ use Livewire\WithPagination;
 #[Title('Posts')]
 class Index extends Component
 {
-    use HasAdminActions, WithFileUploads, WithPagination;
-
-    public string $search = '';
+    use HasAdminActions, WithDataTable, WithFileUploads, WithPagination;
 
     public bool $showModal = false;
 
@@ -44,11 +43,6 @@ class Index extends Component
     public $image;
 
     public ?string $currentImage = null;
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
 
     public function create(): void
     {
@@ -152,17 +146,24 @@ class Index extends Component
 
     public function render(): Factory|View
     {
-        $posts = Post::query()
+        $queryBase = Post::query()
             ->withCount('likes')
-            ->with('user:id,name')
-            ->when($this->search, fn ($q) => $q->where('title', 'like', "%{$this->search}%"))
-            ->orderByDesc('id')
-            ->paginate(10);
+            ->with('user:id,name');
+
+        $posts = $this->applyTable($queryBase, ['title']);
 
         return view('livewire.admin.posts.index', [
             'posts' => $posts,
             'categories' => Category::query()->orderBy('name')->pluck('name', 'id'),
         ]);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function sortableColumns(): array
+    {
+        return ['id', 'title', 'published_at', 'views', 'status'];
     }
 
     protected function rules(): array
