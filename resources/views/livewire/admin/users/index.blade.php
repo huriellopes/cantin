@@ -60,13 +60,11 @@
                                             :label="$user->status === \App\Enum\Status::ACTIVE ? __('common.deactivate') : __('common.activate')"
                                             wire:click="confirmToggle({{ $user->id }})" />
                                         <x-admin.action icon="reset" color="amber" label="{{ __('crud_users.reset_password') }}" wire:click="confirmReset({{ $user->id }})" />
-                                        <form method="POST" action="{{ route('admin.users.impersonate', $user->id) }}" class="inline">
-                                            @csrf
-                                            <button type="submit" title="{{ __('common.impersonate') }}" aria-label="{{ __('common.impersonate') }}"
-                                                    class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-indigo-600 transition hover:bg-indigo-50">
-                                                @svg('lucide-venetian-mask', 'h-[18px] w-[18px]')
-                                            </button>
-                                        </form>
+                                        <button type="button" wire:click="confirmImpersonate({{ $user->id }})"
+                                                title="{{ __('common.impersonate') }}" aria-label="{{ __('common.impersonate') }}"
+                                                class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-indigo-600 transition hover:bg-indigo-50">
+                                            @svg('lucide-venetian-mask', 'h-[18px] w-[18px]')
+                                        </button>
                                         <x-admin.action icon="delete" color="rose" label="{{ __('common.delete') }}" wire:click="confirmDelete({{ $user->id }})" />
                                     @endif
                                 </div>

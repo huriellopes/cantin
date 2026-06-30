@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 return [
+    'impersonate_title' => 'Personificar usuário',
+    'impersonate_message' => 'Você assumirá a sessão deste usuário. Um registro de auditoria será criado.',
     'title' => 'Usuários',
     'subtitle' => 'Gerencie os acessos ao painel.',
     'export_csv' => 'Exportar CSV',

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Routes\Web;
 
-use App\Http\Controllers\Web\ImpersonateController;
 use App\Livewire\Admin\Categories\Index as CategoriesIndex;
 use App\Livewire\Admin\Comments\Index as CommentsIndex;
 use App\Livewire\Admin\Dashboard;
@@ -57,7 +56,6 @@ class AdminRoute
                     Route::get('/users', UsersIndex::class)->name('users.index');
                     Route::get('/deleted-models', DeletedModelsIndex::class)->name('deleted-models.index');
                     Route::get('/impersonation-logs', ImpersonationLogsIndex::class)->name('impersonation-logs.index');
-                    Route::post('/users/{user}/impersonate', [ImpersonateController::class, 'start'])->name('users.impersonate');
                 });
 
                 Route::post('/logout', function () {

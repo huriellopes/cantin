@@ -13,27 +13,6 @@ use Illuminate\Support\Facades\Auth;
 class ImpersonateController extends Controller
 {
     /**
-     * Inicia a personificação de um usuário (somente super admin).
-     */
-    public function start(User $user): RedirectResponse
-    {
-        $current = Auth::user();
-
-        abort_unless($current?->isSuperAdmin() ?? false, 403);
-        abort_if($user->id === $current->id, 403);
-
-        // Já personificando? Mantém o impersonator original.
-        $impersonatorId = session('impersonator_id', $current->id);
-
-        $this->log((int) $impersonatorId, $user->id, 'started');
-
-        session(['impersonator_id' => $impersonatorId]);
-        Auth::login($user);
-
-        return redirect()->route('site.home');
-    }
-
-    /**
      * Encerra a personificação e retorna ao usuário original.
      */
     public function leave(): RedirectResponse
