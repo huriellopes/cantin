@@ -51,10 +51,6 @@ class Create extends Component
 
     public string $neighborhood = '';
 
-    public $latitude;
-
-    public $longitude;
-
     public $type_people_id;
 
     public $number_of_children_of_saint;
@@ -168,8 +164,6 @@ class Create extends Component
             $this->street = $data->address ?? '';
             $this->neighborhood = $data->neighborhood ?? '';
             $this->complement = $data->complement ?? '';
-            $this->latitude = $data->latitude ?? null;
-            $this->longitude = $data->longitude ?? null;
             $this->state_id = $data->state;
 
             if ($this->state_id) {

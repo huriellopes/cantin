@@ -58,10 +58,6 @@ class Index extends Component
 
     public ?int $city_id = null;
 
-    public ?string $latitude = null;
-
-    public ?string $longitude = null;
-
     // Questionário
     public ?int $type_people_id = null;
 
@@ -94,8 +90,6 @@ class Index extends Component
             $this->complement = $data->complement ?? $this->complement;
             $this->state_id = $data->state ?? $this->state_id;
             $this->city_id = $data->city ?? $this->city_id;
-            $this->latitude = $data->latitude ?? null;
-            $this->longitude = $data->longitude ?? null;
         } catch (Throwable) {
             $this->addError('zipcode', __('msg_terreiros.cep_lookup_failed'));
         }
@@ -121,7 +115,7 @@ class Index extends Component
 
         if ($terreiro->address) {
             $this->fill($terreiro->address->only([
-                'zipcode', 'address', 'complement', 'neighborhood', 'state_id', 'city_id', 'latitude', 'longitude',
+                'zipcode', 'address', 'complement', 'neighborhood', 'state_id', 'city_id',
             ]));
         }
 
@@ -146,8 +140,6 @@ class Index extends Component
                     'neighborhood' => $this->neighborhood,
                     'state_id' => $this->state_id,
                     'city_id' => $this->city_id,
-                    'latitude' => $this->latitude,
-                    'longitude' => $this->longitude,
                 ],
             );
 
@@ -281,7 +273,7 @@ class Index extends Component
         return array_merge([
             'name' => '', 'phone' => '', 'nation_terreiro_id' => null, 'leadership_orunko' => '',
             'color_of_leadership' => '', 'zipcode' => '', 'address' => '', 'complement' => '',
-            'neighborhood' => '', 'state_id' => null, 'city_id' => null, 'latitude' => null, 'longitude' => null,
+            'neighborhood' => '', 'state_id' => null, 'city_id' => null,
         ], $this->questionFields());
     }
 }

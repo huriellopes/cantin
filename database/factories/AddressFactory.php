@@ -23,8 +23,6 @@ class AddressFactory extends Factory
             'neighborhood' => $this->faker->city,
             'state_id' => State::query()->inRandomOrder()->first()->id,
             'city_id' => City::query()->inRandomOrder()->first()->id,
-            'latitude' => $this->faker->latitude(),
-            'longitude' => $this->faker->longitude(),
         ];
     }
 }
