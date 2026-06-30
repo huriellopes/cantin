@@ -9,3 +9,16 @@ it('redirects an already authenticated user away from login', function (): void 
         ->get(route('site.auth.login'))
         ->assertRedirect(route('site.home'));
 });
+
+it('records the last login timestamp on a successful login', function (): void {
+    $user = userWithRole('admin');
+
+    expect($user->last_login_at)->toBeNull();
+
+    $this->post(route('site.auth.login.post'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ])->assertRedirect();
+
+    expect($user->fresh()->last_login_at)->not->toBeNull();
+});

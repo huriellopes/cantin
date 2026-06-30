@@ -15,6 +15,8 @@ return [
     'col_name' => 'Nome',
     'col_email' => 'E-mail',
     'col_role' => 'Perfil',
+    'col_last_login' => 'Último acesso',
+    'never_logged_in' => 'Nunca acessou',
     'reset_password' => 'Resetar senha',
     'empty' => 'Nenhum usuário encontrado.',
     'edit_user' => 'Editar usuário',

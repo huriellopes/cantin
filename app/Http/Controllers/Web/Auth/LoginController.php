@@ -34,6 +34,9 @@ class LoginController extends Controller
             }
 
             if (auth()->attempt(['email' => $request->email, 'password' => $request->password], $request->boolean('remember'))) {
+                // Registra o último acesso.
+                auth()->user()->forceFill(['last_login_at' => now()])->save();
+
                 // Senha padrão / temporária: obriga a troca antes de seguir.
                 if (auth()->user()->password_change_required) {
                     return to_route('admin.password.change');
