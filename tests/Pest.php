@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\DuskTestCase;
 use Tests\TestCase;
 
 /*
@@ -19,6 +20,9 @@ use Tests\TestCase;
 */
 
 uses(TestCase::class, RefreshDatabase::class)->in('Feature');
+
+// Testes de browser (Laravel Dusk) — rodam contra a app real via `sail dusk`.
+uses(DuskTestCase::class)->in('Browser');
 
 /*
 |--------------------------------------------------------------------------
