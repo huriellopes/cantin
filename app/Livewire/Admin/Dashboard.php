@@ -27,8 +27,8 @@ class Dashboard extends Component
     {
         $stats = [
             ['label' => 'Visitas no site', 'value' => Visit::query()->count(), 'icon' => 'eye', 'color' => 'sky'],
-            ['label' => 'Terreiros', 'value' => Terreiro::query()->count(), 'icon' => 'home', 'color' => 'violet'],
-            ['label' => 'Comentários', 'value' => Comment::query()->whereNull('parent_id')->count(), 'icon' => 'chat', 'color' => 'amber'],
+            ['label' => 'Terreiros', 'value' => Terreiro::query()->count(), 'icon' => 'house', 'color' => 'violet'],
+            ['label' => 'Comentários', 'value' => Comment::query()->whereNull('parent_id')->count(), 'icon' => 'message-square', 'color' => 'amber'],
             ['label' => 'Usuários', 'value' => User::query()->count(), 'icon' => 'users', 'color' => 'emerald'],
             ['label' => 'Entidades parceiras', 'value' => PartnerEntity::query()->where('status', Status::ACTIVE)->count(), 'icon' => 'star', 'color' => 'rose'],
             ['label' => 'Pessoas trans', 'value' => TransPeople::query()->count(), 'icon' => 'user', 'color' => 'indigo'],

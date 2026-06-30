@@ -18,7 +18,7 @@
                     <ul class="mt-4 space-y-2 text-sm">
                         @foreach ($static_pages as $page)
                             <li>
-                                <a href="{{ route('site.static.page', $page->slug) }}" class="text-slate-400 transition hover:text-white">
+                                <a href="{{ route('site.static.page', $page->slug) }}" wire:navigate class="text-slate-400 transition hover:text-white">
                                     {{ str($page->name)->ucfirst() }}
                                 </a>
                             </li>
