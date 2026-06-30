@@ -13,6 +13,7 @@ use App\Livewire\Admin\Nations\Index as NationsIndex;
 use App\Livewire\Admin\Pages\Index as PagesIndex;
 use App\Livewire\Admin\PartnerEntities\Index as PartnerEntitiesIndex;
 use App\Livewire\Admin\Posts\Index as PostsIndex;
+use App\Livewire\Admin\Profile\Index as ProfileIndex;
 use App\Livewire\Admin\StaticPages\Index as StaticPagesIndex;
 use App\Livewire\Admin\Terreiros\Index as TerreirosIndex;
 use App\Livewire\Admin\TransPeoples\Index as TransPeoplesIndex;
@@ -32,6 +33,8 @@ class AdminRoute
             ->middleware(['auth', 'role:admin,super-admin'])
             ->group(function (): void {
                 Route::get('/', Dashboard::class)->name('dashboard');
+
+                Route::get('/profile', ProfileIndex::class)->name('profile');
 
                 Route::get('/terreiros', TerreirosIndex::class)->name('terreiros.index');
                 Route::get('/comments', CommentsIndex::class)->name('comments.index');

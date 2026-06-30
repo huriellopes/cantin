@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="shortcut icon" href="{{ asset('assets/images/cantin.ico') }}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{{ asset('assets/images/CANTIn.png') }}">
     <title>{{ $title ?? 'Painel' }} · CaNTIn</title>
     {{-- Aplica o estado da sidebar antes da pintura (evita flicker no reload) --}}
     <script>
@@ -60,9 +63,9 @@
     >
         {{-- Logo + chevron (ambos sempre visíveis, lado a lado) --}}
         <div class="admin-logo-row flex h-16 shrink-0 items-center gap-2 px-3">
-            <a href="{{ route('admin.dashboard') }}" wire:navigate class="text-xl font-extrabold tracking-tight text-white">
-                <span class="admin-logo-full">Ca<span class="text-violet-400">NTI</span>n</span>
-                <span class="admin-logo-mark">Ca<span class="text-violet-400">N</span></span>
+            <a href="{{ route('admin.dashboard') }}" wire:navigate class="flex items-center">
+                <img src="{{ asset('assets/images/CANTIn.png') }}" alt="CaNTIn" class="admin-logo-full" />
+                <img src="{{ asset('assets/images/CANTIn.png') }}" alt="CaNTIn" class="admin-logo-mark" />
             </a>
             <button type="button" @click="toggleCollapse()"
                     @mouseenter="showTip($el, collapsed ? 'Expandir menu' : 'Recolher menu')" @mouseleave="tip.show = false"
@@ -122,9 +125,16 @@
                         <span class="hidden text-sm font-medium text-slate-700 sm:block">{{ auth()->user()->name ?? '' }}</span>
                     </button>
                     <div x-show="open" x-cloak @click.outside="open = false" class="absolute right-0 top-12 z-50 w-48 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+                        <a href="{{ route('admin.profile') }}" wire:navigate class="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
+                            @svg('lucide-user-cog', 'h-4 w-4')
+                            Meu perfil
+                        </a>
                         <form method="POST" action="{{ route('admin.logout') }}">
                             @csrf
-                            <button type="submit" class="block w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">Sair</button>
+                            <button type="submit" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
+                                @svg('lucide-log-out', 'h-4 w-4')
+                                Sair
+                            </button>
                         </form>
                     </div>
                 </div>

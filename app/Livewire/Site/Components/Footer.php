@@ -17,7 +17,7 @@ class Footer extends Component
 
     public function mount(): void
     {
-        $this->logo = Cache::remember('logo_cantin_footer', 60 * 60 * 24, fn () => asset('/assets/images/CANTIn.png'));
+        $this->logo = asset('assets/images/CANTIn.png');
 
         $this->static_pages = Cache::remember('static_pages_footer', 60 * 60 * 24, function () {
             return StaticPage::query()

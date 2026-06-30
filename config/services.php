@@ -45,4 +45,13 @@ return [
         'token' => env('TELEGRAM_BOT_TOKEN'),
         'chat_id' => env('TELEGRAM_CHAT_ID'),
     ],
+
+    // Analytics/Ads — carregados somente após consentimento de cookies.
+    'ga' => [
+        'id' => env('GA_MEASUREMENT_ID', 'G-4VSY21XL8V'),
+    ],
+
+    'google_ads' => [
+        'id' => env('GOOGLE_ADS_ID'),
+    ],
 ];

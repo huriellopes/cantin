@@ -1,12 +1,12 @@
 <div>
     <footer class="bg-slate-900 text-slate-300">
-        <div class="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-3">
+        <div class="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-14 md:flex-row md:items-start md:justify-between">
             {{-- Marca --}}
-            <div>
-                <a href="{{ route('site.home') }}" wire:navigate class="text-2xl font-extrabold text-white">
-                    Ca<span class="bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent">NTI</span>n
+            <div class="max-w-xs">
+                <a href="{{ route('site.home') }}" wire:navigate class="inline-block">
+                    <img src="{{ $logo }}" alt="CaNTIn" class="h-16 w-auto" />
                 </a>
-                <p class="mt-3 max-w-xs text-sm text-slate-400">
+                <p class="mt-3 text-sm text-slate-400">
                     Cadastro Nacional de Terreiros Inclusivos — acolhimento, respeito e visibilidade para pessoas trans.
                 </p>
             </div>
@@ -47,8 +47,13 @@
             </div>
         </div>
 
-        <div class="border-t border-slate-800 py-5 text-center text-xs text-slate-500">
-            © {{ date('Y') }} CaNTIn · Desenvolvido por Huriel Lopes
+        <div class="flex flex-col gap-3 border-t border-slate-800 px-6 py-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+            <p>© {{ date('Y') }} CaNTIn</p>
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a href="{{ route('site.privacy') }}" wire:navigate class="transition hover:text-white">Política de Privacidade</a>
+                <a href="{{ route('site.guidelines') }}" wire:navigate class="transition hover:text-white">Diretrizes</a>
+            </div>
+            <p>Desenvolvido pela Empresa Hurvion Systems</p>
         </div>
     </footer>
 </div>

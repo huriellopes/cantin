@@ -23,9 +23,9 @@ class Home extends Component
                 ->values();
         });
 
-        $image = Cache::remember('cantin-home', 60 * 60 * 24, function () {
-            return asset('/assets/images/new/background-outro.png');
-        });
+        // asset() não deve ser cacheado: a URL absoluta depende do scheme/host
+        // da requisição e, se cacheada como http, quebra por mixed content em HTTPS.
+        $image = asset('assets/images/new/background-outro.png');
 
         $commons = Cache::remember('commons-questions-cantin', 60 * 60 * 24, function () {
             return CommonQuestion::query()
