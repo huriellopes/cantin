@@ -5,8 +5,10 @@
     </div>
 
 
-    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <x-admin.table-toolbar :options="$this->perPageOptions()" />
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="border-b border-slate-100 p-4">
+            <x-admin.table-toolbar :options="$this->perPageOptions()" />
+        </div>
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-100 text-sm">

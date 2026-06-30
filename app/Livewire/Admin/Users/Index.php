@@ -7,10 +7,12 @@ namespace App\Livewire\Admin\Users;
 use App\Enum\Status;
 use App\Livewire\Admin\Support\HasAdminActions;
 use App\Livewire\Admin\Support\WithDataTable;
+use App\Models\ImpersonationLog;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -130,6 +132,42 @@ class Index extends Component
         $this->generatedFor = $user->name;
         $this->generatedPassword = $newPassword;
         $this->notify(__('msg_users.password_reset_success'));
+    }
+
+    public function confirmImpersonate(int $id): void
+    {
+        $this->requestConfirm('impersonate', [$id], [
+            'title' => __('crud_users.impersonate_title'),
+            'message' => __('crud_users.impersonate_message'),
+            'label' => __('common.impersonate'),
+        ]);
+    }
+
+    public function impersonate(int $id)
+    {
+        $current = Auth::user();
+
+        abort_unless($current?->isSuperAdmin() ?? false, 403);
+        abort_if($id === $current->id, 403);
+
+        $target = User::query()->findOrFail($id);
+
+        ImpersonationLog::query()->create([
+            'impersonator_id' => $current->id,
+            'impersonated_id' => $target->id,
+            'action' => 'started',
+            'ip' => request()->ip(),
+            'user_agent' => mb_substr((string) request()->userAgent(), 0, 255),
+        ]);
+
+        session(['impersonator_id' => $current->id]);
+        Auth::login($target);
+
+        // Respeita as permissões do personificado: admin/super vão ao painel;
+        // demais, ao site.
+        $destination = $target->hasRole('admin', 'super-admin') ? 'admin.dashboard' : 'site.home';
+
+        return $this->redirect(route($destination));
     }
 
     public function exportCsv()

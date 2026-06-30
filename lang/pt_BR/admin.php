@@ -26,6 +26,7 @@ return [
         'external_links' => 'Links Externos',
         'users' => 'Usuários',
         'deleted_models' => 'Modelos Excluídos',
+        'impersonation_logs' => 'Logs de Personificação',
     ],
     'header' => [
         'view_site' => 'Ver o site',

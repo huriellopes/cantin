@@ -24,6 +24,9 @@ return [
     'export' => 'Export',
     'all' => 'All',
     'per_page' => 'Per page',
+    'impersonate' => 'Impersonate',
+    'impersonating' => 'You are impersonating :name',
+    'stop_impersonating' => 'Back to my account',
     // Loading states (prevents double-click)
     'processing' => 'Processing...',
     'saving' => 'Saving...',

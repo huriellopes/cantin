@@ -9,6 +9,7 @@ use App\Livewire\Admin\Comments\Index as CommentsIndex;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\DeletedModels\Index as DeletedModelsIndex;
 use App\Livewire\Admin\ExternalLinks\Index as ExternalLinksIndex;
+use App\Livewire\Admin\ImpersonationLogs\Index as ImpersonationLogsIndex;
 use App\Livewire\Admin\Nations\Index as NationsIndex;
 use App\Livewire\Admin\Pages\Index as PagesIndex;
 use App\Livewire\Admin\PartnerEntities\Index as PartnerEntitiesIndex;
@@ -54,6 +55,7 @@ class AdminRoute
                 Route::middleware('role:super-admin')->group(function (): void {
                     Route::get('/users', UsersIndex::class)->name('users.index');
                     Route::get('/deleted-models', DeletedModelsIndex::class)->name('deleted-models.index');
+                    Route::get('/impersonation-logs', ImpersonationLogsIndex::class)->name('impersonation-logs.index');
                 });
 
                 Route::post('/logout', function () {

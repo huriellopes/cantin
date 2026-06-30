@@ -26,6 +26,7 @@ return [
         'external_links' => 'External Links',
         'users' => 'Users',
         'deleted_models' => 'Deleted Models',
+        'impersonation_logs' => 'Impersonation Logs',
     ],
     'header' => [
         'view_site' => 'View site',

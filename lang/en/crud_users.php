@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 return [
+    'impersonate_title' => 'Impersonate user',
+    'impersonate_message' => 'You will take over this user session. An audit record will be created.',
     'title' => 'Users',
     'subtitle' => 'Manage access to the panel.',
     'export_csv' => 'Export CSV',

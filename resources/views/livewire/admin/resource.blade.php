@@ -9,7 +9,7 @@
         </button>
     </div>
 
-    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 p-4">
             <x-admin.table-toolbar :options="$this->perPageOptions()" :placeholder="__('crud_resource.search_placeholder')" />
         </div>

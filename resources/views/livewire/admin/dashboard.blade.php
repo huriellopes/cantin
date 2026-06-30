@@ -58,7 +58,7 @@
     </div>
 
     {{-- Terreiros recentes --}}
-    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 px-6 py-4">
             <h3 class="font-semibold text-slate-700">{{ __('page_admin_dashboard.recent_terreiros') }}</h3>
         </div>
