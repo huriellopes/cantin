@@ -37,10 +37,6 @@ class Transpeople extends Component
 
     public ?int $state_id = null;
 
-    public $latitude;
-
-    public $longitude;
-
     public $states;
 
     public ?int $city_id = null;
@@ -97,8 +93,6 @@ class Transpeople extends Component
             $this->street = $data->address ?? '';
             $this->neighborhood = $data->neighborhood ?? '';
             $this->complement = $data->complement ?? '';
-            $this->latitude = $data->latitude ?? null;
-            $this->longitude = $data->longitude ?? null;
             $this->state_id = $data->state;
 
             if ($this->state_id) {
@@ -132,8 +126,6 @@ class Transpeople extends Component
                     'neighborhood' => $this->neighborhood,
                     'state_id' => $this->state_id,
                     'city_id' => $this->city_id,
-                    'latitude' => $this->latitude,
-                    'longitude' => $this->longitude,
                 ]);
             }
 
@@ -165,8 +157,6 @@ class Transpeople extends Component
                 'neighborhood',
                 'state_id',
                 'city_id',
-                'latitude',
-                'longitude',
             ]);
             DB::commit();
 

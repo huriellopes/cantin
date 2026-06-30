@@ -7,9 +7,7 @@ namespace App\Actions\Address;
 use App\Models\City;
 use App\Models\State;
 use App\Services\Address\ViaCepService;
-use App\Traits\Utils;
 use Exception;
-use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 use stdClass;
@@ -18,8 +16,6 @@ use Throwable;
 
 final class FillAddressAction
 {
-    use Utils;
-
     /**
      * @throws Exception
      */
@@ -33,8 +29,8 @@ final class FillAddressAction
             $address = resolve(ViaCepService::class)
                 ->getAddressInfoFromZipCode($zipcode);
 
-            // Comparação case-insensitive: o ViaCEP/BrasilAPI retorna nomes em
-            // caixa mista, mas a base os armazena em CAIXA ALTA (ex.: "SÃO PAULO").
+            // Comparação case-insensitive: a API retorna caixa mista, mas a base
+            // armazena os nomes em CAIXA ALTA (ex.: "SÃO PAULO").
             $state_id = State::query()
                 ->whereRaw('UPPER(abbr) = UPPER(?)', [$address->state])
                 ->pluck('id')
@@ -46,46 +42,18 @@ final class FillAddressAction
                 ->pluck('id')
                 ->first();
 
-            // Geocoding é best-effort: se o provedor (Google Maps) falhar ou não
-            // estiver configurado, o endereço ainda é preenchido (lat/long ficam nulos).
-            $latitude = null;
-            $longitude = null;
-
-            try {
-                $street = $address->address . ',' . str($address->zipcode)->replace('-', '') . ',' . $address->neighborhood . ',' . $address->state . ', Brasil';
-                $result = Geocoder::geocode($street)->get();
-
-                if ($result->isNotEmpty()) {
-                    $coordinates = $result->first()->getCoordinates();
-                    $latitude = $coordinates->getLatitude();
-                    $longitude = $coordinates->getLongitude();
-                }
-            } catch (Exception|Throwable $e) {
-                Log::warning('Geocoding indisponível; lat/long não preenchidos.', ['error' => $e->getMessage()]);
-            }
-
-            $data = [
+            return (object) [
                 'address' => $address->address,
                 'neighborhood' => $address->neighborhood,
                 'complement' => $address->complement,
                 'state' => $state_id,
                 'city' => $city_id,
-                'latitude' => $latitude ?? null,
-                'longitude' => $longitude ?? null,
             ];
-
-            return (object) $data;
         } catch (Exception|Throwable $e) {
-            self::webhook('error', $e, 'Cep not found');
-
-            Log::error($e->getMessage(), [
+            Log::error('Erro ao buscar CEP: ' . $e->getMessage(), [
                 'line' => $e->getLine(),
                 'file' => $e->getFile(),
             ]);
-
-            toastr()
-                ->timeOut(2000)
-                ->error(__('Error when searching for zip code!'));
 
             throw new Exception(__('Error when searching for zip code!'), Response::HTTP_BAD_REQUEST, $e);
         }

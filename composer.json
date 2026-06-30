@@ -9,7 +9,6 @@
         "ashallendesign/short-url": "^8.3",
         "devrabiul/laravel-toaster-magic": "^2.0",
         "diglactic/laravel-breadcrumbs": "^10.1",
-        "geocoder-php/nominatim-provider": "^5.8",
         "guzzlehttp/guzzle": "^7.9",
         "irazasyed/telegram-bot-sdk": "^3.15",
         "laravel-notification-channels/telegram": "^7.0",
@@ -24,8 +23,7 @@
         "spatie/laravel-data": "^4.17",
         "spatie/laravel-deleted-models": "^1.2",
         "spatie/laravel-discord-alerts": "^1.5",
-        "telegram-bot/api": "^2.5",
-        "toin0u/geocoder-laravel": "^13.0"
+        "telegram-bot/api": "^2.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.0",

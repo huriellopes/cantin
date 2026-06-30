@@ -25,8 +25,6 @@ class Address extends Model
         'neighborhood',
         'state_id',
         'city_id',
-        'latitude',
-        'longitude',
     ];
 
     public function state(): BelongsTo
