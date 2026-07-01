@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\TerreiroFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
@@ -11,7 +13,8 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class Terreiro extends Model
 {
-    use KeepsDeletedModels;
+    /** @use HasFactory<TerreiroFactory> */
+    use HasFactory, KeepsDeletedModels;
 
     protected $table = 'terreiros';
 
