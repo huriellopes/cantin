@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
+/**
+ * @property string|null $phone
+ */
 class Terreiro extends Model
 {
     use FormatsPhone, KeepsDeletedModels;

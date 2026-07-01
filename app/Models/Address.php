@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
+/**
+ * @property string|null $zipcode
+ */
 class Address extends Model
 {
     /* @use HasFactory<\Database\Factories\AddressFactory> */

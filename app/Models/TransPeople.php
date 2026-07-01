@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
+/**
+ * @property string|null $phone
+ */
 class TransPeople extends Model
 {
     /* @use HasFactory<\Database\Factories\TransPeopleFactory> */
