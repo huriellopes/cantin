@@ -27,11 +27,11 @@ it('creates a post and publishes it when the date is today', function (): void {
     $category = aCategory();
 
     Livewire::actingAs($admin)->test(Manage::class)
-        ->set('titleField', 'Meu primeiro post')
-        ->set('slug', '')
-        ->set('category_id', $category->id)
-        ->set('published_at', now()->format('Y-m-d'))
-        ->set('content', '<p>Conteúdo do post.</p>')
+        ->set('form.titleField', 'Meu primeiro post')
+        ->set('form.slug', '')
+        ->set('form.category_id', $category->id)
+        ->set('form.published_at', now()->format('Y-m-d'))
+        ->set('form.content', '<p>Conteúdo do post.</p>')
         ->call('save')
         ->assertHasNoErrors()
         ->assertRedirect(route('admin.posts.index'));
@@ -48,10 +48,10 @@ it('keeps a future post pending', function (): void {
     $category = aCategory();
 
     Livewire::actingAs($admin)->test(Manage::class)
-        ->set('titleField', 'Post futuro')
-        ->set('category_id', $category->id)
-        ->set('published_at', now()->addWeek()->format('Y-m-d'))
-        ->set('content', 'Em breve.')
+        ->set('form.titleField', 'Post futuro')
+        ->set('form.category_id', $category->id)
+        ->set('form.published_at', now()->addWeek()->format('Y-m-d'))
+        ->set('form.content', 'Em breve.')
         ->call('save')
         ->assertHasNoErrors();
 
@@ -63,9 +63,9 @@ it('edits an existing post through the manage page', function (): void {
     $post = Post::factory()->create(['title' => 'Antigo', 'content' => '<p>velho</p>', 'category_id' => aCategory()->id]);
 
     Livewire::actingAs($admin)->test(Manage::class, ['post' => $post])
-        ->assertSet('titleField', 'Antigo')
-        ->set('titleField', 'Atualizado')
-        ->set('content', '<p>novo</p>')
+        ->assertSet('form.titleField', 'Antigo')
+        ->set('form.titleField', 'Atualizado')
+        ->set('form.content', '<p>novo</p>')
         ->call('save')
         ->assertHasNoErrors()
         ->assertRedirect(route('admin.posts.index'));
@@ -88,9 +88,9 @@ it('publishes and unpublishes a post', function (): void {
 
 it('validates required post fields', function (): void {
     Livewire::actingAs(userWithRole('admin'))->test(Manage::class)
-        ->set('titleField', '')
-        ->set('category_id')
-        ->set('content', '')
+        ->set('form.titleField', '')
+        ->set('form.category_id')
+        ->set('form.content', '')
         ->call('save')
-        ->assertHasErrors(['titleField', 'category_id', 'content']);
+        ->assertHasErrors(['form.titleField', 'form.category_id', 'form.content']);
 });
