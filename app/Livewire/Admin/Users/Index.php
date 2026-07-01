@@ -8,6 +8,7 @@ use App\Enum\Status;
 use App\Exports\UsersExport;
 use App\Livewire\Admin\Support\HasAdminActions;
 use App\Livewire\Admin\Support\WithDataTable;
+use App\Livewire\Forms\UserForm;
 use App\Models\ImpersonationLog;
 use App\Models\Role;
 use App\Models\User;
@@ -16,7 +17,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -30,13 +30,7 @@ class Index extends Component
 
     public bool $showModal = false;
 
-    public ?int $editingId = null;
-
-    public string $name = '';
-
-    public string $email = '';
-
-    public ?int $role_id = null;
+    public UserForm $form;
 
     public ?string $generatedPassword = null;
 
@@ -44,8 +38,8 @@ class Index extends Component
 
     public function create(): void
     {
-        $this->reset(['editingId', 'name', 'email', 'role_id']);
-        $this->role_id = Role::query()->where('slug', 'admin')->value('id');
+        $this->form->reset();
+        $this->form->role_id = Role::query()->where('slug', 'admin')->value('id');
         $this->resetValidation();
         $this->showModal = true;
     }
@@ -53,24 +47,24 @@ class Index extends Component
     public function edit(int $id): void
     {
         $user = User::query()->findOrFail($id);
-        $this->editingId = $user->id;
-        $this->name = $user->name;
-        $this->email = $user->email;
-        $this->role_id = $user->getRawOriginal('role_id');
+        $this->form->editingId = $user->id;
+        $this->form->name = $user->name;
+        $this->form->email = $user->email;
+        $this->form->role_id = $user->getRawOriginal('role_id');
         $this->resetValidation();
         $this->showModal = true;
     }
 
     public function save(): void
     {
-        $data = $this->validate();
+        $data = $this->form->validate();
 
-        if ($this->editingId) {
-            User::query()->whereKey($this->editingId)->update($data);
+        if ($this->form->editingId) {
+            User::query()->whereKey($this->form->editingId)->update($data);
         } else {
             $user = User::query()->create([
                 ...$data,
-                'slug' => Str::slug($this->name) . '-' . Str::random(5),
+                'slug' => Str::slug($this->form->name) . '-' . Str::random(5),
                 // Senha padrão (hasheada pelo cast); o usuário é obrigado a
                 // trocá-la no primeiro login.
                 'password' => User::DEFAULT_PASSWORD,
@@ -82,7 +76,7 @@ class Index extends Component
             $this->generatedPassword = User::DEFAULT_PASSWORD;
         }
 
-        $message = $this->editingId ? __('msg_users.user_updated') : __('msg_users.user_created');
+        $message = $this->form->editingId ? __('msg_users.user_updated') : __('msg_users.user_created');
         $this->showModal = false;
         $this->notify($message);
     }
@@ -205,14 +199,5 @@ class Index extends Component
     protected function sortableColumns(): array
     {
         return ['id', 'name', 'email', 'status', 'last_login_at', 'created_at'];
-    }
-
-    protected function rules(): array
-    {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($this->editingId)],
-            'role_id' => ['required', Rule::exists('roles', 'id')],
-        ];
     }
 }

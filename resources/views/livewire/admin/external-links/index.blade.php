@@ -58,20 +58,20 @@
         <div class="border-t border-slate-100 p-4">{{ $links->links() }}</div>
     </div>
 
-    <x-admin.modal title="{{ $editingId ? __('crud_external_links.modal_edit') : __('crud_external_links.modal_new') }}">
+    <x-admin.modal title="{{ $form->editingId ? __('crud_external_links.modal_edit') : __('crud_external_links.modal_new') }}">
         <form wire:submit="save" class="space-y-4">
-            <x-admin.input label="{{ __('crud_external_links.field_title') }}" name="title" wire:model="title" />
-            <x-admin.input label="{{ __('crud_external_links.field_slug') }}" name="slug" wire:model="slug" />
+            <x-admin.input label="{{ __('crud_external_links.field_title') }}" name="form.title" wire:model="form.title" />
+            <x-admin.input label="{{ __('crud_external_links.field_slug') }}" name="form.slug" wire:model="form.slug" />
             <div class="space-y-1">
                 <label class="block text-sm font-medium text-slate-700">{{ __('crud_external_links.field_type') }}</label>
-                <select wire:model="type_external_link_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                <select wire:model="form.type_external_link_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
                     <option value="">{{ __('crud_external_links.select_placeholder') }}</option>
                     @foreach ($types as $id => $label)<option value="{{ $id }}">{{ $label }}</option>@endforeach
                 </select>
-                @error('type_external_link_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                @error('form.type_external_link_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
             </div>
-            <x-admin.input label="{{ __('crud_external_links.field_url') }}" name="url" type="url" wire:model="url" />
-            <x-admin.input label="{{ __('crud_external_links.field_description') }}" name="description" wire:model="description" />
+            <x-admin.input label="{{ __('crud_external_links.field_url') }}" name="form.url" type="url" wire:model="form.url" />
+            <x-admin.input label="{{ __('crud_external_links.field_description') }}" name="form.description" wire:model="form.description" />
 
             <div class="flex justify-end gap-2 pt-2">
                 <button type="button" @click="$wire.showModal = false" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">{{ __('common.cancel') }}</button>
