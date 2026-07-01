@@ -26,10 +26,10 @@ it('creates an external link with the author set', function (): void {
 
     Livewire::actingAs($admin)->test(Index::class)
         ->call('create')
-        ->set('title', 'Disque 100')
-        ->set('type_external_link_id', $type->id)
-        ->set('url', 'https://www.gov.br/mdh')
-        ->set('description', 'Canal de denúncias')
+        ->set('form.title', 'Disque 100')
+        ->set('form.type_external_link_id', $type->id)
+        ->set('form.url', 'https://www.gov.br/mdh')
+        ->set('form.description', 'Canal de denúncias')
         ->call('save')
         ->assertHasNoErrors()
         ->assertSet('showModal', false);
@@ -44,12 +44,12 @@ it('creates an external link with the author set', function (): void {
 it('validates external link fields', function (): void {
     Livewire::actingAs(userWithRole('admin'))->test(Index::class)
         ->call('create')
-        ->set('title', '')
-        ->set('type_external_link_id')
-        ->set('url', 'not a url')
-        ->set('description', '')
+        ->set('form.title', '')
+        ->set('form.type_external_link_id')
+        ->set('form.url', 'not a url')
+        ->set('form.description', '')
         ->call('save')
-        ->assertHasErrors(['title', 'type_external_link_id', 'url', 'description']);
+        ->assertHasErrors(['form.title', 'form.type_external_link_id', 'form.url', 'form.description']);
 });
 
 it('toggles an external link status', function (): void {

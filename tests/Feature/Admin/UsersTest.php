@@ -28,9 +28,9 @@ it('creates a user through the component', function (): void {
 
     Livewire::test(Index::class)
         ->call('create')
-        ->set('name', 'Maria Trans')
-        ->set('email', 'maria@example.com')
-        ->set('role_id', $roleId)
+        ->set('form.name', 'Maria Trans')
+        ->set('form.email', 'maria@example.com')
+        ->set('form.role_id', $roleId)
         ->call('save')
         ->assertHasNoErrors()
         ->assertSet('showModal', false);
@@ -48,11 +48,11 @@ it('validates required fields on save', function (): void {
 
     Livewire::test(Index::class)
         ->call('create')
-        ->set('name', '')
-        ->set('email', 'not-an-email')
-        ->set('role_id')
+        ->set('form.name', '')
+        ->set('form.email', 'not-an-email')
+        ->set('form.role_id')
         ->call('save')
-        ->assertHasErrors(['name', 'email', 'role_id']);
+        ->assertHasErrors(['form.name', 'form.email', 'form.role_id']);
 });
 
 it('toggles status and refuses to disable yourself', function (): void {

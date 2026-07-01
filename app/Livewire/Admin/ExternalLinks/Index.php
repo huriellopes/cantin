@@ -7,12 +7,12 @@ namespace App\Livewire\Admin\ExternalLinks;
 use App\Enum\Status;
 use App\Livewire\Admin\Support\HasAdminActions;
 use App\Livewire\Admin\Support\WithDataTable;
+use App\Livewire\Forms\ExternalLinkForm;
 use App\Models\ExternalLink;
 use App\Models\TypeExternalLink;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -26,22 +26,11 @@ class Index extends Component
 
     public bool $showModal = false;
 
-    public ?int $editingId = null;
-
-    public string $title = '';
-
-    public string $slug = '';
-
-    public ?int $type_external_link_id = null;
-
-    /** Já inicia com o esquema para orientar o preenchimento; normalizado no save. */
-    public string $url = 'https://';
-
-    public string $description = '';
+    public ExternalLinkForm $form;
 
     public function create(): void
     {
-        $this->reset(['editingId', 'title', 'slug', 'type_external_link_id', 'url', 'description']);
+        $this->form->reset();
         $this->resetValidation();
         $this->showModal = true;
     }
@@ -49,12 +38,12 @@ class Index extends Component
     public function edit(int $id): void
     {
         $link = ExternalLink::query()->findOrFail($id);
-        $this->editingId = $link->id;
-        $this->title = $link->title;
-        $this->slug = $link->slug;
-        $this->type_external_link_id = $link->type_external_link_id;
-        $this->url = $link->url;
-        $this->description = $link->description;
+        $this->form->editingId = $link->id;
+        $this->form->title = $link->title;
+        $this->form->slug = $link->slug;
+        $this->form->type_external_link_id = $link->type_external_link_id;
+        $this->form->url = $link->url;
+        $this->form->description = $link->description;
         $this->resetValidation();
         $this->showModal = true;
     }
@@ -62,27 +51,27 @@ class Index extends Component
     public function save(): void
     {
         // Normaliza o link antes de validar: se vier sem esquema, assume https://.
-        $this->url = $this->normalizeUrl($this->url);
+        $this->form->url = $this->normalizeUrl($this->form->url);
 
-        $this->validate();
+        $this->form->validate();
 
         $payload = [
-            'title' => $this->title,
-            'slug' => Str::slug($this->slug ?: $this->title),
-            'type_external_link_id' => $this->type_external_link_id,
-            'url' => $this->url,
-            'description' => $this->description,
+            'title' => $this->form->title,
+            'slug' => Str::slug($this->form->slug ?: $this->form->title),
+            'type_external_link_id' => $this->form->type_external_link_id,
+            'url' => $this->form->url,
+            'description' => $this->form->description,
         ];
 
-        if (!$this->editingId) {
+        if (!$this->form->editingId) {
             $payload['user_id'] = auth()->id();
             $payload['status'] = Status::ACTIVE;
         }
 
-        $editing = (bool) $this->editingId;
+        $editing = (bool) $this->form->editingId;
 
         if ($editing) {
-            ExternalLink::query()->whereKey($this->editingId)->update($payload);
+            ExternalLink::query()->whereKey($this->form->editingId)->update($payload);
         } else {
             ExternalLink::query()->create($payload);
         }
@@ -134,17 +123,6 @@ class Index extends Component
     protected function sortableColumns(): array
     {
         return ['id', 'title', 'url', 'status', 'created_at'];
-    }
-
-    protected function rules(): array
-    {
-        return [
-            'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', Rule::unique('external_links', 'slug')->ignore($this->editingId)],
-            'type_external_link_id' => ['required', 'exists:type_external_links,id'],
-            'url' => ['required', 'url'],
-            'description' => ['required', 'string', 'max:255'],
-        ];
     }
 
     /**

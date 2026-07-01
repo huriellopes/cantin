@@ -93,20 +93,20 @@
     </div>
 
     {{-- Modal criar/editar --}}
-    <x-admin.modal title="{{ $editingId ? __('crud_users.edit_user') : __('crud_users.new_user') }}">
+    <x-admin.modal title="{{ $form->editingId ? __('crud_users.edit_user') : __('crud_users.new_user') }}">
         <form wire:submit="save" class="space-y-4">
-            <x-admin.input label="{{ __('crud_users.field_name') }}" name="name" wire:model="name" />
-            <x-admin.input label="{{ __('crud_users.field_email') }}" name="email" type="email" wire:model="email" />
+            <x-admin.input label="{{ __('crud_users.field_name') }}" name="form.name" wire:model="form.name" />
+            <x-admin.input label="{{ __('crud_users.field_email') }}" name="form.email" type="email" wire:model="form.email" />
 
             <div class="space-y-1">
                 <label for="role_id" class="block text-sm font-medium text-slate-700">{{ __('crud_users.access_role') }}</label>
-                <select id="role_id" wire:model="role_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
+                <select id="role_id" wire:model="form.role_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
                     <option value="">{{ __('crud_users.select_placeholder') }}</option>
                     @foreach ($roles as $id => $label)
                         <option value="{{ $id }}">{{ $label }}</option>
                     @endforeach
                 </select>
-                @error('role_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                @error('form.role_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
             </div>
 
             <div class="flex justify-end gap-2 pt-2">

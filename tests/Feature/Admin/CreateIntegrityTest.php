@@ -47,9 +47,9 @@ it('does not set a null id when creating a user', function (): void {
     Livewire::actingAs(userWithRole('super-admin'))
         ->test(App\Livewire\Admin\Users\Index::class)
         ->call('create')
-        ->set('name', 'Fulano')
-        ->set('email', 'fulano@example.com')
-        ->set('role_id', Role::query()->where('slug', 'admin')->value('id'))
+        ->set('form.name', 'Fulano')
+        ->set('form.email', 'fulano@example.com')
+        ->set('form.role_id', Role::query()->where('slug', 'admin')->value('id'))
         ->call('save')
         ->assertHasNoErrors();
 
