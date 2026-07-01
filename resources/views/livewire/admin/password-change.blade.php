@@ -6,14 +6,14 @@
         <form wire:submit="save" class="mt-6 space-y-4">
             <div class="space-y-1">
                 <label for="password" class="block text-sm font-medium text-slate-700">{{ __('msg_password_change.new_password') }}</label>
-                <input type="password" id="password" wire:model="password" autocomplete="new-password"
+                <input type="password" id="password" wire:model="form.password" autocomplete="new-password"
                        class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
-                @error('password') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                @error('form.password') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
             </div>
 
             <div class="space-y-1">
                 <label for="password_confirmation" class="block text-sm font-medium text-slate-700">{{ __('msg_password_change.confirm_password') }}</label>
-                <input type="password" id="password_confirmation" wire:model="password_confirmation" autocomplete="new-password"
+                <input type="password" id="password_confirmation" wire:model="form.password_confirmation" autocomplete="new-password"
                        class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
             </div>
 
