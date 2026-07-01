@@ -44,7 +44,9 @@
                 <div class="card" x-data="{ expanded: false }" wire:key="{{ $common->id }}">
                     <div class="card-header flex items-center" @click="expanded = ! expanded">
                         <span class="font-semibold text-sm">{{ $common->question }}</span>
-                        <i class="bi bi-arrow-down-short icon ms-auto" :class="{ 'rotate-180': expanded, 'rotate-0': ! expanded }"></i>
+                        <span class="ms-auto transition-transform" :class="{ 'rotate-180': expanded, 'rotate-0': ! expanded }">
+                            @svg('lucide-chevron-down', 'h-5 w-5 text-slate-500')
+                        </span>
                     </div>
                     <div
                         class="card-body"
