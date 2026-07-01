@@ -12,7 +12,7 @@
 
     {{-- Preload da imagem de fundo do hero (LCP) — só na home, onde ela aparece. --}}
     @if (request()->routeIs('site.home'))
-        <link rel="preload" as="image" href="{{ asset('assets/images/new/background-outro.png') }}" fetchpriority="high">
+        <link rel="preload" as="image" href="{{ asset('assets/images/new/background-outro.webp') }}" fetchpriority="high">
     @endif
 
     {{-- Título, description, canonical, OpenGraph e Twitter (archtechx/laravel-seo).
@@ -35,7 +35,7 @@
          :class="solid ? 'bg-white/95 shadow-sm backdrop-blur' : 'bg-transparent'">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
             <a href="{{ route('site.home') }}" wire:navigate class="flex items-center">
-                <img src="{{ asset('assets/images/CANTIn.png') }}" alt="CaNTIn" class="h-11 w-auto" />
+                <img src="{{ asset('assets/images/cantin-logo.webp') }}" alt="CaNTIn" width="160" height="160" class="h-11 w-auto" />
             </a>
 
             @php

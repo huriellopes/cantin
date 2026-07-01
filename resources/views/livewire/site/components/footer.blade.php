@@ -4,7 +4,7 @@
             {{-- Marca --}}
             <div class="max-w-xs">
                 <a href="{{ route('site.home') }}" wire:navigate class="inline-block">
-                    <img src="{{ $logo }}" alt="CaNTIn" class="h-16 w-auto" loading="lazy" decoding="async" />
+                    <img src="{{ asset('assets/images/cantin-logo.webp') }}" alt="CaNTIn" width="160" height="160" class="h-16 w-auto" loading="lazy" decoding="async" />
                 </a>
                 <p class="mt-3 text-sm text-slate-400">
                     {{ __('footer.tagline') }}
@@ -14,7 +14,7 @@
             {{-- Páginas --}}
             @if (! empty($static_pages) && count($static_pages) > 0)
                 <div>
-                    <h5 class="text-sm font-semibold uppercase tracking-wider text-slate-200">{{ __('footer.pages') }}</h5>
+                    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-200">{{ __('footer.pages') }}</h2>
                     <ul class="mt-4 space-y-2 text-sm">
                         @foreach ($static_pages as $page)
                             <li>
@@ -29,7 +29,7 @@
 
             {{-- Contato --}}
             <div class="md:text-right">
-                <h5 class="text-sm font-semibold uppercase tracking-wider text-slate-200">{{ __('footer.contact') }}</h5>
+                <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-200">{{ __('footer.contact') }}</h2>
                 <p class="mt-4 font-semibold text-white">Babalorixá Alan T'Ogun</p>
                 <p class="mt-1 text-sm text-slate-400">(61) 9 9977-6608</p>
                 <p class="text-sm text-slate-400">seggvg@gmail.com</p>
