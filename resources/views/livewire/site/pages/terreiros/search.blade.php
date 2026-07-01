@@ -6,6 +6,7 @@
 
     <div class="mx-auto mt-8 max-w-xl">
         <input type="search" wire:model.live.debounce.300ms="search" placeholder="{{ __('page_terreiros_search.search_placeholder') }}"
+               aria-label="{{ __('page_terreiros_search.search_placeholder') }}"
                class="w-full rounded-full border border-slate-300 px-5 py-3 text-sm shadow-sm focus:border-violet-500 focus:ring-violet-500">
     </div>
 
