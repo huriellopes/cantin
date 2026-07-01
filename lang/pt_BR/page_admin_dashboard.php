@@ -8,4 +8,7 @@ return [
     'chart_total' => 'total',
     'recent_terreiros' => 'Terreiros recentes',
     'no_terreiros' => 'Nenhum terreiro cadastrado ainda.',
+    'see_more' => 'Ver mais',
+    'col_terreiro' => 'Terreiro',
+    'col_created' => 'Cadastrado em',
 ];

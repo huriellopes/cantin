@@ -44,12 +44,17 @@ class Dashboard extends Component
 
         // A métrica de quantidade de usuários é sensível: apenas o super-admin
         // pode vê-la (o admin comum não deve ter essa visão do sistema).
-        if (auth()->user()?->isSuperAdmin()) {
+        $isSuper = auth()->user()?->isSuperAdmin() ?? false;
+
+        if ($isSuper) {
             $stats[] = ['label' => __('msg_dashboard.stat_users'), 'value' => $counts['users'], 'icon' => 'users', 'color' => 'emerald'];
         }
 
         return view('livewire.admin.dashboard', [
             'stats' => $stats,
+            // Super-admin vê o cartão de saúde (componente próprio, tempo real);
+            // o admin comum vê só o aviso "no ar".
+            'isSuper' => $isSuper,
             'period' => $days,
             'periodOptions' => [
                 1 => __('msg_dashboard.period_today'),

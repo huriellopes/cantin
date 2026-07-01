@@ -4,7 +4,7 @@
             {{-- Marca --}}
             <div class="max-w-xs">
                 <a href="{{ route('site.home') }}" wire:navigate class="inline-block">
-                    <img src="{{ $logo }}" alt="CaNTIn" class="h-16 w-auto" />
+                    <img src="{{ $logo }}" alt="CaNTIn" class="h-16 w-auto" loading="lazy" decoding="async" />
                 </a>
                 <p class="mt-3 text-sm text-slate-400">
                     {{ __('footer.tagline') }}

@@ -21,7 +21,7 @@
                 </p>
             </article>
             <div class="lg:col-span-1">
-                <img src="{{ $image }}" alt="CaNTIn" class="w-full rounded-3xl object-cover shadow-lg" />
+                <img src="{{ $image }}" alt="CaNTIn" class="w-full rounded-3xl object-cover shadow-lg" loading="lazy" decoding="async" />
             </div>
         </div>
 
