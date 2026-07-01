@@ -1,0 +1,84 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'title' => 'Sistema',
+    'subtitle' => 'Logs, debug, agendamentos e filas — controle exclusivo do super usuário.',
+
+    // Abas
+    'tab_logs' => 'Logs',
+    'tab_debug' => 'Debug',
+    'tab_schedules' => 'Agendamentos',
+    'tab_jobs' => 'Filas / Jobs',
+
+    // Logs (arquivo)
+    'log_files' => 'Arquivos de log',
+    'no_logs' => 'Nenhum arquivo de log encontrado.',
+    'all_levels' => 'Todos os níveis',
+    'clear_log' => 'Limpar arquivo',
+    'details' => 'Detalhes',
+    'no_entries' => 'Nenhuma entrada para os filtros selecionados.',
+    'confirm_clear_log_title' => 'Limpar arquivo de log',
+    'confirm_clear_log_message' => 'O conteúdo deste arquivo será apagado permanentemente. Deseja continuar?',
+    'confirm_clear_log_label' => 'Limpar',
+    'log_cleared' => 'Arquivo de log limpo com sucesso.',
+    'log_clear_failed' => 'Não foi possível limpar o arquivo de log.',
+
+    // Debug (Debugbar)
+    'debug_captures' => 'Capturas de requisição (Debugbar)',
+    'clear_debug' => 'Limpar capturas',
+    'method' => 'Método',
+    'uri' => 'URI',
+    'status' => 'Status',
+    'duration' => 'Duração',
+    'date' => 'Data',
+    'view' => 'Ver',
+    'no_captures' => 'Nenhuma captura disponível.',
+    'has_exceptions' => 'Contém exceções',
+    'capture_detail' => 'Detalhe da captura',
+    'confirm_clear_debug_title' => 'Limpar capturas de debug',
+    'confirm_clear_debug_message' => 'Todas as capturas do Debugbar serão removidas. Deseja continuar?',
+    'confirm_clear_debug_label' => 'Limpar',
+    'debug_cleared' => ':count captura(s) removida(s).',
+
+    // Agendamentos
+    'command' => 'Comando',
+    'expression' => 'Expressão',
+    'frequency' => 'Frequência',
+    'next_run' => 'Próxima execução',
+    'no_schedules' => 'Nenhuma tarefa agendada.',
+    'schedule_every_minute' => 'a cada minuto',
+    'schedule_hourly' => 'a cada hora',
+    'schedule_daily' => 'diariamente',
+    'schedule_weekly' => 'semanalmente',
+    'schedule_monthly' => 'mensalmente',
+    'schedule_daily_at' => 'diariamente às :time',
+
+    // Filas / Jobs
+    'pending_jobs' => 'Jobs pendentes',
+    'failed_jobs' => 'Jobs com falha',
+    'connection' => 'Conexão',
+    'job' => 'Job',
+    'queue' => 'Fila',
+    'attempts' => 'Tentativas',
+    'available_at' => 'Disponível em',
+    'no_pending' => 'Nenhum job pendente.',
+    'exception' => 'Exceção',
+    'failed_at' => 'Falhou em',
+    'retry' => 'Reprocessar',
+    'forget' => 'Remover',
+    'retry_all' => 'Reprocessar todos',
+    'flush_all' => 'Limpar todos',
+    'no_failed' => 'Nenhum job com falha.',
+    'job_retried' => 'Job reenfileirado para reprocessamento.',
+    'jobs_retried_all' => 'Todos os jobs com falha foram reenfileirados.',
+    'job_forgotten' => 'Job removido do registro de falhas.',
+    'jobs_flushed' => 'Registro de jobs com falha limpo.',
+    'confirm_forget_title' => 'Remover job com falha',
+    'confirm_forget_message' => 'Este registro de falha será removido permanentemente. Deseja continuar?',
+    'confirm_forget_label' => 'Remover',
+    'confirm_flush_title' => 'Limpar jobs com falha',
+    'confirm_flush_message' => 'Todos os registros de jobs com falha serão removidos. Deseja continuar?',
+    'confirm_flush_label' => 'Limpar todos',
+];

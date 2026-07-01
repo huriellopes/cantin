@@ -27,6 +27,7 @@ return [
         'users' => 'Usuários',
         'deleted_models' => 'Modelos Excluídos',
         'impersonation_logs' => 'Logs de Personificação',
+        'system' => 'Sistema',
     ],
     'header' => [
         'view_site' => 'Ver o site',
