@@ -44,6 +44,9 @@ class Search extends Component
                     $query->where(function ($q) use ($like): void {
                         $q->whereRaw('LOWER(name) LIKE ?', [$like])
                             ->orWhereRaw('LOWER(leadership_orunko) LIKE ?', [$like])
+                            ->orWhereHas('nation', function ($queryNation) use ($like): void {
+                                $queryNation->whereRaw('LOWER(name) LIKE ?', [$like]);
+                            })
                             ->orWhereHas('address', function ($queryAddress) use ($like): void {
                                 $queryAddress->whereHas('state', function ($queryState) use ($like): void {
                                     $queryState->whereRaw('LOWER(name) LIKE ?', [$like])
