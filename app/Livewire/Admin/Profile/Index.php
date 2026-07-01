@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Admin\Profile;
 
 use App\Livewire\Admin\Support\HasAdminActions;
+use App\Livewire\Forms\ProfileForm;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -21,32 +22,22 @@ class Index extends Component
 {
     use HasAdminActions;
 
-    public string $name = '';
-
-    public string $email = '';
-
-    public string $current_password = '';
-
-    public string $password = '';
-
-    public string $password_confirmation = '';
+    public ProfileForm $form;
 
     public bool $showDelete = false;
-
-    public string $delete_password = '';
 
     public function mount(): void
     {
         $user = Auth::user();
-        $this->name = $user->name;
-        $this->email = $user->email;
+        $this->form->name = $user->name;
+        $this->form->email = $user->email;
     }
 
     public function updateProfile(): void
     {
         $user = Auth::user();
 
-        $data = $this->validate([
+        $data = $this->form->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
         ]);
@@ -57,27 +48,27 @@ class Index extends Component
 
     public function updatePassword(): void
     {
-        $this->validate([
+        $this->form->validate([
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        Auth::user()->update(['password' => Hash::make($this->password)]);
+        Auth::user()->update(['password' => Hash::make($this->form->password)]);
 
-        $this->reset(['current_password', 'password', 'password_confirmation']);
+        $this->form->reset(['current_password', 'password', 'password_confirmation']);
         $this->notify(__('admin.profile.password_changed'));
     }
 
     public function confirmDeleteAccount(): void
     {
-        $this->reset('delete_password');
+        $this->form->reset('delete_password');
         $this->resetValidation();
         $this->showDelete = true;
     }
 
     public function deleteAccount()
     {
-        $this->validate(
+        $this->form->validate(
             ['delete_password' => ['required', 'current_password']],
             ['delete_password.current_password' => __('admin.profile.wrong_password')],
         );
