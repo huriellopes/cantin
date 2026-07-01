@@ -1,8 +1,26 @@
-<div class="space-y-8">
+{{-- wire:poll atualiza o painel automaticamente (lê o cache das stats). --}}
+<div class="space-y-8" wire:poll.60s>
     <div>
         <h2 class="text-2xl font-bold text-slate-800">{{ __('page_admin_dashboard.greeting', ['name' => auth()->user()->name]) }}</h2>
         <p class="mt-1 text-sm text-slate-500">{{ __('page_admin_dashboard.summary_subtitle') }}</p>
     </div>
+
+    {{-- Saúde da aplicação: detalhada e em tempo real para super-admin
+         (componente próprio com polling); "no ar" para admin. --}}
+    @if ($isSuper)
+        <livewire:admin.system-health />
+    @else
+        <div class="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4">
+            <span class="relative flex h-3 w-3">
+                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:hidden"></span>
+                <span class="relative inline-flex h-3 w-3 rounded-full bg-emerald-500"></span>
+            </span>
+            <div>
+                <p class="text-sm font-semibold text-emerald-800">{{ __('msg_dashboard.platform_online') }}</p>
+                <p class="text-xs text-emerald-700">{{ __('msg_dashboard.platform_online_desc') }}</p>
+            </div>
+        </div>
+    @endif
 
     {{-- Stat cards --}}
     @php
@@ -69,14 +87,21 @@
                         <span class="text-xs text-slate-400">{{ __('msg_dashboard.no_data') }}</span>
                     </div>
                 @else
-                    <div class="flex h-28 items-end gap-px">
-                        @foreach ($chart['series'] as $point)
-                            {{-- A coluna precisa de altura definida (h-full) para a barra
-                                 interna em % renderizar; flex items-end ancora no fundo. --}}
-                            <div class="group relative flex h-full flex-1 items-end" title="{{ $point['label'] }}: {{ $point['value'] }}">
-                                <div class="{{ $barColors[$chart['color']] ?? 'bg-slate-400' }} w-full rounded-t transition-all hover:opacity-80"
-                                     style="height: {{ max(2, (int) round($point['value'] / $max * 100)) }}%"></div>
-                            </div>
+                    {{-- Tap (mobile) ou hover (desktop) mostra o valor do ponto. --}}
+                    <div class="flex h-28 items-end gap-px" x-data="{ sel: null }">
+                        @foreach ($chart['series'] as $i => $point)
+                            <button type="button"
+                                    class="group relative flex h-full flex-1 items-end"
+                                    @click="sel = (sel === {{ $i }} ? null : {{ $i }})"
+                                    @mouseenter="sel = {{ $i }}" @mouseleave="sel = null"
+                                    aria-label="{{ $point['label'] }}: {{ $point['value'] }}">
+                                <span class="{{ $barColors[$chart['color']] ?? 'bg-slate-400' }} block w-full rounded-t transition-all group-hover:opacity-80"
+                                      style="height: {{ max(2, (int) round($point['value'] / $max * 100)) }}%"></span>
+                                <span x-show="sel === {{ $i }}" x-cloak
+                                      class="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-1.5 py-0.5 text-[10px] font-medium text-white shadow">
+                                    {{ $point['label'] }}: {{ $point['value'] }}
+                                </span>
+                            </button>
                         @endforeach
                     </div>
                     <div class="mt-2 flex justify-between text-[10px] text-slate-400">
@@ -88,20 +113,35 @@
         @endforeach
     </div>
 
-    {{-- Terreiros recentes --}}
-    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div class="border-b border-slate-100 px-6 py-4">
+    {{-- Terreiros recentes (mesmo padrão de tabela do admin) --}}
+    <x-admin.card>
+        <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
             <h3 class="font-semibold text-slate-700">{{ __('page_admin_dashboard.recent_terreiros') }}</h3>
+            <a href="{{ route('admin.terreiros.index') }}" wire:navigate
+               class="inline-flex items-center gap-1 text-sm font-medium text-violet-600 transition hover:text-violet-800">
+                {{ __('page_admin_dashboard.see_more') }}
+                @svg('lucide-arrow-right', 'h-4 w-4')
+            </a>
         </div>
-        <ul class="divide-y divide-slate-100">
-            @forelse ($recentTerreiros as $terreiro)
-                <li class="flex items-center justify-between px-6 py-3 text-sm">
-                    <span class="font-medium text-slate-700">{{ $terreiro->name }}</span>
-                    <span class="text-slate-400">{{ $terreiro->created_at?->format('d/m/Y') }}</span>
-                </li>
-            @empty
-                <li class="px-6 py-8 text-center text-sm text-slate-400">{{ __('page_admin_dashboard.no_terreiros') }}</li>
-            @endforelse
-        </ul>
-    </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-100 text-sm">
+                <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <tr>
+                        <th class="px-6 py-3">{{ __('page_admin_dashboard.col_terreiro') }}</th>
+                        <th class="px-6 py-3 text-right">{{ __('page_admin_dashboard.col_created') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse ($recentTerreiros as $terreiro)
+                        <tr class="hover:bg-slate-50" wire:key="recent-{{ $terreiro->id }}">
+                            <td class="px-6 py-3 font-medium text-slate-700">{{ $terreiro->name }}</td>
+                            <td class="px-6 py-3 text-right text-slate-400">{{ $terreiro->created_at?->format('d/m/Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="2" class="px-6 py-8 text-center text-slate-400">{{ __('page_admin_dashboard.no_terreiros') }}</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </x-admin.card>
 </div>

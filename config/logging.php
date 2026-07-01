@@ -86,6 +86,15 @@ return [
             'thread' => env('TELEGRAM_THREAD_ALERTS'),
         ],
 
+        // Notificações dos agendamentos (sucesso/falha) — nível info para que o
+        // sucesso também seja enviado. Cai em silêncio sem token/chat.
+        'telegram_schedules' => [
+            'driver' => 'custom',
+            'via' => TelegramLoggerFactory::class,
+            'level' => 'info',
+            'thread' => env('TELEGRAM_THREAD_ALERTS'),
+        ],
+
         'info-log' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel-log-' . date('Y-m-d') . '.log'),

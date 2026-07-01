@@ -6,23 +6,17 @@ namespace App\Livewire\Site\Components;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
 use Livewire\Component;
 
 class WhatsappButton extends Component
 {
-    public $phoneNumber = '+5561999776608';
-
-    public function openWhatsapp(): Redirector|RedirectResponse
-    {
-        $url = "https://wa.me/{$this->phoneNumber}";
-
-        return redirect($url);
-    }
+    public string $phoneNumber = '+5561999776608';
 
     public function render(): Factory|View
     {
-        return view('livewire.site.components.whatsapp-button');
+        return view('livewire.site.components.whatsapp-button', [
+            // wa.me usa apenas dígitos; abre em nova aba pelo link (target=_blank).
+            'whatsappUrl' => 'https://wa.me/' . preg_replace('/\D/', '', $this->phoneNumber),
+        ]);
     }
 }
