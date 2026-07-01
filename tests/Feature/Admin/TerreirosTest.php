@@ -68,7 +68,9 @@ it('creates a terreiro with address and questionnaire', function (): void {
     $terreiro = Terreiro::query()->with(['address', 'question'])->first();
     expect($terreiro)->not->toBeNull()
         ->and($terreiro->name)->toBe('Ilê Axé')
-        ->and($terreiro->phone)->toBe('11999999999')
+        // Gravado sem máscara no banco; exibido com máscara pelo accessor.
+        ->and($terreiro->getRawOriginal('phone'))->toBe('11999999999')
+        ->and($terreiro->phone)->toBe('(11) 9 9999-9999')
         ->and($terreiro->address)->not->toBeNull()
         ->and($terreiro->address->neighborhood)->toBe('Sé')
         ->and($terreiro->question)->not->toBeNull()
