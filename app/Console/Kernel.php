@@ -21,6 +21,9 @@ class Kernel extends ConsoleKernel
 
         // Atualiza as estatísticas/gráficos do dashboard (cache) de hora em hora.
         $schedule->command('dashboard:refresh')->hourly();
+
+        // Remove logs e capturas de debug antigos, mantendo os últimos 3 dias.
+        $schedule->command('system:prune-logs --days=3')->dailyAt('04:00');
     }
 
     /**

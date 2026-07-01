@@ -59,7 +59,7 @@ return [
 
     // Analytics/Ads — carregados somente após consentimento de cookies.
     'ga' => [
-        'id' => env('GA_MEASUREMENT_ID', 'G-4VSY21XL8V'),
+        'id' => env('GA_MEASUREMENT_ID'),
     ],
 
     'google_ads' => [

@@ -22,6 +22,7 @@ use App\Livewire\Admin\Posts\Manage as PostsManage;
 use App\Livewire\Admin\Profile\Index as ProfileIndex;
 use App\Livewire\Admin\StaticPages\Index as StaticPagesIndex;
 use App\Livewire\Admin\StaticPages\Manage as StaticPagesManage;
+use App\Livewire\Admin\System\Monitor as SystemMonitor;
 use App\Livewire\Admin\Terreiros\Index as TerreirosIndex;
 use App\Livewire\Admin\TransPeoples\Index as TransPeoplesIndex;
 use App\Livewire\Admin\TypeExternalLinks\Index as TypeExternalLinksIndex;
@@ -76,6 +77,7 @@ class AdminRoute
                     Route::get('/users', UsersIndex::class)->name('users.index');
                     Route::get('/deleted-models', DeletedModelsIndex::class)->name('deleted-models.index');
                     Route::get('/impersonation-logs', ImpersonationLogsIndex::class)->name('impersonation-logs.index');
+                    Route::get('/system', SystemMonitor::class)->name('system.index');
                 });
 
                 Route::post('/logout', function () {
