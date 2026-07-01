@@ -42,6 +42,7 @@
         $sections = [
             [__('admin.nav_group.general'), [
                 [__('admin.nav.dashboard'), route('admin.dashboard'), request()->routeIs('admin.dashboard'), 'layout-dashboard'],
+                [__('admin.nav.profile'), route('admin.profile'), request()->routeIs('admin.profile'), 'circle-user'],
             ]],
             [__('admin.nav_group.community'), [
                 [__('admin.nav.terreiros'), route('admin.terreiros.index'), request()->routeIs('admin.terreiros.*'), 'house'],
