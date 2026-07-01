@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-md py-10">
+<div>
     <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         <h2 class="text-xl font-bold text-slate-800">{{ __('msg_password_change.title') }}</h2>
         <p class="mt-1 text-sm text-slate-500">{{ __('msg_password_change.subtitle') }}</p>

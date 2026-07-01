@@ -31,8 +31,10 @@ return [
     'recovery_desc' => 'Guarde-os em local seguro. Cada um pode ser usado uma única vez caso você perca o acesso ao app.',
     'show' => 'Mostrar',
     'hide' => 'Ocultar',
+    'close' => 'Fechar',
     'click_to_reveal' => 'Clique para revelar',
     'download_txt' => 'Baixar .txt',
     'download_png' => 'Baixar .png',
+    'download_started' => 'Preparando o download…',
     'view_recovery' => 'Ver códigos de recuperação',
 ];

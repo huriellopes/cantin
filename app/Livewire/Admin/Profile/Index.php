@@ -161,6 +161,14 @@ class Index extends Component
     }
 
     /**
+     * Fecha o card de códigos de recuperação (limpa do estado; não afeta o 2FA).
+     */
+    public function hideRecoveryCodes(): void
+    {
+        $this->recoveryCodes = [];
+    }
+
+    /**
      * Baixa os códigos de recuperação em .txt — gerado sob demanda e transmitido
      * direto ao navegador (nada é gravado no servidor).
      */
