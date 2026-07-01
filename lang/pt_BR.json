@@ -109,8 +109,12 @@
     "Zip code not found!": "Cep não encontrado!",
     "Error when searching for zip code!": "Erro ao buscar o cep!",
     "Partner entity successfully registered!": "Entidade parceira cadastrada com sucesso!",
+    "Partner entity already registered!": "Entidade parceira já cadastrada!",
     "Trans people successfully registered!": "Pessoas trans cadastradas com sucesso!",
+    "Trans people already registered!": "Pessoa trans já cadastrada!",
+    "Error when registering trans people!": "Erro ao cadastrar a pessoa trans!",
     "Terreiro successfully registered!": "Terreiro cadastrado com sucesso!",
+    "Error when creating terreiro!": "Erro ao cadastrar o terreiro!",
 
     "Register": "Cadastrar",
     "Loading...": "Carregando...",
