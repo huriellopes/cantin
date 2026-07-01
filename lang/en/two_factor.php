@@ -29,4 +29,10 @@ return [
     'disabled' => '2FA disabled.',
     'recovery_title' => 'Recovery codes',
     'recovery_desc' => 'Keep them in a safe place. Each can be used once if you lose access to the app.',
+    'show' => 'Show',
+    'hide' => 'Hide',
+    'click_to_reveal' => 'Click to reveal',
+    'download_txt' => 'Download .txt',
+    'download_png' => 'Download .png',
+    'view_recovery' => 'View recovery codes',
 ];

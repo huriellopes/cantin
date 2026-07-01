@@ -86,7 +86,7 @@ it('enables and confirms 2FA from the profile', function (): void {
 
     $otp = (new Google2FA())->getCurrentOtp($user->fresh()->two_factor_secret);
 
-    $component->set('twoFactorCode', $otp)->call('confirmTwoFactor');
+    $component->set('form.two_factor_code', $otp)->call('confirmTwoFactor');
 
     expect($user->fresh()->hasTwoFactorEnabled())->toBeTrue();
 });
