@@ -1,5 +1,3 @@
-import './bootstrap';
-
 import mask from '@alpinejs/mask';
 import focus from '@alpinejs/focus';
 
