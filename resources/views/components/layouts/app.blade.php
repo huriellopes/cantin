@@ -58,7 +58,7 @@
             <div class="hidden items-center gap-6 lg:flex">
                 @foreach ($links as [$route, $label])
                     <a href="{{ route($route) }}" wire:navigate
-                       class="text-sm font-medium transition hover:opacity-70 {{ request()->routeIs($route) ? 'text-violet-600' : '' }}"
+                       class="text-sm font-medium transition-opacity hover:opacity-70 {{ request()->routeIs($route) ? 'text-violet-600' : '' }}"
                        :class="solid ? '{{ request()->routeIs($route) ? 'text-violet-600' : 'text-slate-700' }}' : 'text-white drop-shadow'">
                         {{ $label }}
                     </a>
@@ -69,7 +69,7 @@
                     @endif
                 @else
                     <a href="{{ route('site.auth.login') }}" wire:navigate
-                       class="text-sm font-medium transition hover:opacity-70"
+                       class="text-sm font-medium transition-opacity hover:opacity-70"
                        :class="solid ? 'text-slate-700' : 'text-white drop-shadow'">{{ __('nav.login') }}</a>
                 @endauth
                 <a href="{{ route('site.terreiros.create') }}" wire:navigate
