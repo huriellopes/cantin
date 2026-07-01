@@ -3,9 +3,10 @@
         <div>
             <h2 class="text-xl font-bold text-slate-800">{{ __('crud_partner_entities.title') }}</h2>
         </div>
-        <button wire:click="create" class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
+        <button wire:click="create" title="{{ __('crud_partner_entities.new_entity') }}" aria-label="{{ __('crud_partner_entities.new_entity') }}"
+                class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700 sm:px-4">
             @svg('lucide-plus', 'h-4 w-4')
-            {{ __('crud_partner_entities.new_entity') }}
+            <span class="hidden sm:inline">{{ __('crud_partner_entities.new_entity') }}</span>
         </button>
     </div>
 
@@ -21,7 +22,6 @@
                     <tr>
                         <x-admin.th column="id" :sort-field="$sortField" :sort-direction="$sortDirection">#</x-admin.th>
                         <x-admin.th column="name" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_partner_entities.col_name') }}</x-admin.th>
-                        <x-admin.th column="email" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_partner_entities.col_email') }}</x-admin.th>
                         <x-admin.th column="phone" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_partner_entities.col_phone') }}</x-admin.th>
                         <th class="px-4 py-3">{{ __('crud_partner_entities.col_city_state') }}</th>
                         <x-admin.th column="status" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('common.status') }}</x-admin.th>
@@ -32,10 +32,12 @@
                     @forelse ($entities as $entity)
                         <tr class="hover:bg-slate-50" wire:key="pe-{{ $entity->id }}">
                             <td class="px-4 py-3 text-slate-400">{{ $entity->id }}</td>
-                            <td class="px-4 py-3 font-medium text-slate-700">{{ $entity->name }}</td>
-                            <td class="px-4 py-3 text-slate-600">{{ $entity->email }}</td>
+                            <td class="px-4 py-3">
+                                <span class="font-medium text-slate-700">{{ $entity->name }}</span>
+                                <span class="block text-xs text-slate-400">{{ $entity->email }}</span>
+                            </td>
                             <td class="px-4 py-3 text-slate-600">{{ $entity->phone }}</td>
-                            <td class="px-4 py-3 text-slate-600">{{ $entity->address?->city?->name }}{{ $entity->address?->state ? ' / '.$entity->address->state->name : '' }}</td>
+                            <td class="px-4 py-3 text-slate-600">{{ collect([$entity->address?->city?->name, $entity->address?->state?->abbr])->filter()->implode('/') ?: '—' }}</td>
                             <td class="px-4 py-3"><x-admin.badge :color="$entity->status?->getColor() ?? 'slate'">{{ $entity->status?->label() }}</x-admin.badge></td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-1">
@@ -50,7 +52,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="px-4 py-10 text-center text-slate-400">{{ __('crud_partner_entities.empty') }}</td></tr>
+                        <tr><td colspan="6" class="px-4 py-10 text-center text-slate-400">{{ __('crud_partner_entities.empty') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

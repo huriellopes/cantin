@@ -23,7 +23,11 @@
     ];
 @endphp
 
-<button type="button" title="{{ $label }}" aria-label="{{ $label }}"
-        {{ $attributes->merge(['class' => 'inline-flex h-8 w-8 items-center justify-center rounded-lg transition '.($colors[$color] ?? $colors['slate'])]) }}>
-    @svg('lucide-'.($lucide[$icon] ?? 'pencil'), 'h-[18px] w-[18px]')
-</button>
+{{-- Botão de ação (somente ícone) com tooltip no hover (desktop), à esquerda
+     para não ser cortado pelo overflow horizontal da tabela. --}}
+<x-admin.tooltip :label="$label" position="left">
+    <button type="button" aria-label="{{ $label }}"
+            {{ $attributes->merge(['class' => 'inline-flex h-8 w-8 items-center justify-center rounded-lg transition '.($colors[$color] ?? $colors['slate'])]) }}>
+        @svg('lucide-'.($lucide[$icon] ?? 'pencil'), 'h-[18px] w-[18px]')
+    </button>
+</x-admin.tooltip>

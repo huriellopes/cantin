@@ -6,14 +6,16 @@
         </div>
         <div class="flex items-center gap-2">
             <button type="button" wire:click="export" wire:loading.attr="disabled" wire:target="export"
-                    class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-70">
+                    title="{{ __('exports.export') }}" aria-label="{{ __('exports.export') }}"
+                    class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-70 sm:px-4">
                 @svg('lucide-file-spreadsheet', 'h-4 w-4')
-                <span wire:loading.remove wire:target="export">{{ __('exports.export') }}</span>
-                <span wire:loading wire:target="export">{{ __('common.exporting') }}</span>
+                <span class="hidden sm:inline" wire:loading.remove wire:target="export">{{ __('exports.export') }}</span>
+                <span class="hidden sm:inline" wire:loading wire:target="export">{{ __('common.exporting') }}</span>
             </button>
-            <button wire:click="create" class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
+            <button wire:click="create" title="{{ __('crud_users.new_user') }}" aria-label="{{ __('crud_users.new_user') }}"
+                    class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700 sm:px-4">
                 @svg('lucide-plus', 'h-4 w-4')
-                {{ __('crud_users.new_user') }}
+                <span class="hidden sm:inline">{{ __('crud_users.new_user') }}</span>
             </button>
         </div>
     </div>
@@ -36,8 +38,7 @@
                 <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                     <tr>
                         <x-admin.th column="id" :sort-field="$sortField" :sort-direction="$sortDirection">#</x-admin.th>
-                        <x-admin.th column="name" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_users.col_name') }}</x-admin.th>
-                        <x-admin.th column="email" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_users.col_email') }}</x-admin.th>
+                        <x-admin.th column="name" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_users.col_user') }}</x-admin.th>
                         <th class="px-4 py-3">{{ __('crud_users.col_role') }}</th>
                         <x-admin.th column="status" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('common.status') }}</x-admin.th>
                         <x-admin.th column="last_login_at" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_users.col_last_login') }}</x-admin.th>
@@ -48,8 +49,10 @@
                     @forelse ($users as $user)
                         <tr class="hover:bg-slate-50" wire:key="user-{{ $user->id }}">
                             <td class="px-4 py-3 text-slate-400">{{ $user->id }}</td>
-                            <td class="px-4 py-3 font-medium text-slate-700">{{ $user->name }}</td>
-                            <td class="px-4 py-3 text-slate-600">{{ $user->email }}</td>
+                            <td class="px-4 py-3">
+                                <span class="font-medium text-slate-700">{{ $user->name }}</span>
+                                <span class="block text-xs text-slate-400">{{ $user->email }}</span>
+                            </td>
                             <td class="px-4 py-3 text-slate-600">{{ $user->role_id?->label() }}</td>
                             <td class="px-4 py-3">
                                 <x-admin.badge :color="$user->status?->getColor() ?? 'slate'">{{ $user->status?->label() }}</x-admin.badge>
@@ -65,18 +68,20 @@
                                             :label="$user->status === \App\Enum\Status::ACTIVE ? __('common.deactivate') : __('common.activate')"
                                             wire:click="confirmToggle({{ $user->id }})" />
                                         <x-admin.action icon="reset" color="amber" label="{{ __('crud_users.reset_password') }}" wire:click="confirmReset({{ $user->id }})" />
-                                        <button type="button" wire:click="confirmImpersonate({{ $user->id }})"
-                                                title="{{ __('common.impersonate') }}" aria-label="{{ __('common.impersonate') }}"
-                                                class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-indigo-600 transition hover:bg-indigo-50">
-                                            @svg('lucide-venetian-mask', 'h-[18px] w-[18px]')
-                                        </button>
+                                        <x-admin.tooltip :label="__('common.impersonate')" position="left">
+                                            <button type="button" wire:click="confirmImpersonate({{ $user->id }})"
+                                                    aria-label="{{ __('common.impersonate') }}"
+                                                    class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-indigo-600 transition hover:bg-indigo-50">
+                                                @svg('lucide-venetian-mask', 'h-[18px] w-[18px]')
+                                            </button>
+                                        </x-admin.tooltip>
                                         <x-admin.action icon="delete" color="rose" label="{{ __('common.delete') }}" wire:click="confirmDelete({{ $user->id }})" />
                                     @endif
                                 </div>
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="px-4 py-10 text-center text-slate-400">{{ __('crud_users.empty') }}</td></tr>
+                        <tr><td colspan="6" class="px-4 py-10 text-center text-slate-400">{{ __('crud_users.empty') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

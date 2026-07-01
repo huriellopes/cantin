@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\FormatsPhone;
 use Database\Factories\TerreiroFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,10 +12,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
+/**
+ * @property string|null $phone
+ */
 class Terreiro extends Model
 {
     /** @use HasFactory<TerreiroFactory> */
-    use HasFactory, KeepsDeletedModels;
+    use FormatsPhone, HasFactory, KeepsDeletedModels;
 
     protected $table = 'terreiros';
 

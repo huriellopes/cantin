@@ -4,9 +4,10 @@
             <h2 class="text-xl font-bold text-slate-800">{{ __('crud_posts.title') }}</h2>
             <p class="text-sm text-slate-500">{{ __('crud_posts.subtitle') }}</p>
         </div>
-        <a href="{{ route('admin.posts.create') }}" wire:navigate class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
+        <a href="{{ route('admin.posts.create') }}" wire:navigate title="{{ __('crud_posts.new_post') }}" aria-label="{{ __('crud_posts.new_post') }}"
+           class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700 sm:px-4">
             @svg('lucide-plus', 'h-4 w-4')
-            {{ __('crud_posts.new_post') }}
+            <span class="hidden sm:inline">{{ __('crud_posts.new_post') }}</span>
         </a>
     </div>
 

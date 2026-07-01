@@ -17,6 +17,8 @@ return [
     'deactivate' => 'Inativar',
     'active' => 'Ativo',
     'inactive' => 'Inativo',
+    'published' => 'Publicado',
+    'pending' => 'Pendente',
     'yes' => 'Sim',
     'no' => 'Não',
     'back' => 'Voltar',

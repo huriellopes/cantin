@@ -128,7 +128,7 @@ class Index extends Component
     public function render(): Factory|View
     {
         $queryBase = PartnerEntity::query()
-            ->with(['address.city:id,name', 'address.state:id,name']);
+            ->with(['address.city:id,name', 'address.state:id,name,abbr']);
 
         $entities = $this->applyTable($queryBase, ['name', 'email']);
 
