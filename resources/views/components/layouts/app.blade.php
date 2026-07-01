@@ -34,11 +34,11 @@
 </head>
 <body class="flex min-h-screen flex-col bg-white text-slate-800 antialiased">
     @php $transparentNav = request()->routeIs('site.home'); @endphp
-    <nav x-data="{ open: false, scrolled: false, get solid() { return {{ $transparentNav ? 'false' : 'true' }} || this.scrolled || this.open } }"
-         x-init="scrolled = window.scrollY > 10"
+    <nav x-data="{ open: false, scrolled: false, ready: false, get solid() { return {{ $transparentNav ? 'false' : 'true' }} || this.scrolled || this.open } }"
+         x-init="scrolled = window.scrollY > 10; $nextTick(() => ready = true)"
          @scroll.window="scrolled = window.scrollY > 10"
-         class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
-         :class="solid ? 'bg-white/95 shadow-sm backdrop-blur' : 'bg-transparent'">
+         class="fixed inset-x-0 top-0 z-50"
+         :class="{ 'transition-all duration-300': ready, 'bg-white/95 shadow-sm backdrop-blur': solid, 'bg-transparent': !solid }">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
             <a href="{{ route('site.home') }}" wire:navigate class="flex items-center">
                 <img src="{{ asset('assets/images/cantin-logo.webp') }}" alt="CaNTIn" width="160" height="160" class="h-11 w-auto" />
