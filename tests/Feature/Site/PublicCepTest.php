@@ -53,22 +53,22 @@ it('fills the address from a CEP on the trans people form', function (): void {
     [$state, $city] = fakeSpCep();
 
     Livewire::test(Transpeople::class)
-        ->set('zipcode', '01001-000')
+        ->set('form.zipcode', '01001-000')
         ->call('searchZipCode')
         ->assertHasNoErrors()
-        ->assertSet('street', 'Praça da Sé')
-        ->assertSet('state_id', $state->id)
-        ->assertSet('city_id', $city->id);
+        ->assertSet('form.street', 'Praça da Sé')
+        ->assertSet('form.state_id', $state->id)
+        ->assertSet('form.city_id', $city->id);
 });
 
 it('fills the address from a CEP on the partner entities form', function (): void {
     [$state, $city] = fakeSpCep();
 
     Livewire::test(PartnersEntities::class)
-        ->set('zipcode', '01001-000')
+        ->set('form.zipcode', '01001-000')
         ->call('searchZipCode')
         ->assertHasNoErrors()
-        ->assertSet('street', 'Praça da Sé')
-        ->assertSet('state_id', $state->id)
-        ->assertSet('city_id', $city->id);
+        ->assertSet('form.street', 'Praça da Sé')
+        ->assertSet('form.state_id', $state->id)
+        ->assertSet('form.city_id', $city->id);
 });
