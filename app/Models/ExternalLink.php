@@ -10,10 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Override;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
-class ExternalLink extends Model
+class ExternalLink extends Model implements AuditableContract
 {
+    use Auditable;
+
     /* @use HasFactory<\Database\Factories\ExternalLinkFactory> */
     use HasFactory, KeepsDeletedModels;
 

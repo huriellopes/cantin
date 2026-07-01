@@ -28,6 +28,7 @@ return [
         'deleted_models' => 'Deleted Models',
         'impersonation_logs' => 'Impersonation Logs',
         'system' => 'System',
+        'audits' => 'Audits',
     ],
     'nav_group' => [
         'general' => 'General',

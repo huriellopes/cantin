@@ -69,6 +69,7 @@
                 [__('admin.nav.deleted_models'), route('admin.deleted-models.index'), request()->routeIs('admin.deleted-models.*'), 'trash-2'],
                 [__('admin.nav.impersonation_logs'), route('admin.impersonation-logs.index'), request()->routeIs('admin.impersonation-logs.*'), 'venetian-mask'],
                 [__('admin.nav.system'), route('admin.system.index'), request()->routeIs('admin.system.*'), 'activity'],
+                [__('admin.nav.audits'), route('admin.audits.index'), request()->routeIs('admin.audits.*'), 'scroll-text'],
             ]];
         }
     @endphp

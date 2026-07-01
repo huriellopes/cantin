@@ -6,6 +6,7 @@ namespace App\Http\Routes\Web;
 
 use App\Http\Controllers\Web\EditorAttachmentController;
 use App\Http\Controllers\Web\ExportDownloadController;
+use App\Livewire\Admin\Audits\Index as AuditsIndex;
 use App\Livewire\Admin\Categories\Index as CategoriesIndex;
 use App\Livewire\Admin\Comments\Index as CommentsIndex;
 use App\Livewire\Admin\Dashboard;
@@ -78,6 +79,7 @@ class AdminRoute
                     Route::get('/deleted-models', DeletedModelsIndex::class)->name('deleted-models.index');
                     Route::get('/impersonation-logs', ImpersonationLogsIndex::class)->name('impersonation-logs.index');
                     Route::get('/system', SystemMonitor::class)->name('system.index');
+                    Route::get('/audits', AuditsIndex::class)->name('audits.index');
                 });
 
                 Route::post('/logout', function () {

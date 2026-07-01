@@ -8,10 +8,13 @@ use App\Enum\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
-class Category extends Model
+class Category extends Model implements AuditableContract
 {
+    use Auditable;
     use KeepsDeletedModels;
 
     protected $fillable = [
