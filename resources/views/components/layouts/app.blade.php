@@ -35,6 +35,7 @@
 <body class="flex min-h-screen flex-col bg-white text-slate-800 antialiased">
     @php $transparentNav = request()->routeIs('site.home'); @endphp
     <nav x-data="{ open: false, scrolled: false, get solid() { return {{ $transparentNav ? 'false' : 'true' }} || this.scrolled || this.open } }"
+         x-init="scrolled = window.scrollY > 10"
          @scroll.window="scrolled = window.scrollY > 10"
          class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
          :class="solid ? 'bg-white/95 shadow-sm backdrop-blur' : 'bg-transparent'">
