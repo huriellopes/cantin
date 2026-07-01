@@ -63,6 +63,27 @@
 .admin-logo-full { height: 2.5rem; width: auto; object-fit: contain; flex-shrink: 0; }
 .admin-logo-mark { display: none; height: 1.75rem; width: auto; object-fit: contain; flex-shrink: 0; }
 
+/* Seções do menu lateral */
+.admin-nav-group + .admin-nav-group { margin-top: .5rem; }
+.admin-group-label {
+    padding: .5rem .75rem .25rem;
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #64748b; /* slate-500 */
+}
+
+@media (min-width: 1024px) {
+    /* No modo recolhido o rótulo da seção some e vira uma divisória entre grupos. */
+    html.sidebar-collapsed .admin-group-label { display: none; }
+    html.sidebar-collapsed .admin-nav-group + .admin-nav-group {
+        margin-top: .5rem;
+        padding-top: .5rem;
+        border-top: 1px solid #243044; /* slate-800/linha do painel */
+    }
+}
+
 @media (min-width: 1024px) {
     .admin-aside { width: 16rem; }
     .admin-content { padding-left: 16rem; }

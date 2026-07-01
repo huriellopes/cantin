@@ -29,6 +29,13 @@ return [
         'impersonation_logs' => 'Logs de Personificação',
         'system' => 'Sistema',
     ],
+    'nav_group' => [
+        'general' => 'Geral',
+        'community' => 'Comunidade',
+        'blog' => 'Blog',
+        'pages_links' => 'Páginas e Links',
+        'system' => 'Sistema',
+    ],
     'header' => [
         'view_site' => 'Ver o site',
         'my_profile' => 'Meu perfil',
