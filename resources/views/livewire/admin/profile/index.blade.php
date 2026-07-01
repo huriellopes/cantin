@@ -7,8 +7,8 @@
     {{-- Dados pessoais --}}
     <form wire:submit="updateProfile" class="space-y-5 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
         <h2 class="text-lg font-semibold text-slate-800">{{ __('admin.profile.personal_data') }}</h2>
-        <x-admin.input label="{{ __('admin.profile.name') }}" name="name" wire:model="name" />
-        <x-admin.input label="{{ __('admin.profile.email') }}" name="email" type="email" wire:model="email" />
+        <x-admin.input label="{{ __('admin.profile.name') }}" name="form.name" wire:model="form.name" />
+        <x-admin.input label="{{ __('admin.profile.email') }}" name="form.email" type="email" wire:model="form.email" />
         <div class="flex justify-end">
             <button type="submit" wire:loading.attr="disabled" wire:target="updateProfile"
                     class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-70">
@@ -22,9 +22,9 @@
     {{-- Alterar senha --}}
     <form wire:submit="updatePassword" class="space-y-5 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
         <h2 class="text-lg font-semibold text-slate-800">{{ __('admin.profile.change_password') }}</h2>
-        <x-admin.input label="{{ __('admin.profile.current_password') }}" name="current_password" type="password" wire:model="current_password" autocomplete="current-password" />
-        <x-admin.input label="{{ __('admin.profile.new_password') }}" name="password" type="password" wire:model="password" autocomplete="new-password" />
-        <x-admin.input label="{{ __('admin.profile.confirm_password') }}" name="password_confirmation" type="password" wire:model="password_confirmation" autocomplete="new-password" />
+        <x-admin.input label="{{ __('admin.profile.current_password') }}" name="form.current_password" type="password" wire:model="form.current_password" autocomplete="current-password" />
+        <x-admin.input label="{{ __('admin.profile.new_password') }}" name="form.password" type="password" wire:model="form.password" autocomplete="new-password" />
+        <x-admin.input label="{{ __('admin.profile.confirm_password') }}" name="form.password_confirmation" type="password" wire:model="form.password_confirmation" autocomplete="new-password" />
         <div class="flex justify-end">
             <button type="submit" wire:loading.attr="disabled" wire:target="updatePassword"
                     class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-70">
@@ -50,7 +50,7 @@
     <x-admin.modal show="showDelete" title="{{ __('admin.profile.delete_modal_title') }}">
         <form wire:submit="deleteAccount" class="space-y-4">
             <p class="text-sm text-slate-600">{{ __('admin.profile.delete_modal_desc') }}</p>
-            <x-admin.input label="{{ __('admin.profile.your_password') }}" name="delete_password" type="password" wire:model="delete_password" autocomplete="current-password" />
+            <x-admin.input label="{{ __('admin.profile.your_password') }}" name="form.delete_password" type="password" wire:model="form.delete_password" autocomplete="current-password" />
             <div class="flex justify-end gap-3 pt-2">
                 <button type="button" @click="$wire.showDelete = false" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">{{ __('admin.profile.cancel') }}</button>
                 <button type="submit" wire:loading.attr="disabled" wire:target="deleteAccount"
