@@ -15,6 +15,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Sleep;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Throwable;
 
@@ -109,7 +110,15 @@ class PartnersEntities extends Component
 
     public function store(): void
     {
-        $this->validate();
+        try {
+            $this->validate();
+        } catch (ValidationException $e) {
+            toastr()
+                ->timeOut(4000)
+                ->error(__('Please fill in the required fields!'));
+
+            throw $e;
+        }
 
         $clearZipCode = str($this->zipcode)->replace('-', '');
 
