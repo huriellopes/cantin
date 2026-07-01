@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Admin;
 
-use App\Models\User;
+use App\Livewire\Forms\PasswordChangeForm;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -20,28 +19,15 @@ use Livewire\Component;
 #[Title('Trocar senha')]
 class PasswordChange extends Component
 {
-    public string $password = '';
-
-    public string $password_confirmation = '';
+    public PasswordChangeForm $form;
 
     public function save(): void
     {
-        $this->validate([
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-                // Não pode manter a senha padrão.
-                Rule::notIn([User::DEFAULT_PASSWORD]),
-            ],
-        ], [
-            'password.not_in' => __('msg_password_change.not_default'),
-        ]);
+        $this->form->validate();
 
         $user = auth()->user();
         $user->update([
-            'password' => $this->password,
+            'password' => $this->form->password,
             'password_change_required' => false,
         ]);
 
