@@ -1,7 +1,7 @@
 {{-- wire:poll atualiza o painel automaticamente (lê o cache das stats). --}}
 <div class="space-y-8" wire:poll.60s>
     <div>
-        <h2 class="text-2xl font-bold text-slate-800">{{ __('page_admin_dashboard.greeting', ['name' => auth()->user()->name]) }}</h2>
+        <h2 class="text-2xl font-bold text-slate-800">{{ __('page_admin_dashboard.greeting', ['name' => username(auth()->user()->name)]) }}</h2>
         <p class="mt-1 text-sm text-slate-500">{{ __('page_admin_dashboard.summary_subtitle') }}</p>
     </div>
 
