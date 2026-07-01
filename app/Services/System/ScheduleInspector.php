@@ -18,7 +18,7 @@ use Throwable;
 class ScheduleInspector
 {
     /**
-     * @return Collection<int, array{command: string, expression: string, human: string, description: ?string, next_run: ?string, timezone: string}>
+     * @return Collection<int, array<string, mixed>>
      */
     public function events(): Collection
     {
@@ -26,15 +26,23 @@ class ScheduleInspector
         $schedule = app(Schedule::class);
 
         return collect($schedule->events())
-            ->map(fn (Event $event): array => [
-                'command' => $this->label($event),
-                'expression' => $event->expression,
-                'human' => $this->humanize($event->expression),
-                'description' => $event->description,
-                'next_run' => $this->nextRun($event),
-                'timezone' => $this->timezone($event),
-            ])
+            ->map(fn (Event $event): array => $this->describe($event))
             ->values();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function describe(Event $event): array
+    {
+        return [
+            'command' => $this->label($event),
+            'expression' => $event->expression,
+            'human' => $this->humanize($event->expression),
+            'description' => $event->description,
+            'next_run' => $this->nextRun($event),
+            'timezone' => $this->timezone($event),
+        ];
     }
 
     /**
@@ -48,7 +56,7 @@ class ScheduleInspector
             return $tz->getName();
         }
 
-        return is_string($tz) && $tz !== '' ? $tz : (string) config('app.timezone');
+        return $tz !== '' ? $tz : (string) config('app.timezone');
     }
 
     private function label(Event $event): string

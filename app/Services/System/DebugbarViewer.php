@@ -22,7 +22,7 @@ class DebugbarViewer
     /**
      * Resumo das capturas mais recentes.
      *
-     * @return Collection<int, array{id: string, method: string, uri: string, time: ?string, duration: ?float, status: ?int, has_exceptions: bool, modified: int}>
+     * @return Collection<int, array<string, mixed>>
      */
     public function captures(): Collection
     {
@@ -83,7 +83,7 @@ class DebugbarViewer
     }
 
     /**
-     * @return array{id: string, method: string, uri: string, time: ?string, duration: ?float, status: ?int, has_exceptions: bool, modified: int}
+     * @return array<string, mixed>
      */
     private function summary(SplFileInfo $file): array
     {
