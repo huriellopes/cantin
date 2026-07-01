@@ -4,26 +4,30 @@ declare(strict_types=1);
 
 namespace App\Console;
 
+use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 use Override;
 
 class Kernel extends ConsoleKernel
 {
     /**
      * Define the application's command schedule.
+     *
+     * Todos os agendamentos notificam o Telegram ao concluir (sucesso/falha).
      */
     #[Override]
     protected function schedule(Schedule $schedule): void
     {
         // Regenera o sitemap.xml diariamente para refletir novos posts/páginas.
-        $schedule->command('sitemap:generate')->dailyAt('03:00');
+        $this->notifyTelegram($schedule->command('sitemap:generate')->dailyAt('03:00'), 'sitemap:generate');
 
         // Atualiza as estatísticas/gráficos do dashboard (cache) de hora em hora.
-        $schedule->command('dashboard:refresh')->hourly();
+        $this->notifyTelegram($schedule->command('dashboard:refresh')->hourly(), 'dashboard:refresh');
 
         // Remove logs e capturas de debug antigos, mantendo os últimos 3 dias.
-        $schedule->command('system:prune-logs --days=3')->dailyAt('04:00');
+        $this->notifyTelegram($schedule->command('system:prune-logs --days=3')->dailyAt('04:00'), 'system:prune-logs');
     }
 
     /**
@@ -35,5 +39,20 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
+    }
+
+    /**
+     * Envia ao Telegram uma notificação de sucesso/falha do agendamento.
+     * Cai em silêncio se o Telegram não estiver configurado.
+     */
+    private function notifyTelegram(Event $event, string $label): Event
+    {
+        return $event
+            ->onSuccess(function () use ($label): void {
+                Log::channel('telegram_schedules')->info("✅ Agendamento concluído: {$label}");
+            })
+            ->onFailure(function () use ($label): void {
+                Log::channel('telegram_schedules')->error("❌ Agendamento FALHOU: {$label}");
+            });
     }
 }

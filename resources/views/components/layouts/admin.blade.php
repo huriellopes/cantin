@@ -86,7 +86,7 @@
             </a>
             <button type="button" @click="toggleCollapse()"
                     @mouseenter="showTip($el, collapsed ? @js(__('admin.header.expand')) : @js(__('admin.header.collapse')))" @mouseleave="tip.show = false"
-                    class="admin-chevron-toggle rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                    class="admin-chevron-toggle hidden rounded-md p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white lg:inline-flex"
                     aria-label="Recolher/expandir menu">
                 @svg('lucide-chevron-left', 'admin-chevron h-5 w-5 transition-transform')
             </button>
