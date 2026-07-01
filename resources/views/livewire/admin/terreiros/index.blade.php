@@ -66,30 +66,30 @@
         <div class="border-t border-slate-100 p-4">{{ $terreiros->links() }}</div>
     </div>
 
-    <x-admin.modal title="{{ $editingId ? __('crud_terreiros.modal_edit_title') : __('crud_terreiros.modal_new_title') }}">
+    <x-admin.modal title="{{ $form->editingId ? __('crud_terreiros.modal_edit_title') : __('crud_terreiros.modal_new_title') }}">
         <form wire:submit="save" class="space-y-6">
             {{-- Dados --}}
             <section class="space-y-4">
                 <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-400">{{ __('crud_terreiros.section_data') }}</h4>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <x-admin.input label="{{ __('crud_terreiros.field_name') }}" name="name" wire:model="name" />
-                    <x-admin.input label="{{ __('crud_terreiros.field_phone') }}" name="phone" wire:model="phone" x-mask="(99) 9 9999-9999" />
-                    <x-admin.input label="{{ __('crud_terreiros.field_leadership_orunko') }}" name="leadership_orunko" wire:model="leadership_orunko" />
+                    <x-admin.input label="{{ __('crud_terreiros.field_name') }}" name="form.name" wire:model="form.name" />
+                    <x-admin.input label="{{ __('crud_terreiros.field_phone') }}" name="form.phone" wire:model="form.phone" x-mask="(99) 9 9999-9999" />
+                    <x-admin.input label="{{ __('crud_terreiros.field_leadership_orunko') }}" name="form.leadership_orunko" wire:model="form.leadership_orunko" />
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-slate-700">{{ __('crud_terreiros.field_nation') }}</label>
-                        <select wire:model="nation_terreiro_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                        <select wire:model="form.nation_terreiro_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
                             <option value="">{{ __('crud_terreiros.select_placeholder') }}</option>
                             @foreach ($nations as $id => $label)<option value="{{ $id }}">{{ $label }}</option>@endforeach
                         </select>
-                        @error('nation_terreiro_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                        @error('form.nation_terreiro_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-slate-700">{{ __('crud_terreiros.field_color_of_leadership') }}</label>
-                        <select wire:model="color_of_leadership" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                        <select wire:model="form.color_of_leadership" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
                             <option value="">{{ __('crud_terreiros.select_placeholder') }}</option>
                             @foreach ($config['color_of_leadership'] as $value => $label)<option value="{{ $value }}">{{ $label }}</option>@endforeach
                         </select>
-                        @error('color_of_leadership') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                        @error('form.color_of_leadership') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </section>
@@ -99,27 +99,27 @@
                 <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-400">{{ __('crud_terreiros.section_address') }}</h4>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div class="flex items-end gap-2">
-                        <div class="flex-1"><x-admin.input label="{{ __('crud_terreiros.field_zipcode') }}" name="zipcode" wire:model="zipcode" x-mask="99999-999" /></div>
+                        <div class="flex-1"><x-admin.input label="{{ __('crud_terreiros.field_zipcode') }}" name="form.zipcode" wire:model="form.zipcode" x-mask="99999-999" /></div>
                         <button type="button" wire:click="buscarCep" class="mb-0.5 rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200">{{ __('common.search') }}</button>
                     </div>
-                    <x-admin.input label="{{ __('crud_terreiros.field_address') }}" name="address" wire:model="address" />
-                    <x-admin.input label="{{ __('crud_terreiros.field_complement') }}" name="complement" wire:model="complement" />
-                    <x-admin.input label="{{ __('crud_terreiros.field_neighborhood') }}" name="neighborhood" wire:model="neighborhood" />
+                    <x-admin.input label="{{ __('crud_terreiros.field_address') }}" name="form.address" wire:model="form.address" />
+                    <x-admin.input label="{{ __('crud_terreiros.field_complement') }}" name="form.complement" wire:model="form.complement" />
+                    <x-admin.input label="{{ __('crud_terreiros.field_neighborhood') }}" name="form.neighborhood" wire:model="form.neighborhood" />
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-slate-700">{{ __('crud_terreiros.field_state') }}</label>
-                        <select wire:model.live="state_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                        <select wire:model.live="form.state_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
                             <option value="">{{ __('crud_terreiros.select_placeholder') }}</option>
                             @foreach ($states as $id => $label)<option value="{{ $id }}">{{ $label }}</option>@endforeach
                         </select>
-                        @error('state_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                        @error('form.state_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
                     </div>
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-slate-700">{{ __('crud_terreiros.field_city') }}</label>
-                        <select wire:model="city_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                        <select wire:model="form.city_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
                             <option value="">{{ __('crud_terreiros.select_placeholder') }}</option>
                             @foreach ($cities as $id => $label)<option value="{{ $id }}">{{ $label }}</option>@endforeach
                         </select>
-                        @error('city_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                        @error('form.city_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </section>
@@ -130,14 +130,14 @@
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-slate-700">{{ __('crud_terreiros.field_gender_identity') }}</label>
-                        <select wire:model="type_people_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                        <select wire:model="form.type_people_id" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
                             <option value="">{{ __('crud_terreiros.select_placeholder') }}</option>
                             @foreach ($typePeoples as $id => $label)<option value="{{ $id }}">{{ $label }}</option>@endforeach
                         </select>
-                        @error('type_people_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                        @error('form.type_people_id') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
                     </div>
-                    <x-admin.input label="{{ __('crud_terreiros.field_active_members') }}" name="number_of_children_of_saint" type="number" wire:model="number_of_children_of_saint" />
-                    <x-admin.input label="{{ __('crud_terreiros.field_trans_members') }}" name="number_of_children_of_saint_trans" type="number" wire:model="number_of_children_of_saint_trans" />
+                    <x-admin.input label="{{ __('crud_terreiros.field_active_members') }}" name="form.number_of_children_of_saint" type="number" wire:model="form.number_of_children_of_saint" />
+                    <x-admin.input label="{{ __('crud_terreiros.field_trans_members') }}" name="form.number_of_children_of_saint_trans" type="number" wire:model="form.number_of_children_of_saint_trans" />
 
                     @foreach ([
                         'trans_men_and_women' => __('crud_terreiros.q_trans_men_and_women'),
@@ -150,18 +150,18 @@
                     ] as $field => $label)
                         <div class="space-y-1">
                             <label class="block text-sm font-medium text-slate-700">{{ $label }}</label>
-                            <select wire:model="{{ $field }}" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                            <select wire:model="form.{{ $field }}" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
                                 <option value="">{{ __('crud_terreiros.select_placeholder') }}</option>
                                 @foreach (($config[$field] ?? []) as $value => $optLabel)<option value="{{ $value }}">{{ $optLabel }}</option>@endforeach
                             </select>
-                            @error($field) <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                            @error('form.'.$field) <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
                         </div>
                     @endforeach
 
                     <div class="space-y-1 sm:col-span-2">
                         <label class="block text-sm font-medium text-slate-700">{{ __('crud_terreiros.field_suggestion_text') }}</label>
-                        <textarea wire:model="suggestion_text" rows="2" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></textarea>
-                        @error('suggestion_text') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                        <textarea wire:model="form.suggestion_text" rows="2" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></textarea>
+                        @error('form.suggestion_text') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </section>

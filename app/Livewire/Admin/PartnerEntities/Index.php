@@ -6,8 +6,8 @@ namespace App\Livewire\Admin\PartnerEntities;
 
 use App\Enum\Status;
 use App\Livewire\Admin\Support\HasAdminActions;
-use App\Livewire\Admin\Support\InteractsWithAddress;
 use App\Livewire\Admin\Support\WithDataTable;
+use App\Livewire\Forms\PartnerEntityAdminForm;
 use App\Models\PartnerEntity;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -21,28 +21,23 @@ use Livewire\WithPagination;
 #[Title('Entidades Parceiras')]
 class Index extends Component
 {
-    use HasAdminActions, InteractsWithAddress, WithDataTable, WithFileUploads, WithPagination;
+    use HasAdminActions, WithDataTable, WithFileUploads, WithPagination;
 
     public bool $showModal = false;
 
-    public ?int $editingId = null;
-
-    public string $name = '';
-
-    public string $email = '';
-
-    public string $phone = '';
-
-    public string $activity_carried_out = '';
-
-    public $image;
+    public PartnerEntityAdminForm $form;
 
     public ?string $currentImage = null;
 
+    public function buscarCep(): void
+    {
+        $this->form->buscarCep();
+    }
+
     public function create(): void
     {
-        $this->reset(['editingId', 'name', 'email', 'phone', 'activity_carried_out', 'image', 'currentImage']);
-        $this->resetAddress();
+        $this->form->reset();
+        $this->currentImage = null;
         $this->resetValidation();
         $this->showModal = true;
     }
@@ -50,45 +45,45 @@ class Index extends Component
     public function edit(int $id): void
     {
         $entity = PartnerEntity::query()->with('address')->findOrFail($id);
-        $this->editingId = $entity->id;
-        $this->name = $entity->name;
-        $this->email = $entity->email;
-        $this->phone = $entity->phone;
-        $this->activity_carried_out = $entity->activity_carried_out;
+        $this->form->editingId = $entity->id;
+        $this->form->name = $entity->name;
+        $this->form->email = $entity->email;
+        $this->form->phone = $entity->phone;
+        $this->form->activity_carried_out = $entity->activity_carried_out;
         $this->currentImage = $entity->path_image;
-        $this->image = null;
-        $this->fillAddressFrom($entity->address);
+        $this->form->image = null;
+        $this->form->fillAddressFrom($entity->address);
         $this->resetValidation();
         $this->showModal = true;
     }
 
     public function save(): void
     {
-        $this->validate();
+        $this->form->validate();
 
-        $address = $this->persistAddress();
+        $address = $this->form->persistAddress();
 
         $payload = [
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => preg_replace('/\D/', '', $this->phone),
-            'activity_carried_out' => $this->activity_carried_out,
+            'name' => $this->form->name,
+            'email' => $this->form->email,
+            'phone' => preg_replace('/\D/', '', $this->form->phone),
+            'activity_carried_out' => $this->form->activity_carried_out,
             'address_id' => $address->id,
         ];
 
-        if ($this->image) {
-            $payload['path_image'] = $this->image->store('partners', 'public');
+        if ($this->form->image) {
+            $payload['path_image'] = $this->form->image->store('partners', 'public');
         }
 
-        if (!$this->editingId) {
+        if (!$this->form->editingId) {
             $payload['status'] = Status::ACTIVE;
             $payload['user_id'] = auth()->id();
         }
 
-        $editing = (bool) $this->editingId;
+        $editing = (bool) $this->form->editingId;
 
         if ($editing) {
-            PartnerEntity::query()->whereKey($this->editingId)->update($payload);
+            PartnerEntity::query()->whereKey($this->form->editingId)->update($payload);
         } else {
             PartnerEntity::query()->create($payload);
         }
@@ -134,8 +129,8 @@ class Index extends Component
 
         return view('livewire.admin.partner-entities.index', [
             'entities' => $entities,
-            'states' => $this->statesOptions(),
-            'cities' => $this->citiesOptions(),
+            'states' => $this->form->statesOptions(),
+            'cities' => $this->form->citiesOptions(),
         ]);
     }
 
@@ -145,16 +140,5 @@ class Index extends Component
     protected function sortableColumns(): array
     {
         return ['id', 'name', 'email', 'phone', 'status', 'created_at'];
-    }
-
-    protected function rules(): array
-    {
-        return array_merge([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email'],
-            'phone' => ['required', 'string'],
-            'activity_carried_out' => ['required', 'string'],
-            'image' => [$this->editingId ? 'nullable' : 'required', 'image', 'max:4096'],
-        ], $this->addressRules());
     }
 }

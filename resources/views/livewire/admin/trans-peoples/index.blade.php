@@ -59,14 +59,14 @@
         <div class="border-t border-slate-100 p-4">{{ $people->links() }}</div>
     </div>
 
-    <x-admin.modal title="{{ $editingId ? __('crud_trans_peoples.edit_record') : __('crud_trans_peoples.new_record') }}">
+    <x-admin.modal title="{{ $form->editingId ? __('crud_trans_peoples.edit_record') : __('crud_trans_peoples.new_record') }}">
         <form wire:submit="save" class="space-y-6">
             <section class="space-y-4">
                 <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-400">{{ __('crud_trans_peoples.personal_data') }}</h4>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <x-admin.input label="{{ __('crud_trans_peoples.field_name') }}" name="name" wire:model="name" />
-                    <x-admin.input label="{{ __('crud_trans_peoples.field_email') }}" name="email" type="email" wire:model="email" />
-                    <x-admin.input label="{{ __('crud_trans_peoples.field_phone') }}" name="phone" wire:model="phone" x-mask="(99) 9 9999-9999" />
+                    <x-admin.input label="{{ __('crud_trans_peoples.field_name') }}" name="form.name" wire:model="form.name" />
+                    <x-admin.input label="{{ __('crud_trans_peoples.field_email') }}" name="form.email" type="email" wire:model="form.email" />
+                    <x-admin.input label="{{ __('crud_trans_peoples.field_phone') }}" name="form.phone" wire:model="form.phone" x-mask="(99) 9 9999-9999" />
                 </div>
             </section>
 
