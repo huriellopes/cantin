@@ -49,9 +49,9 @@
             </div>
         </div>
 
-        <div class="flex flex-col gap-3 border-t border-slate-800 px-6 py-5 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-col items-center gap-3 border-t border-slate-800 px-6 py-5 text-center text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:text-left">
             <p>© {{ date('Y') }} CaNTIn</p>
-            <div class="flex flex-wrap items-center justify-center gap-4">
+            <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
                 <a href="{{ route('site.privacy') }}" wire:navigate class="transition hover:text-white">{{ __('footer.privacy') }}</a>
                 <a href="{{ route('site.guidelines') }}" wire:navigate class="transition hover:text-white">{{ __('footer.guidelines') }}</a>
             </div>
