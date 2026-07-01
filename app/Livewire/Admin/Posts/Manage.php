@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Admin\Posts;
 
 use App\Enum\StatusPost;
+use App\Livewire\Forms\PostForm;
 use App\Models\Category;
 use App\Models\Post;
 use App\Support\HtmlSanitizer;
@@ -12,7 +13,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -28,66 +28,54 @@ class Manage extends Component
 {
     use WithFileUploads;
 
-    public ?int $editingId = null;
-
-    public string $titleField = '';
-
-    public string $slug = '';
-
-    public ?int $category_id = null;
-
-    public string $published_at = '';
-
-    public string $content = '';
-
-    public $image;
+    public PostForm $form;
 
     public ?string $currentImage = null;
 
     public function mount(?Post $post = null): void
     {
         if ($post instanceof Post && $post->exists) {
-            $this->editingId = $post->id;
-            $this->titleField = $post->title;
-            $this->slug = $post->slug;
-            $this->category_id = $post->category_id;
-            $this->published_at = Date::parse($post->published_at)->format('Y-m-d');
-            $this->content = $post->content;
+            $this->form->editingId = $post->id;
+            $this->form->titleField = $post->title;
+            $this->form->slug = $post->slug;
+            $this->form->category_id = $post->category_id;
+            $this->form->published_at = Date::parse($post->published_at)->format('Y-m-d');
+            $this->form->content = $post->content;
             $this->currentImage = $post->main_image;
 
             return;
         }
 
-        $this->published_at = now()->format('Y-m-d');
+        $this->form->published_at = now()->format('Y-m-d');
     }
 
     public function save(): void
     {
-        $this->validate();
+        $this->form->validate();
 
-        $publishedAt = Date::parse($this->published_at);
+        $publishedAt = Date::parse($this->form->published_at);
 
         $payload = [
-            'title' => $this->titleField,
-            'slug' => Str::slug($this->slug ?: $this->titleField),
-            'category_id' => $this->category_id,
+            'title' => $this->form->titleField,
+            'slug' => Str::slug($this->form->slug ?: $this->form->titleField),
+            'category_id' => $this->form->category_id,
             'published_at' => $publishedAt,
-            'content' => HtmlSanitizer::clean($this->content),
+            'content' => HtmlSanitizer::clean($this->form->content),
             'status' => $publishedAt->startOfDay()->lte(today()) ? StatusPost::PUBLISHED : StatusPost::PENDING,
         ];
 
-        if ($this->image) {
-            $payload['main_image'] = $this->image->store('posts', 'public');
+        if ($this->form->image) {
+            $payload['main_image'] = $this->form->image->store('posts', 'public');
         }
 
-        if (!$this->editingId) {
+        if (!$this->form->editingId) {
             $payload['user_id'] = auth()->id();
         }
 
-        $editing = (bool) $this->editingId;
+        $editing = (bool) $this->form->editingId;
 
         if ($editing) {
-            Post::query()->whereKey($this->editingId)->update($payload);
+            Post::query()->whereKey($this->form->editingId)->update($payload);
         } else {
             Post::query()->create($payload);
         }
@@ -105,17 +93,5 @@ class Manage extends Component
         return view('livewire.admin.posts.manage', [
             'categories' => Category::query()->orderBy('name')->pluck('name', 'id'),
         ]);
-    }
-
-    protected function rules(): array
-    {
-        return [
-            'titleField' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', Rule::unique('posts', 'slug')->ignore($this->editingId)],
-            'category_id' => ['required', Rule::exists('categories', 'id')],
-            'published_at' => ['required', 'date'],
-            'content' => ['required', 'string'],
-            'image' => ['nullable', 'image', 'max:4096'],
-        ];
     }
 }
