@@ -11,6 +11,7 @@ return [
     ],
     'nav' => [
         'dashboard' => 'Painel',
+        'profile' => 'Meu Perfil',
         'terreiros' => 'Terreiros',
         'nations' => 'Nações',
         'type_terreiros' => 'Tipos de Terreiro',

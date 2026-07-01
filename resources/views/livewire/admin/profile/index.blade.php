@@ -66,7 +66,9 @@
         @if ($showTwoFactorSetup)
             {{-- Passo de configuração: QR + confirmação --}}
             <div class="grid gap-5 sm:grid-cols-[auto,1fr] sm:items-center">
-                <div class="mx-auto rounded-lg border border-slate-200 p-3">{!! $qrCode !!}</div>
+                <div class="mx-auto rounded-lg border border-slate-200 p-3">
+                    <img src="{{ $qrCode }}" alt="QR Code 2FA" class="h-44 w-44" />
+                </div>
                 <div>
                     <p class="text-sm text-slate-600">{{ __('two_factor.scan_hint') }}</p>
                     <label for="twoFactorCode" class="mt-3 block text-sm font-medium text-slate-700">{{ __('two_factor.code') }}</label>

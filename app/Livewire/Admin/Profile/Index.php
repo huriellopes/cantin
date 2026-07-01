@@ -122,7 +122,7 @@ class Index extends Component
     {
         $user = Auth::user();
 
-        if (!TwoFactor::verify((string) $user->two_factor_secret, $this->twoFactorCode)) {
+        if (!TwoFactor::verify((string) $user->twoFactorSecret(), $this->twoFactorCode)) {
             $this->addError('twoFactorCode', __('two_factor.invalid_code'));
 
             return;
