@@ -268,15 +268,7 @@ class Monitor extends Component
     {
         if ($this->search !== '') {
             $needle = mb_strtolower($this->search);
-            $items = $items->filter(function (array $row) use ($searchable, $needle): bool {
-                foreach ($searchable as $col) {
-                    if (str_contains(mb_strtolower((string) ($row[$col] ?? '')), $needle)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
+            $items = $items->filter(fn (array $row): bool => array_any($searchable, fn (string $col): bool => str_contains(mb_strtolower((string) ($row[$col] ?? '')), $needle)));
         }
 
         if (in_array($this->sortField, $this->sortableColumns(), true)) {
