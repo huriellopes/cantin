@@ -161,7 +161,7 @@ class Index extends Component
         }
 
         if (preg_match('#^https?://#i', $url) !== 1) {
-            $url = 'https://' . $url;
+            return 'https://' . $url;
         }
 
         return $url;
