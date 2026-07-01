@@ -15,14 +15,18 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Override;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 /**
  * @property bool $password_change_required
  * @property Carbon|null $last_login_at
  */
-class User extends Authenticatable
+class User extends Authenticatable implements AuditableContract
 {
+    use Auditable;
+
     /* @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, KeepsDeletedModels, Notifiable;
 

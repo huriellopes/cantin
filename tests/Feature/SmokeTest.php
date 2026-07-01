@@ -40,6 +40,7 @@ it('serves every admin page for a super-admin', function (string $route): void {
     'admin.external-links.index',
     'admin.users.index',
     'admin.deleted-models.index',
+    'admin.audits.index',
 ]);
 
 it('shows breadcrumbs on admin pages', function (): void {

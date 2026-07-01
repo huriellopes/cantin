@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 /**
@@ -28,8 +30,9 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
  * @property User $user
  * @property Category $category
  */
-class Post extends Model
+class Post extends Model implements AuditableContract
 {
+    use Auditable;
     use HasFactory, KeepsDeletedModels;
 
     /**

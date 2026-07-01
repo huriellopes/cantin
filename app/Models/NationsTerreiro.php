@@ -6,10 +6,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Override;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
-class NationsTerreiro extends Model
+class NationsTerreiro extends Model implements AuditableContract
 {
+    use Auditable;
     use KeepsDeletedModels;
 
     /**

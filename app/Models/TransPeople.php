@@ -10,13 +10,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 /**
  * @property string|null $phone
  */
-class TransPeople extends Model
+class TransPeople extends Model implements AuditableContract
 {
+    use Auditable;
+
     /* @use HasFactory<\Database\Factories\TransPeopleFactory> */
     use FormatsPhone, HasFactory, KeepsDeletedModels;
 

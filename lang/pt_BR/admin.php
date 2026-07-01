@@ -28,6 +28,7 @@ return [
         'deleted_models' => 'Modelos Excluídos',
         'impersonation_logs' => 'Logs de Personificação',
         'system' => 'Sistema',
+        'audits' => 'Auditorias',
     ],
     'nav_group' => [
         'general' => 'Geral',
