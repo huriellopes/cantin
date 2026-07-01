@@ -159,9 +159,10 @@
 
             <div class="ml-auto flex items-center gap-2">
                 <a href="{{ route('site.home') }}" target="_blank" rel="noopener"
-                   class="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 sm:flex">
-                    @svg('lucide-external-link', 'h-4 w-4')
-                    {{ __('admin.header.view_site') }}
+                   title="{{ __('admin.header.view_site') }}" aria-label="{{ __('admin.header.view_site') }}"
+                   class="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 sm:px-3">
+                    @svg('lucide-external-link', 'h-5 w-5 sm:h-4 sm:w-4')
+                    <span class="hidden sm:inline">{{ __('admin.header.view_site') }}</span>
                 </a>
 
                 <livewire:admin.support.exports-manager />
