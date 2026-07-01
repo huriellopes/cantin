@@ -9,9 +9,9 @@
 
         <div>
             <label for="activity_carried_out" class="mb-1 block text-sm font-medium text-slate-700">{{ __('page_partners.activity_carried_out') }}</label>
-            <textarea id="activity_carried_out" rows="5" wire:model.live="activity_carried_out"
+            <textarea id="activity_carried_out" rows="5" wire:model.live="form.activity_carried_out"
                       class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500"></textarea>
-            @error('activity_carried_out') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
+            @error('form.activity_carried_out') <p class="mt-1 text-xs text-rose-600">{{ $message }}</p> @enderror
         </div>
 
         <div class="flex justify-end">

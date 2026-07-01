@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Site\Pages;
 
 use App\Actions\Address\FillAddressAction;
+use App\Livewire\Forms\TranspeopleForm;
 use App\Models\Address;
 use App\Models\City;
 use App\Models\State;
@@ -22,25 +23,9 @@ use Throwable;
 
 class Transpeople extends Component
 {
-    public string $name = '';
-
-    public string $email = '';
-
-    public string $phone = '';
-
-    public string $zipcode = '';
-
-    public string $street = '';
-
-    public string $complement = '';
-
-    public string $neighborhood = '';
-
-    public ?int $state_id = null;
+    public TranspeopleForm $form;
 
     public $states;
-
-    public ?int $city_id = null;
 
     public $cities;
 
@@ -53,36 +38,42 @@ class Transpeople extends Component
 
         $this->cities = collect();
 
-        if ($this->state_id) {
-            $this->loadCities($this->state_id);
+        if ($this->form->state_id) {
+            $this->loadCities($this->form->state_id);
         }
     }
 
-    public function updatedStateId(?int $value): void
+    public function updated(string $property, $value): void
     {
-        $this->validateOnly('state_id');
-
-        $this->city_id = null;
-        $this->cities = null;
-
-        if ($value) {
-            $this->loadCities($value);
+        if (!str_starts_with($property, 'form.')) {
+            return;
         }
-    }
 
-    public function updated($property): void
-    {
-        if ($property !== 'state_id') {
-            $this->validateOnly($property);
+        $field = mb_substr($property, mb_strlen('form.'));
+
+        // Cascata estado -> cidade: ao trocar o estado, limpa a cidade e recarrega a lista.
+        if ($field === 'state_id') {
+            $this->form->validateOnly('state_id');
+
+            $this->form->city_id = null;
+            $this->cities = collect();
+
+            if ($value) {
+                $this->loadCities((int) $value);
+            }
+
+            return;
         }
+
+        $this->form->validateOnly($field);
     }
 
     public function searchZipCode(): void
     {
-        $cleanedZipCode = preg_replace('/\D/', '', $this->zipcode);
+        $cleanedZipCode = preg_replace('/\D/', '', $this->form->zipcode);
 
         if (!preg_match('/^\d{8}$/', (string) $cleanedZipCode)) {
-            $this->addError('zipcode', __('Invalid zipcode!'));
+            $this->form->addError('zipcode', __('Invalid zipcode!'));
 
             return;
         }
@@ -91,26 +82,26 @@ class Transpeople extends Component
         try {
             $data = FillAddressAction::exec($cleanedZipCode);
 
-            $this->street = $data->address ?? '';
-            $this->neighborhood = $data->neighborhood ?? '';
-            $this->complement = $data->complement ?? '';
-            $this->state_id = $data->state;
+            $this->form->street = $data->address ?? '';
+            $this->form->neighborhood = $data->neighborhood ?? '';
+            $this->form->complement = $data->complement ?? '';
+            $this->form->state_id = $data->state;
 
-            if ($this->state_id) {
-                $this->loadCities($this->state_id);
+            if ($this->form->state_id) {
+                $this->loadCities($this->form->state_id);
             }
 
-            $this->city_id = $data->city;
+            $this->form->city_id = $data->city;
         } catch (Throwable $e) {
             Log::error('Erro na busca de CEP (site): ' . $e->getMessage(), ['zipcode' => $cleanedZipCode]);
-            $this->addError('zipcode', __('Error when searching for zip code!'));
+            $this->form->addError('zipcode', __('Error when searching for zip code!'));
         }
     }
 
     public function store(): void
     {
         try {
-            $this->validate();
+            $this->form->validate();
         } catch (ValidationException $e) {
             toastr()
                 ->timeOut(4000)
@@ -122,7 +113,7 @@ class Transpeople extends Component
         try {
             DB::beginTransaction();
 
-            $clearZipCode = str($this->zipcode)->replace('-', '');
+            $clearZipCode = str($this->form->zipcode)->replace('-', '');
 
             $address = Address::query()
                 ->where('zipcode', '=', $clearZipCode)
@@ -131,15 +122,15 @@ class Transpeople extends Component
             if (!$address) {
                 $address = Address::query()->create([
                     'zipcode' => $clearZipCode,
-                    'address' => $this->street,
-                    'complement' => $this->complement,
-                    'neighborhood' => $this->neighborhood,
-                    'state_id' => $this->state_id,
-                    'city_id' => $this->city_id,
+                    'address' => $this->form->street,
+                    'complement' => $this->form->complement,
+                    'neighborhood' => $this->form->neighborhood,
+                    'state_id' => $this->form->state_id,
+                    'city_id' => $this->form->city_id,
                 ]);
             }
 
-            $transExist = Trans::query()->where('email', '=', $this->email)->first();
+            $transExist = Trans::query()->where('email', '=', $this->form->email)->first();
 
             if ($transExist) {
                 toastr()
@@ -150,24 +141,13 @@ class Transpeople extends Component
             }
 
             Trans::query()->create([
-                'name' => $this->name,
-                'email' => $this->email,
-                'phone' => Utils::clearMask($this->phone),
+                'name' => $this->form->name,
+                'email' => $this->form->email,
+                'phone' => Utils::clearMask($this->form->phone),
                 'address_id' => $address->id,
             ]);
 
-            $this->reset([
-                'name',
-                'email',
-                'phone',
-                'zipcode',
-                'street',
-                'number',
-                'complement',
-                'neighborhood',
-                'state_id',
-                'city_id',
-            ]);
+            $this->form->reset();
             DB::commit();
 
             toastr()
@@ -195,47 +175,5 @@ class Transpeople extends Component
             ->where('state_id', '=', $stateId)
             ->orderBy('name')
             ->get();
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function rules(): array
-    {
-        return [
-            'name' => 'required|string',
-            'email' => 'required|email|string',
-            'phone' => 'required|string',
-            'zipcode' => 'required|string',
-            'street' => 'required|string',
-            'complement' => 'nullable|string',
-            'neighborhood' => 'required|string',
-            'state_id' => 'required|integer',
-            'city_id' => 'required|integer',
-        ];
-    }
-
-    protected function messages(): array
-    {
-        return [
-            'name.required' => __('The name field is required.'),
-            'name.string' => __('The name field only allows characters.'),
-            'email.required' => __('The email field is required.'),
-            'email.string' => __('The email field only allows characters.'),
-            'email.email' => __('The email field is invalid.'),
-            'phone.required' => __('The phone field is required.'),
-            'phone.string' => __('The phone field only allows characters.'),
-            'zipcode.required' => __('The zipcode field is required.'),
-            'zipcode.string' => __('The zipcode field only allows characters.'),
-            'street.required' => __('The address field is required.'),
-            'street.string' => __('The address field only allows characters.'),
-            'complement.string' => __('The complement field only allows characters.'),
-            'neighborhood.required' => __('The neighborhood field is required.'),
-            'neighborhood.string' => __('The neighborhood field only allows characters.'),
-            'state_id.required' => __('The state field is required.'),
-            'state_id.integer' => __('The state field is only allowed numeric characters.'),
-            'city_id.required' => __('The city field is required.'),
-            'city_id.integer' => __('The city field is only allowed numeric characters.'),
-        ];
     }
 }
