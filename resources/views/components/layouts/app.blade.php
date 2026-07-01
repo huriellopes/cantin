@@ -124,6 +124,9 @@
     <x-impersonation-banner />
 
     @livewireScripts
-    {!! ToastMagic::scripts() !!}
+    {{-- defer no <script src> do toaster (o init inline usa <script type=…> e
+         roda no DOMContentLoaded, então toastMagic já está definido). Tira o JS
+         do caminho crítico de renderização. --}}
+    {!! str_replace('<script src=', '<script defer src=', ToastMagic::scripts()) !!}
 </body>
 </html>
