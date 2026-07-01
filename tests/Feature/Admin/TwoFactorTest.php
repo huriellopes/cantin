@@ -99,6 +99,17 @@ it('disables 2FA from the profile', function (): void {
     expect($user->fresh()->hasTwoFactorEnabled())->toBeFalse();
 });
 
+it('shows and hides recovery codes from the profile', function (): void {
+    $user = userWithTwoFactor();
+
+    Livewire::actingAs($user)->test(ProfileIndex::class)
+        ->assertSet('recoveryCodes', [])
+        ->call('showRecoveryCodes')
+        ->assertSet('recoveryCodes', ['AAAAA-BBBBB', 'CCCCC-DDDDD'])
+        ->call('hideRecoveryCodes')
+        ->assertSet('recoveryCodes', []);
+});
+
 it('does not lock out login when the 2FA secret cannot be decrypted', function (): void {
     $user = userWithTwoFactor('senha-forte-123');
 
