@@ -33,20 +33,20 @@ it('fills the address from a CEP on the public terreiro form', function (): void
     $city = City::query()->forceCreate(['name' => 'São Paulo', 'slug' => 'sao-paulo', 'state_id' => $state->id]);
 
     Livewire::test(Create::class)
-        ->set('zipcode', '01001-000')
+        ->set('form.zipcode', '01001-000')
         ->call('searchZipCode')
         ->assertHasNoErrors()
-        ->assertSet('street', 'Praça da Sé')
-        ->assertSet('neighborhood', 'Sé')
-        ->assertSet('state_id', $state->id)
-        ->assertSet('city_id', $city->id);
+        ->assertSet('form.street', 'Praça da Sé')
+        ->assertSet('form.neighborhood', 'Sé')
+        ->assertSet('form.state_id', $state->id)
+        ->assertSet('form.city_id', $city->id);
 });
 
 it('shows an error for an invalid zipcode on the public form', function (): void {
     Livewire::test(Create::class)
-        ->set('zipcode', '123')
+        ->set('form.zipcode', '123')
         ->call('searchZipCode')
-        ->assertHasErrors('zipcode');
+        ->assertHasErrors('form.zipcode');
 });
 
 it('fills the address from a CEP on the trans people form', function (): void {
