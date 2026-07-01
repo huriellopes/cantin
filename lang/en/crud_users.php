@@ -14,6 +14,7 @@ return [
     'search_placeholder' => 'Search by name or e-mail...',
     'col_name' => 'Name',
     'col_email' => 'E-mail',
+    'col_user' => 'User',
     'col_role' => 'Role',
     'col_last_login' => 'Last login',
     'never_logged_in' => 'Never logged in',

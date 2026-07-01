@@ -111,7 +111,7 @@ class Index extends Component
     public function render(): Factory|View
     {
         $queryBase = TransPeople::query()
-            ->with(['address.city:id,name', 'address.state:id,name']);
+            ->with(['address.city:id,name', 'address.state:id,name,abbr']);
 
         $people = $this->applyTable($queryBase, ['name', 'email']);
 

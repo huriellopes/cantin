@@ -3,9 +3,10 @@
         <div>
             <h2 class="text-xl font-bold text-slate-800">{{ __('crud_external_links.title') }}</h2>
         </div>
-        <button wire:click="create" class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
+        <button wire:click="create" title="{{ __('crud_external_links.new_link') }}" aria-label="{{ __('crud_external_links.new_link') }}"
+                class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700 sm:px-4">
             @svg('lucide-plus', 'h-4 w-4')
-            {{ __('crud_external_links.new_link') }}
+            <span class="hidden sm:inline">{{ __('crud_external_links.new_link') }}</span>
         </button>
     </div>
 

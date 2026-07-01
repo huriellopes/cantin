@@ -34,7 +34,8 @@ class Index extends Component
 
     public ?int $type_external_link_id = null;
 
-    public string $url = '';
+    /** Já inicia com o esquema para orientar o preenchimento; normalizado no save. */
+    public string $url = 'https://';
 
     public string $description = '';
 
@@ -60,6 +61,9 @@ class Index extends Component
 
     public function save(): void
     {
+        // Normaliza o link antes de validar: se vier sem esquema, assume https://.
+        $this->url = $this->normalizeUrl($this->url);
+
         $this->validate();
 
         $payload = [
@@ -141,5 +145,25 @@ class Index extends Component
             'url' => ['required', 'url'],
             'description' => ['required', 'string', 'max:255'],
         ];
+    }
+
+    /**
+     * Garante um esquema no link: sem http(s):// na frente, assume https://.
+     * O placeholder "https://" (ou "http://") sozinho vira vazio para a
+     * validação "required" avisar que falta a URL.
+     */
+    private function normalizeUrl(string $url): string
+    {
+        $url = mb_trim($url);
+
+        if (in_array(mb_strtolower($url), ['', 'https://', 'http://'], true)) {
+            return '';
+        }
+
+        if (preg_match('#^https?://#i', $url) !== 1) {
+            $url = 'https://' . $url;
+        }
+
+        return $url;
     }
 }

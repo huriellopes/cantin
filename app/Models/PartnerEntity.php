@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enum\Status;
+use App\Models\Concerns\FormatsPhone;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 class PartnerEntity extends Model
 {
     /* @use HasFactory<\Database\Factories\PartnerEntityFactory> */
-    use HasFactory, KeepsDeletedModels;
+    use FormatsPhone, HasFactory, KeepsDeletedModels;
 
     protected $table = 'partners_entities';
 

@@ -133,7 +133,8 @@ class Index extends Component
 
         DB::transaction(function (): void {
             $address = Address::query()->updateOrCreate(
-                ['zipcode' => $this->zipcode],
+                // O CEP é gravado só com dígitos; casa a busca com o valor limpo.
+                ['zipcode' => preg_replace('/\D/', '', $this->zipcode)],
                 [
                     'address' => $this->address,
                     'complement' => $this->complement,

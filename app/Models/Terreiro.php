@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\FormatsPhone;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
@@ -11,7 +12,7 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class Terreiro extends Model
 {
-    use KeepsDeletedModels;
+    use FormatsPhone, KeepsDeletedModels;
 
     protected $table = 'terreiros';
 
