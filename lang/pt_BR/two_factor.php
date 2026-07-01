@@ -29,4 +29,10 @@ return [
     'disabled' => '2FA desativada.',
     'recovery_title' => 'Códigos de recuperação',
     'recovery_desc' => 'Guarde-os em local seguro. Cada um pode ser usado uma única vez caso você perca o acesso ao app.',
+    'show' => 'Mostrar',
+    'hide' => 'Ocultar',
+    'click_to_reveal' => 'Clique para revelar',
+    'download_txt' => 'Baixar .txt',
+    'download_png' => 'Baixar .png',
+    'view_recovery' => 'Ver códigos de recuperação',
 ];
