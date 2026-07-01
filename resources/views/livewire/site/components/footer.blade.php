@@ -1,6 +1,6 @@
 <div>
     <footer class="bg-slate-900 text-slate-300">
-        <div class="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-14 md:flex-row md:items-start md:justify-between">
+        <div class="mx-auto flex max-w-7xl flex-col items-center gap-10 px-6 py-14 text-center md:flex-row md:items-start md:justify-between md:text-left">
             {{-- Marca --}}
             <div class="max-w-xs">
                 <a href="{{ route('site.home') }}" wire:navigate class="inline-block">
@@ -33,7 +33,7 @@
                 <p class="mt-4 font-semibold text-white">Babalorixá Alan T'Ogun</p>
                 <p class="mt-1 text-sm text-slate-400">(61) 9 9977-6608</p>
                 <p class="text-sm text-slate-400">seggvg@gmail.com</p>
-                <div class="mt-4 flex gap-3 md:justify-end">
+                <div class="mt-4 flex justify-center gap-3 md:justify-end">
                     @foreach ([
                         ['https://www.facebook.com/alan.baloni', 'facebook'],
                         ['https://www.instagram.com/alanbaloni79/', 'instagram'],

@@ -110,9 +110,7 @@
 
     <livewire:site.components.whatsapp-button />
 
-    @if (! request()->routeIs('site.auth.login') && ! request()->routeIs('site.terreiros.search'))
-        <livewire:site.components.footer />
-    @endif
+    <livewire:site.components.footer />
 
     {{-- Banner de cookies + Analytics/Ads carregados apenas com consentimento --}}
     <x-cookie-consent />
