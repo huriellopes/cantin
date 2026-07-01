@@ -94,21 +94,41 @@
 
         <nav class="scrollbar-dark flex-1 space-y-1 overflow-y-auto overflow-x-hidden px-3 py-2 text-sm">
             @foreach ($sections as [$sectionTitle, $items])
-                <div class="admin-nav-group">
-                    <p class="admin-group-label">{{ $sectionTitle }}</p>
-                    @foreach ($items as [$label, $url, $active, $icon])
-                        <a href="{{ $url }}" wire:navigate
-                           @mouseenter="showTip($el, @js($label))" @mouseleave="tip.show = false"
-                           @class([
-                                'admin-nav-item group flex items-center gap-3 rounded-lg px-3 py-2 transition',
-                                'bg-violet-600 text-white' => $active,
-                                'hover:bg-slate-800 hover:text-white' => ! $active,
-                            ])
-                        >
-                            @svg('lucide-'.$icon, 'h-5 w-5 shrink-0')
-                            <span class="admin-label">{{ $label }}</span>
-                        </a>
-                    @endforeach
+                @php $groupActive = collect($items)->contains(fn ($it) => $it[2]); @endphp
+                {{-- Seção recolhível: o cabeçalho abre/fecha os itens (persistido em
+                     localStorage). No modo ícone (sidebar recolhida) o accordion é
+                     neutralizado — os itens ficam sempre visíveis (open || collapsed). --}}
+                <div class="admin-nav-group"
+                     x-data="{
+                        open: true,
+                        init() {
+                            const key = 'admin-nav-group-{{ $loop->index }}';
+                            const saved = localStorage.getItem(key);
+                            this.open = {{ $groupActive ? 'true' : "saved === null ? true : saved === '1'" }};
+                            this.$watch('open', v => localStorage.setItem(key, v ? '1' : '0'));
+                        }
+                     }">
+                    <button type="button" class="admin-group-label" @click="open = ! open" :aria-expanded="open">
+                        <span class="admin-label">{{ $sectionTitle }}</span>
+                        <span class="admin-label admin-group-chevron transition-transform" :class="{ '-rotate-90': ! open }">
+                            @svg('lucide-chevron-down', 'h-4 w-4')
+                        </span>
+                    </button>
+                    <div x-show="open || collapsed" x-collapse class="space-y-1">
+                        @foreach ($items as [$label, $url, $active, $icon])
+                            <a href="{{ $url }}" wire:navigate
+                               @mouseenter="showTip($el, @js($label))" @mouseleave="tip.show = false"
+                               @class([
+                                    'admin-nav-item group flex items-center gap-3 rounded-lg px-3 py-2 transition',
+                                    'bg-violet-600 text-white' => $active,
+                                    'hover:bg-slate-800 hover:text-white' => ! $active,
+                                ])
+                            >
+                                @svg('lucide-'.$icon, 'h-5 w-5 shrink-0')
+                                <span class="admin-label">{{ $label }}</span>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
             @endforeach
         </nav>

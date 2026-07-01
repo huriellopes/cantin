@@ -63,16 +63,27 @@
 .admin-logo-full { height: 2.5rem; width: auto; object-fit: contain; flex-shrink: 0; }
 .admin-logo-mark { display: none; height: 1.75rem; width: auto; object-fit: contain; flex-shrink: 0; }
 
-/* Seções do menu lateral */
+/* Seções do menu lateral (cabeçalho recolhível) */
 .admin-nav-group + .admin-nav-group { margin-top: .5rem; }
 .admin-group-label {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    width: 100%;
     padding: .5rem .75rem .25rem;
     font-size: .68rem;
     font-weight: 600;
     letter-spacing: .08em;
     text-transform: uppercase;
     color: #64748b; /* slate-500 */
+    background: transparent;
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+    transition: color .15s;
 }
+.admin-group-label:hover { color: #cbd5e1; } /* slate-300 */
+.admin-group-chevron { margin-left: auto; }
 
 @media (min-width: 1024px) {
     /* No modo recolhido o rótulo da seção some e vira uma divisória entre grupos. */
