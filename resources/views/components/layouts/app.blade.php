@@ -12,7 +12,7 @@
 
     {{-- Preload da imagem de fundo do hero (LCP) — só na home, onde ela aparece. --}}
     @if (request()->routeIs('site.home'))
-        <link rel="preload" as="image" href="{{ asset('assets/images/new/background-outro.png') }}" fetchpriority="high">
+        <link rel="preload" as="image" href="{{ asset('assets/images/new/background-outro.webp') }}" fetchpriority="high">
     @endif
 
     {{-- Título, description, canonical, OpenGraph e Twitter (archtechx/laravel-seo).
@@ -25,7 +25,12 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
-    {!! ToastMagic::styles() !!}
+    {{-- CSS do toaster carregado de forma assíncrona (media=print + onload) para
+         não bloquear a renderização: o toast só aparece após interação/evento,
+         quando o estilo já foi aplicado. <noscript> mantém o fallback sem JS. --}}
+    @php $toasterStyles = ToastMagic::styles(); @endphp
+    {!! str_replace('rel="stylesheet"', 'rel="stylesheet" media="print" onload="this.media=\'all\'"', $toasterStyles) !!}
+    <noscript>{!! $toasterStyles !!}</noscript>
 </head>
 <body class="flex min-h-screen flex-col bg-white text-slate-800 antialiased">
     @php $transparentNav = request()->routeIs('site.home'); @endphp
@@ -35,7 +40,7 @@
          :class="solid ? 'bg-white/95 shadow-sm backdrop-blur' : 'bg-transparent'">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
             <a href="{{ route('site.home') }}" wire:navigate class="flex items-center">
-                <img src="{{ asset('assets/images/CANTIn.png') }}" alt="CaNTIn" class="h-11 w-auto" />
+                <img src="{{ asset('assets/images/cantin-logo.webp') }}" alt="CaNTIn" width="160" height="160" class="h-11 w-auto" />
             </a>
 
             @php
@@ -53,7 +58,7 @@
             <div class="hidden items-center gap-6 lg:flex">
                 @foreach ($links as [$route, $label])
                     <a href="{{ route($route) }}" wire:navigate
-                       class="text-sm font-medium transition hover:opacity-70 {{ request()->routeIs($route) ? 'text-violet-600' : '' }}"
+                       class="text-sm font-medium transition-opacity hover:opacity-70 {{ request()->routeIs($route) ? 'text-violet-600' : '' }}"
                        :class="solid ? '{{ request()->routeIs($route) ? 'text-violet-600' : 'text-slate-700' }}' : 'text-white drop-shadow'">
                         {{ $label }}
                     </a>
@@ -64,7 +69,7 @@
                     @endif
                 @else
                     <a href="{{ route('site.auth.login') }}" wire:navigate
-                       class="text-sm font-medium transition hover:opacity-70"
+                       class="text-sm font-medium transition-opacity hover:opacity-70"
                        :class="solid ? 'text-slate-700' : 'text-white drop-shadow'">{{ __('nav.login') }}</a>
                 @endauth
                 <a href="{{ route('site.terreiros.create') }}" wire:navigate
