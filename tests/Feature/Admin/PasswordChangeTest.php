@@ -43,8 +43,8 @@ it('changes the password, clears the flag and redirects to the dashboard', funct
     $user = userNeedingPasswordChange();
 
     Livewire::actingAs($user)->test(PasswordChange::class)
-        ->set('password', 'NovaSenhaForte1')
-        ->set('password_confirmation', 'NovaSenhaForte1')
+        ->set('form.password', 'NovaSenhaForte1')
+        ->set('form.password_confirmation', 'NovaSenhaForte1')
         ->call('save')
         ->assertHasNoErrors()
         ->assertRedirect(route('admin.dashboard'));
@@ -56,16 +56,16 @@ it('changes the password, clears the flag and redirects to the dashboard', funct
 
 it('rejects keeping the default password', function (): void {
     Livewire::actingAs(userNeedingPasswordChange())->test(PasswordChange::class)
-        ->set('password', User::DEFAULT_PASSWORD)
-        ->set('password_confirmation', User::DEFAULT_PASSWORD)
+        ->set('form.password', User::DEFAULT_PASSWORD)
+        ->set('form.password_confirmation', User::DEFAULT_PASSWORD)
         ->call('save')
-        ->assertHasErrors('password');
+        ->assertHasErrors('form.password');
 });
 
 it('requires the confirmation to match', function (): void {
     Livewire::actingAs(userNeedingPasswordChange())->test(PasswordChange::class)
-        ->set('password', 'NovaSenhaForte1')
-        ->set('password_confirmation', 'diferente')
+        ->set('form.password', 'NovaSenhaForte1')
+        ->set('form.password_confirmation', 'diferente')
         ->call('save')
-        ->assertHasErrors('password');
+        ->assertHasErrors('form.password');
 });
