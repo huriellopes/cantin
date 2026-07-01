@@ -91,13 +91,30 @@ jobs:
             $COMPOSE exec -T -u root app chown -R www-data:www-data storage bootstrap/cache
             $COMPOSE exec -T -u root app chown www-data:www-data public/sitemap.xml
 
-            echo "==> Reiniciando app para aplicar a config do supervisor/php-fpm"
-            $COMPOSE restart app
+            # --- Ativação sem downtime (evita o 502 durante o deploy) ---
+            # Antes usávamos 'restart app' + 'restart nginx', que derrubavam o
+            # PHP-FPM/nginx por alguns segundos e faziam o proxy (NPM) devolver
+            # 502. Como o código é bind-mount e o opcache revalida timestamps
+            # (revalidate_freq=0), trocamos os restarts por recargas graciosas.
 
-            echo "==> Reiniciando nginx (carrega o certificado de forma confiável)"
-            # restart (não 'reload'): ao trocar o cert (ex.: dummy -> real ou
-            # após renovação), o reload nem sempre recarrega os symlinks; o
-            # restart garante o cert atual.
-            $COMPOSE restart nginx
+            echo "==> Recarga graciosa dos workers de fila (terminam o job atual)"
+            # Workers long-running não revalidam o código no meio do processo;
+            # queue:restart sinaliza para saírem após o job atual e o supervisor
+            # os sobe de novo já com o código novo. Não afeta requisições web.
+            $COMPOSE exec -T app php artisan queue:restart
+
+            echo "==> Recarga graciosa do PHP-FPM (SIGUSR2, sem derrubar o app)"
+            # SIGUSR2 no master do PHP-FPM recria os workers sem encerrar o
+            # processo nem recusar conexões — elimina a janela de 502 do
+            # 'restart'. Com opcache.revalidate_freq=0, o código novo já é
+            # servido de imediato; o reload apenas garante um estado limpo.
+            $COMPOSE exec -T app supervisorctl signal USR2 php-fpm || true
+
+            echo "==> Recarga graciosa do nginx (zero downtime; valida antes)"
+            # 'reload' mantém os workers atuais atendendo até os novos assumirem,
+            # sem a janela de conexão recusada do 'restart'. O reload também
+            # recarrega os certificados. Só recarrega se a config passar no teste.
+            $COMPOSE exec -T nginx nginx -t
+            $COMPOSE exec -T nginx nginx -s reload
 
             echo "==> Deploy concluído"
