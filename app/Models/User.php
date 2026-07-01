@@ -7,6 +7,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enum\Role as RoleEnum;
 use App\Enum\Status;
+use App\Models\Concerns\HasTwoFactorAuthentication;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,13 +23,16 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 /**
  * @property bool $password_change_required
  * @property Carbon|null $last_login_at
+ * @property string|null $two_factor_secret
+ * @property array<int, string>|null $two_factor_recovery_codes
+ * @property Carbon|null $two_factor_confirmed_at
  */
 class User extends Authenticatable implements AuditableContract
 {
     use Auditable;
 
     /* @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, KeepsDeletedModels, Notifiable;
+    use HasApiTokens, HasFactory, HasTwoFactorAuthentication, KeepsDeletedModels, Notifiable;
 
     /**
      * Senha padrão atribuída a usuários criados pelo super-admin. O usuário é

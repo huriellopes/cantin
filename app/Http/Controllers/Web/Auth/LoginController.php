@@ -44,6 +44,18 @@ class LoginController extends Controller
                 // Sucesso: zera o contador de tentativas.
                 $this->clearLoginAttempts($request);
 
+                // 2FA ativo: não conclui o login; guarda o pendente e desafia.
+                if (auth()->user()->hasTwoFactorEnabled()) {
+                    $pendingId = auth()->id();
+                    $remember = $request->boolean('remember');
+
+                    auth()->logout();
+
+                    $request->session()->put('login.2fa', ['id' => $pendingId, 'remember' => $remember]);
+
+                    return to_route('site.auth.two-factor');
+                }
+
                 // Registra o último acesso.
                 auth()->user()->forceFill(['last_login_at' => now()])->save();
 

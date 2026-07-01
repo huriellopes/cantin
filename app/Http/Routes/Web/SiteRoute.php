@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Routes\Web;
 
 use App\Http\Controllers\Web\Auth\LoginController;
+use App\Livewire\Site\Auth\TwoFactorChallenge;
 use App\Livewire\Site\Pages\About;
 use App\Livewire\Site\Pages\Auth\Login;
 use App\Livewire\Site\Pages\Blog\Posts;
@@ -80,6 +81,8 @@ class SiteRoute
                             ->name('login');
                         Route::post('/', [LoginController::class, 'login'])
                             ->name('login.post');
+                        Route::get('/two-factor', TwoFactorChallenge::class)
+                            ->name('two-factor');
                     });
             });
     }
