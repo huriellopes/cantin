@@ -24,7 +24,8 @@ class Kernel extends ConsoleKernel
         $this->notifyTelegram($schedule->command('sitemap:generate')->dailyAt('03:00'), 'sitemap:generate');
 
         // Atualiza as estatísticas/gráficos do dashboard (cache) de hora em hora.
-        $this->notifyTelegram($schedule->command('dashboard:refresh')->hourly(), 'dashboard:refresh');
+        // Por ser horário, notifica o Telegram SÓ em caso de falha (evita ruído).
+        $this->notifyTelegram($schedule->command('dashboard:refresh')->hourly(), 'dashboard:refresh', notifySuccess: false);
 
         // Remove logs e capturas de debug antigos, mantendo os últimos 3 dias.
         $this->notifyTelegram($schedule->command('system:prune-logs --days=3')->dailyAt('04:00'), 'system:prune-logs');
@@ -45,14 +46,16 @@ class Kernel extends ConsoleKernel
      * Envia ao Telegram uma notificação de sucesso/falha do agendamento.
      * Cai em silêncio se o Telegram não estiver configurado.
      */
-    private function notifyTelegram(Event $event, string $label): Event
+    private function notifyTelegram(Event $event, string $label, bool $notifySuccess = true): Event
     {
-        return $event
-            ->onSuccess(function () use ($label): void {
+        if ($notifySuccess) {
+            $event->onSuccess(function () use ($label): void {
                 Log::channel('telegram_schedules')->info("✅ Agendamento concluído: {$label}");
-            })
-            ->onFailure(function () use ($label): void {
-                Log::channel('telegram_schedules')->error("❌ Agendamento FALHOU: {$label}");
             });
+        }
+
+        return $event->onFailure(function () use ($label): void {
+            Log::channel('telegram_schedules')->error("❌ Agendamento FALHOU: {$label}");
+        });
     }
 }
