@@ -14,6 +14,8 @@ use App\Models\Page;
 use App\Models\PartnerEntity;
 use App\Models\Post;
 use App\Models\StaticPage;
+use App\Models\Terreiro;
+use App\Models\TerreiroQuestion;
 use App\Models\TransPeople;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -174,5 +176,8 @@ class DatabaseSeeder extends Seeder
         ExternalLink::factory()->count(10)->recycle($users)->create();
         Page::factory()->count(5)->create();
         StaticPage::factory()->count(5)->recycle($users)->create();
+
+        // Terreiros com o questionário relacionado (hasOne question).
+        Terreiro::factory()->count(15)->has(TerreiroQuestion::factory(), 'question')->create();
     }
 }
