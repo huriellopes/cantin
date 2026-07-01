@@ -58,6 +58,7 @@
             $nav[] = [__('admin.nav.users'), route('admin.users.index'), request()->routeIs('admin.users.*'), 'users'];
             $nav[] = [__('admin.nav.deleted_models'), route('admin.deleted-models.index'), request()->routeIs('admin.deleted-models.*'), 'trash-2'];
             $nav[] = [__('admin.nav.impersonation_logs'), route('admin.impersonation-logs.index'), request()->routeIs('admin.impersonation-logs.*'), 'venetian-mask'];
+            $nav[] = [__('admin.nav.system'), route('admin.system.index'), request()->routeIs('admin.system.*'), 'activity'];
         }
     @endphp
 

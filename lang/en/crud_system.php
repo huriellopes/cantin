@@ -1,0 +1,84 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'title' => 'System',
+    'subtitle' => 'Logs, debug, schedules and queues — super user only.',
+
+    // Tabs
+    'tab_logs' => 'Logs',
+    'tab_debug' => 'Debug',
+    'tab_schedules' => 'Schedules',
+    'tab_jobs' => 'Queues / Jobs',
+
+    // Logs (file)
+    'log_files' => 'Log files',
+    'no_logs' => 'No log files found.',
+    'all_levels' => 'All levels',
+    'clear_log' => 'Clear file',
+    'details' => 'Details',
+    'no_entries' => 'No entries for the selected filters.',
+    'confirm_clear_log_title' => 'Clear log file',
+    'confirm_clear_log_message' => 'This file content will be permanently erased. Continue?',
+    'confirm_clear_log_label' => 'Clear',
+    'log_cleared' => 'Log file cleared successfully.',
+    'log_clear_failed' => 'Could not clear the log file.',
+
+    // Debug (Debugbar)
+    'debug_captures' => 'Request captures (Debugbar)',
+    'clear_debug' => 'Clear captures',
+    'method' => 'Method',
+    'uri' => 'URI',
+    'status' => 'Status',
+    'duration' => 'Duration',
+    'date' => 'Date',
+    'view' => 'View',
+    'no_captures' => 'No captures available.',
+    'has_exceptions' => 'Contains exceptions',
+    'capture_detail' => 'Capture detail',
+    'confirm_clear_debug_title' => 'Clear debug captures',
+    'confirm_clear_debug_message' => 'All Debugbar captures will be removed. Continue?',
+    'confirm_clear_debug_label' => 'Clear',
+    'debug_cleared' => ':count capture(s) removed.',
+
+    // Schedules
+    'command' => 'Command',
+    'expression' => 'Expression',
+    'frequency' => 'Frequency',
+    'next_run' => 'Next run',
+    'no_schedules' => 'No scheduled tasks.',
+    'schedule_every_minute' => 'every minute',
+    'schedule_hourly' => 'hourly',
+    'schedule_daily' => 'daily',
+    'schedule_weekly' => 'weekly',
+    'schedule_monthly' => 'monthly',
+    'schedule_daily_at' => 'daily at :time',
+
+    // Queues / Jobs
+    'pending_jobs' => 'Pending jobs',
+    'failed_jobs' => 'Failed jobs',
+    'connection' => 'Connection',
+    'job' => 'Job',
+    'queue' => 'Queue',
+    'attempts' => 'Attempts',
+    'available_at' => 'Available at',
+    'no_pending' => 'No pending jobs.',
+    'exception' => 'Exception',
+    'failed_at' => 'Failed at',
+    'retry' => 'Retry',
+    'forget' => 'Remove',
+    'retry_all' => 'Retry all',
+    'flush_all' => 'Flush all',
+    'no_failed' => 'No failed jobs.',
+    'job_retried' => 'Job queued for retry.',
+    'jobs_retried_all' => 'All failed jobs were queued for retry.',
+    'job_forgotten' => 'Job removed from the failed list.',
+    'jobs_flushed' => 'Failed jobs list cleared.',
+    'confirm_forget_title' => 'Remove failed job',
+    'confirm_forget_message' => 'This failed record will be permanently removed. Continue?',
+    'confirm_forget_label' => 'Remove',
+    'confirm_flush_title' => 'Flush failed jobs',
+    'confirm_flush_message' => 'All failed job records will be removed. Continue?',
+    'confirm_flush_label' => 'Flush all',
+];

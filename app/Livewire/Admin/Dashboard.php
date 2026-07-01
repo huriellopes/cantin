@@ -38,10 +38,15 @@ class Dashboard extends Component
             ['label' => __('msg_dashboard.stat_visits'), 'value' => $counts['visits'], 'icon' => 'eye', 'color' => 'sky'],
             ['label' => __('msg_dashboard.stat_terreiros'), 'value' => $counts['terreiros'], 'icon' => 'house', 'color' => 'violet'],
             ['label' => __('msg_dashboard.stat_comments'), 'value' => $counts['comments'], 'icon' => 'message-square', 'color' => 'amber'],
-            ['label' => __('msg_dashboard.stat_users'), 'value' => $counts['users'], 'icon' => 'users', 'color' => 'emerald'],
             ['label' => __('msg_dashboard.stat_partner_entities'), 'value' => $counts['partner_entities'], 'icon' => 'star', 'color' => 'rose'],
             ['label' => __('msg_dashboard.stat_trans_people'), 'value' => $counts['trans_people'], 'icon' => 'user', 'color' => 'indigo'],
         ];
+
+        // A métrica de quantidade de usuários é sensível: apenas o super-admin
+        // pode vê-la (o admin comum não deve ter essa visão do sistema).
+        if (auth()->user()?->isSuperAdmin()) {
+            $stats[] = ['label' => __('msg_dashboard.stat_users'), 'value' => $counts['users'], 'icon' => 'users', 'color' => 'emerald'];
+        }
 
         return view('livewire.admin.dashboard', [
             'stats' => $stats,

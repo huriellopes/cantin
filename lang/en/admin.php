@@ -27,6 +27,7 @@ return [
         'users' => 'Users',
         'deleted_models' => 'Deleted Models',
         'impersonation_logs' => 'Impersonation Logs',
+        'system' => 'System',
     ],
     'header' => [
         'view_site' => 'View site',
