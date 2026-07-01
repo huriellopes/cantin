@@ -67,8 +67,8 @@ class LogViewer
         $content = (string) file_get_contents($path);
         $entries = $this->parse($content);
 
-        $level = mb_strtolower(trim($level));
-        $search = trim($search);
+        $level = mb_strtolower(mb_trim($level));
+        $search = mb_trim($search);
 
         return collect($entries)
             ->when($level !== '', fn (Collection $c): Collection => $c->filter(
@@ -120,7 +120,7 @@ class LogViewer
 
             $block = mb_substr($content, $start, $end - $start);
             $headerLen = mb_strlen($matches[0][$i][0]);
-            $body = trim(mb_substr($block, $headerLen));
+            $body = mb_trim(mb_substr($block, $headerLen));
 
             // Separa a primeira linha (mensagem) do restante (stack/contexto).
             $lines = explode("\n", $body, 2);
@@ -129,8 +129,8 @@ class LogViewer
                 'level' => mb_strtolower((string) $matches['level'][$i][0]),
                 'datetime' => (string) $matches['datetime'][$i][0],
                 'env' => (string) $matches['env'][$i][0],
-                'message' => trim($lines[0]),
-                'context' => isset($lines[1]) ? trim($lines[1]) : '',
+                'message' => mb_trim($lines[0]),
+                'context' => isset($lines[1]) ? mb_trim($lines[1]) : '',
             ];
 
             if (count($entries) >= self::MAX_ENTRIES) {

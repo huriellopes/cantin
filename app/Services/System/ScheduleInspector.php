@@ -43,7 +43,7 @@ class ScheduleInspector
         // Remove o binário do PHP e o "artisan" para exibir só o comando.
         $command = (string) preg_replace('/^.*artisan[\'"]?\s+/', '', (string) $command);
 
-        return trim($command) ?: $event->getSummaryForDisplay();
+        return mb_trim($command) ?: $event->getSummaryForDisplay();
     }
 
     /**
