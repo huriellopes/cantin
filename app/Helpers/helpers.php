@@ -6,13 +6,25 @@ use AshAllenDesign\ShortURL\Classes\Builder;
 use Illuminate\Support\Str;
 
 if (!function_exists('username')) {
+    /**
+     * Retorna apenas o primeiro e o último nome (ex.: "Maria da Silva" -> "Maria Silva").
+     * Com um único nome, devolve-o sozinho (sem espaço sobrando).
+     */
     function username(string $name): string
     {
-        $parts = explode(' ', $name);
-        $firstName = array_shift($parts);
-        $lastName = array_pop($parts);
+        $parts = array_values(array_filter(explode(' ', mb_trim($name)), fn (string $part): bool => $part !== ''));
 
-        return Str::ucfirst($firstName) . ' ' . Str::ucfirst($lastName);
+        if ($parts === []) {
+            return '';
+        }
+
+        $first = Str::ucfirst($parts[0]);
+
+        if (count($parts) === 1) {
+            return $first;
+        }
+
+        return $first . ' ' . Str::ucfirst(end($parts));
     }
 }
 

@@ -174,7 +174,7 @@
                         <span class="flex h-8 w-8 items-center justify-center rounded-full bg-violet-600 text-sm font-semibold text-white">
                             {{ strtoupper(substr(auth()->user()->name ?? '?', 0, 1)) }}
                         </span>
-                        <span class="hidden text-sm font-medium text-slate-700 sm:block">{{ auth()->user()->name ?? '' }}</span>
+                        <span class="hidden text-sm font-medium text-slate-700 sm:block">{{ username(auth()->user()->name ?? '') }}</span>
                     </button>
                     <div x-show="open" x-cloak @click.outside="open = false" class="absolute right-0 top-12 z-50 w-48 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
                         <a href="{{ route('admin.profile') }}" wire:navigate class="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
