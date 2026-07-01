@@ -31,24 +31,26 @@ class Search extends Component
 
     public function render(): Factory|View
     {
-        $term = mb_trim($this->search);
+        // Busca case-insensitive e portável (sqlite/pgsql): compara em minúsculas
+        // dos dois lados — LOWER(coluna) LIKE %termo_minusculo%.
+        $like = '%' . mb_strtolower(mb_trim($this->search)) . '%';
 
         return view('livewire.site.pages.terreiros.search', [
             'terreiros' => Terreiro::query()
                 ->with(['nation:id,name', 'address.city:id,name', 'address.state:id,name,abbr'])
-                ->when($term !== '', function ($query) use ($term): void {
-                    // Busca por: nome do terreiro, nome da liderança e localização
-                    // (cidade, estado por nome ou UF). Agrupado para não vazar o OR.
-                    $query->where(function ($q) use ($term): void {
-                        $q->where('name', 'like', "%{$term}%")
-                            ->orWhere('leadership_orunko', 'like', "%{$term}%")
-                            ->orWhereHas('address', function ($queryAddress) use ($term): void {
-                                $queryAddress->whereHas('state', function ($queryState) use ($term): void {
-                                    $queryState->where('name', 'like', "%{$term}%")
-                                        ->orWhere('abbr', 'like', "%{$term}%")
-                                        ->orWhere('slug', 'like', "%{$term}%");
-                                })->orWhereHas('city', function ($queryCity) use ($term): void {
-                                    $queryCity->where('name', 'like', "%{$term}%");
+                ->when(mb_trim($this->search) !== '', function ($query) use ($like): void {
+                    // Nome do terreiro, nome da liderança e localização (cidade,
+                    // estado por nome ou UF). Agrupado para não vazar o OR.
+                    $query->where(function ($q) use ($like): void {
+                        $q->whereRaw('LOWER(name) LIKE ?', [$like])
+                            ->orWhereRaw('LOWER(leadership_orunko) LIKE ?', [$like])
+                            ->orWhereHas('address', function ($queryAddress) use ($like): void {
+                                $queryAddress->whereHas('state', function ($queryState) use ($like): void {
+                                    $queryState->whereRaw('LOWER(name) LIKE ?', [$like])
+                                        ->orWhereRaw('LOWER(abbr) LIKE ?', [$like])
+                                        ->orWhereRaw('LOWER(slug) LIKE ?', [$like]);
+                                })->orWhereHas('city', function ($queryCity) use ($like): void {
+                                    $queryCity->whereRaw('LOWER(name) LIKE ?', [$like]);
                                 });
                             });
                     });
