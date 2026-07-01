@@ -159,14 +159,22 @@
             </div>
         </x-admin.card>
 
-        {{-- Modal de detalhe da captura --}}
+        {{-- Modal de detalhe da captura.
+             O fechamento é feito instantaneamente no cliente (Alpine: open=false)
+             e depois sincronizado no servidor ($wire.closeCapture()), então nunca
+             depende de um round-trip do Livewire para sumir da tela. --}}
         @if ($capture !== null)
-            <div class="fixed inset-0 z-[70] flex items-center justify-center p-4">
-                <div class="absolute inset-0 bg-slate-900/50" wire:click="closeCapture"></div>
+            <div wire:key="capture-modal"
+                 x-data="{ open: true, close() { this.open = false; $wire.closeCapture() } }"
+                 x-show="open"
+                 x-trap.noscroll="open"
+                 @keydown.escape.window="close()"
+                 class="fixed inset-0 z-[70] flex items-center justify-center p-4">
+                <div class="absolute inset-0 bg-slate-900/50" @click="close()"></div>
                 <div class="relative z-10 flex max-h-[85vh] w-full max-w-3xl flex-col rounded-2xl bg-white shadow-xl">
                     <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
                         <h3 class="font-semibold text-slate-800">{{ __('crud_system.capture_detail') }}</h3>
-                        <button type="button" wire:click="closeCapture" class="text-slate-400 hover:text-slate-600">@svg('lucide-x', 'h-5 w-5')</button>
+                        <button type="button" @click="close()" class="text-slate-400 hover:text-slate-600">@svg('lucide-x', 'h-5 w-5')</button>
                     </div>
                     <pre class="flex-1 overflow-auto rounded-b-2xl bg-slate-900 p-4 text-xs text-slate-200">{{ json_encode($capture, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) }}</pre>
                 </div>
