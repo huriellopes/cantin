@@ -8,7 +8,7 @@
 
 <div class="relative" x-data="{ open: false }" @keydown.escape="open = false">
     <button type="button" @click="open = ! open"
-            {{ $attributes->class(['flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-medium transition hover:opacity-70']) }}
+            {{ $attributes->class(['flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-medium transition-opacity hover:opacity-70']) }}
             aria-label="{{ __('nav.language') }}">
         @svg('lucide-languages', 'h-4 w-4')
         <span>{{ $labels[$current] ?? strtoupper($current) }}</span>

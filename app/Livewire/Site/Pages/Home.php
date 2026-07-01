@@ -24,7 +24,7 @@ class Home extends Component
 
         // asset() não deve ser cacheado: a URL absoluta depende do scheme/host
         // da requisição e, se cacheada como http, quebra por mixed content em HTTPS.
-        $image = asset('assets/images/new/background-outro.png');
+        $image = asset('assets/images/new/background-outro.webp');
 
         // FAQ vem dos arquivos de tradução (lang/{locale}/faq.php), acompanhando
         // o idioma selecionado. A resposta aceita HTML simples.

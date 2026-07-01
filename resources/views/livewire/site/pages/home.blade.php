@@ -43,7 +43,7 @@
             ] as [$emoji, $titulo, $texto])
                 <div class="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
                     <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-100 to-pink-100 text-2xl">{{ $emoji }}</div>
-                    <h3 class="mt-5 text-xl font-bold text-slate-800">{{ $titulo }}</h3>
+                    <h2 class="mt-5 text-xl font-bold text-slate-800">{{ $titulo }}</h2>
                     <p class="mt-2 text-slate-600">{{ $texto }}</p>
                 </div>
             @endforeach
