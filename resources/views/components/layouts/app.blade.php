@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="author" content="Huriel Lopes">
-    <meta name="google-site-verification" content="mtKJbrrih326td_6rW85I4VqoTSvw3BiVzBuj02BSfg" />
+    <meta name="google-site-verification" content="msIw9NHp2yJdz3pV1FCJKyYoPmTu-vXAe9fmgk6cCAQ" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
