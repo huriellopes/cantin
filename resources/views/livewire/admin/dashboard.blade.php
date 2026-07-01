@@ -113,20 +113,35 @@
         @endforeach
     </div>
 
-    {{-- Terreiros recentes --}}
-    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div class="border-b border-slate-100 px-6 py-4">
+    {{-- Terreiros recentes (mesmo padrão de tabela do admin) --}}
+    <x-admin.card>
+        <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
             <h3 class="font-semibold text-slate-700">{{ __('page_admin_dashboard.recent_terreiros') }}</h3>
+            <a href="{{ route('admin.terreiros.index') }}" wire:navigate
+               class="inline-flex items-center gap-1 text-sm font-medium text-violet-600 transition hover:text-violet-800">
+                {{ __('page_admin_dashboard.see_more') }}
+                @svg('lucide-arrow-right', 'h-4 w-4')
+            </a>
         </div>
-        <ul class="divide-y divide-slate-100">
-            @forelse ($recentTerreiros as $terreiro)
-                <li class="flex items-center justify-between px-6 py-3 text-sm">
-                    <span class="font-medium text-slate-700">{{ $terreiro->name }}</span>
-                    <span class="text-slate-400">{{ $terreiro->created_at?->format('d/m/Y') }}</span>
-                </li>
-            @empty
-                <li class="px-6 py-8 text-center text-sm text-slate-400">{{ __('page_admin_dashboard.no_terreiros') }}</li>
-            @endforelse
-        </ul>
-    </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-100 text-sm">
+                <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <tr>
+                        <th class="px-6 py-3">{{ __('page_admin_dashboard.col_terreiro') }}</th>
+                        <th class="px-6 py-3 text-right">{{ __('page_admin_dashboard.col_created') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse ($recentTerreiros as $terreiro)
+                        <tr class="hover:bg-slate-50" wire:key="recent-{{ $terreiro->id }}">
+                            <td class="px-6 py-3 font-medium text-slate-700">{{ $terreiro->name }}</td>
+                            <td class="px-6 py-3 text-right text-slate-400">{{ $terreiro->created_at?->format('d/m/Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="2" class="px-6 py-8 text-center text-slate-400">{{ __('page_admin_dashboard.no_terreiros') }}</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </x-admin.card>
 </div>
