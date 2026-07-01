@@ -48,6 +48,11 @@ class Monitor extends Component
     public function setTab(string $tab): void
     {
         $this->tab = in_array($tab, ['logs', 'debug', 'schedules', 'jobs'], true) ? $tab : 'logs';
+
+        // Fecha qualquer captura aberta ao trocar de aba (evita que o modal do
+        // Debugbar reapareça "preso" ao voltar para a aba debug).
+        $this->captureId = null;
+
         $this->resetPage('pendingPage');
         $this->resetPage('failedPage');
     }
