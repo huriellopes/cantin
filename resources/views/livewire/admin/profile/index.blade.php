@@ -59,12 +59,19 @@
                         <p class="text-sm font-semibold text-amber-800">{{ __('two_factor.recovery_title') }}</p>
                         <p class="mt-1 text-xs text-amber-700">{{ __('two_factor.recovery_desc') }}</p>
                     </div>
-                    <button type="button" @click="show = ! show"
-                            class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-100">
-                        <span x-show="! show">@svg('lucide-eye', 'h-4 w-4')</span>
-                        <span x-show="show" x-cloak>@svg('lucide-eye-off', 'h-4 w-4')</span>
-                        <span x-text="show ? @js(__('two_factor.hide')) : @js(__('two_factor.show'))"></span>
-                    </button>
+                    <div class="flex shrink-0 items-center gap-2">
+                        <button type="button" @click="show = ! show"
+                                class="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-100">
+                            <span x-show="! show">@svg('lucide-eye', 'h-4 w-4')</span>
+                            <span x-show="show" x-cloak>@svg('lucide-eye-off', 'h-4 w-4')</span>
+                            <span x-text="show ? @js(__('two_factor.hide')) : @js(__('two_factor.show'))"></span>
+                        </button>
+                        <button type="button" wire:click="hideRecoveryCodes"
+                                title="{{ __('two_factor.close') }}" aria-label="{{ __('two_factor.close') }}"
+                                class="inline-flex items-center justify-center rounded-lg border border-amber-300 bg-white p-1.5 text-amber-800 transition hover:bg-amber-100">
+                            @svg('lucide-x', 'h-4 w-4')
+                        </button>
+                    </div>
                 </div>
 
                 <div class="relative mt-3">
@@ -82,10 +89,12 @@
 
                 <div class="mt-4 flex flex-wrap gap-2">
                     <button type="button" wire:click="downloadRecoveryCodesTxt" wire:loading.attr="disabled"
+                            @click="$dispatch('toast', { type: 'info', message: @js(__('two_factor.download_started')) })"
                             class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50">
                         @svg('lucide-file-text', 'h-4 w-4') {{ __('two_factor.download_txt') }}
                     </button>
                     <button type="button" wire:click="downloadRecoveryCodesPng" wire:loading.attr="disabled"
+                            @click="$dispatch('toast', { type: 'info', message: @js(__('two_factor.download_started')) })"
                             class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50">
                         @svg('lucide-image', 'h-4 w-4') {{ __('two_factor.download_png') }}
                     </button>

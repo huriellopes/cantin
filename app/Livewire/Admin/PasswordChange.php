@@ -15,7 +15,7 @@ use Livewire\Component;
  * Tela de troca obrigatória de senha. Exibida quando o usuário ainda está com
  * a senha padrão (password_change_required). Após trocar, libera o painel.
  */
-#[Layout('components.layouts.admin')]
+#[Layout('components.layouts.guest')]
 #[Title('Trocar senha')]
 class PasswordChange extends Component
 {

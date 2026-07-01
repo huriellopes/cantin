@@ -31,8 +31,10 @@ return [
     'recovery_desc' => 'Keep them in a safe place. Each can be used once if you lose access to the app.',
     'show' => 'Show',
     'hide' => 'Hide',
+    'close' => 'Close',
     'click_to_reveal' => 'Click to reveal',
     'download_txt' => 'Download .txt',
     'download_png' => 'Download .png',
+    'download_started' => 'Preparing your download…',
     'view_recovery' => 'View recovery codes',
 ];
