@@ -9,10 +9,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
-class StaticPage extends Model
+class StaticPage extends Model implements AuditableContract
 {
+    use Auditable;
+
     /* @use HasFactory<\Database\Factories\StaticPageFactory> */
     use HasFactory, KeepsDeletedModels;
 
