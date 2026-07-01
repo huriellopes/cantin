@@ -20,7 +20,7 @@ it('publishes a reply to a comment', function (): void {
 
     Livewire::actingAs($admin)->test(Index::class)
         ->call('reply', $comment->id)
-        ->set('body', 'Obrigado pelo comentário!')
+        ->set('form.body', 'Obrigado pelo comentário!')
         ->call('save')
         ->assertHasNoErrors()
         ->assertSet('showModal', false);
@@ -38,9 +38,9 @@ it('validates the reply body', function (): void {
 
     Livewire::actingAs($admin)->test(Index::class)
         ->call('reply', $comment->id)
-        ->set('body', '')
+        ->set('form.body', '')
         ->call('save')
-        ->assertHasErrors(['body']);
+        ->assertHasErrors(['form.body']);
 });
 
 it('toggles a comment status', function (): void {

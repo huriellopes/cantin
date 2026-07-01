@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\Comments;
 use App\Enum\Status;
 use App\Livewire\Admin\Support\HasAdminActions;
 use App\Livewire\Admin\Support\WithDataTable;
+use App\Livewire\Forms\CommentReplyForm;
 use App\Models\Comment;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -27,26 +28,26 @@ class Index extends Component
 
     public string $originalBody = '';
 
-    public string $body = '';
+    public CommentReplyForm $form;
 
     public function reply(int $id): void
     {
         $comment = Comment::query()->findOrFail($id);
         $this->replyingTo = $comment->id;
         $this->originalBody = $comment->body;
-        $this->body = '';
+        $this->form->reset();
         $this->resetValidation();
         $this->showModal = true;
     }
 
     public function save(): void
     {
-        $this->validate();
+        $this->form->validate();
 
         $parent = Comment::query()->findOrFail($this->replyingTo);
 
         Comment::query()->create([
-            'body' => $this->body,
+            'body' => $this->form->body,
             'ip_address' => request()->ip(),
             'user_id' => auth()->id(),
             'parent_id' => $parent->id,
@@ -97,12 +98,5 @@ class Index extends Component
     protected function sortableColumns(): array
     {
         return ['id', 'body', 'status', 'created_at'];
-    }
-
-    protected function rules(): array
-    {
-        return [
-            'body' => ['required', 'string', 'min:1', 'max:500'],
-        ];
     }
 }
