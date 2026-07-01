@@ -61,26 +61,26 @@
         <div class="border-t border-slate-100 p-4">{{ $entities->links() }}</div>
     </div>
 
-    <x-admin.modal title="{{ $editingId ? __('crud_partner_entities.edit_entity') : __('crud_partner_entities.new_entity') }}">
+    <x-admin.modal title="{{ $form->editingId ? __('crud_partner_entities.edit_entity') : __('crud_partner_entities.new_entity') }}">
         <form wire:submit="save" class="space-y-6">
             <section class="space-y-4">
                 <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-400">{{ __('crud_partner_entities.section_data') }}</h4>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <x-admin.input label="{{ __('crud_partner_entities.field_name') }}" name="name" wire:model="name" />
-                    <x-admin.input label="{{ __('crud_partner_entities.field_email') }}" name="email" type="email" wire:model="email" />
-                    <x-admin.input label="{{ __('crud_partner_entities.field_phone') }}" name="phone" wire:model="phone" x-mask="(99) 9 9999-9999" />
+                    <x-admin.input label="{{ __('crud_partner_entities.field_name') }}" name="form.name" wire:model="form.name" />
+                    <x-admin.input label="{{ __('crud_partner_entities.field_email') }}" name="form.email" type="email" wire:model="form.email" />
+                    <x-admin.input label="{{ __('crud_partner_entities.field_phone') }}" name="form.phone" wire:model="form.phone" x-mask="(99) 9 9999-9999" />
                 </div>
                 <div class="space-y-1">
                     <label for="activity_carried_out" class="block text-sm font-medium text-slate-700">{{ __('crud_partner_entities.field_activities') }}</label>
-                    <textarea id="activity_carried_out" wire:model="activity_carried_out" rows="3" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500"></textarea>
-                    @error('activity_carried_out') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                    <textarea id="activity_carried_out" wire:model="form.activity_carried_out" rows="3" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500"></textarea>
+                    @error('form.activity_carried_out') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
                 </div>
                 <div class="space-y-1">
                     <label for="image" class="block text-sm font-medium text-slate-700">{{ __('crud_partner_entities.field_image') }}</label>
-                    @if ($currentImage && ! $image)<p class="text-xs text-slate-500">{{ __('crud_partner_entities.current_image') }} {{ $currentImage }}</p>@endif
-                    <input type="file" id="image" wire:model="image" accept="image/*" class="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100">
+                    @if ($currentImage && ! $form->image)<p class="text-xs text-slate-500">{{ __('crud_partner_entities.current_image') }} {{ $currentImage }}</p>@endif
+                    <input type="file" id="image" wire:model="form.image" accept="image/*" class="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100">
                     <div wire:loading wire:target="image" class="text-xs text-slate-400">{{ __('crud_partner_entities.uploading_image') }}</div>
-                    @error('image') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                    @error('form.image') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
                 </div>
             </section>
 

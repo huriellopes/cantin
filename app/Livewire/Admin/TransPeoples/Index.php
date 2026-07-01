@@ -6,8 +6,8 @@ namespace App\Livewire\Admin\TransPeoples;
 
 use App\Enum\Status;
 use App\Livewire\Admin\Support\HasAdminActions;
-use App\Livewire\Admin\Support\InteractsWithAddress;
 use App\Livewire\Admin\Support\WithDataTable;
+use App\Livewire\Forms\TransPersonForm;
 use App\Models\TransPeople;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -20,22 +20,20 @@ use Livewire\WithPagination;
 #[Title('Pessoas Trans')]
 class Index extends Component
 {
-    use HasAdminActions, InteractsWithAddress, WithDataTable, WithPagination;
+    use HasAdminActions, WithDataTable, WithPagination;
 
     public bool $showModal = false;
 
-    public ?int $editingId = null;
+    public TransPersonForm $form;
 
-    public string $name = '';
-
-    public string $email = '';
-
-    public string $phone = '';
+    public function buscarCep(): void
+    {
+        $this->form->buscarCep();
+    }
 
     public function create(): void
     {
-        $this->reset(['editingId', 'name', 'email', 'phone']);
-        $this->resetAddress();
+        $this->form->reset();
         $this->resetValidation();
         $this->showModal = true;
     }
@@ -43,36 +41,36 @@ class Index extends Component
     public function edit(int $id): void
     {
         $person = TransPeople::query()->with('address')->findOrFail($id);
-        $this->editingId = $person->id;
-        $this->name = $person->name;
-        $this->email = $person->email;
-        $this->phone = $person->phone;
-        $this->fillAddressFrom($person->address);
+        $this->form->editingId = $person->id;
+        $this->form->name = $person->name;
+        $this->form->email = $person->email;
+        $this->form->phone = $person->phone;
+        $this->form->fillAddressFrom($person->address);
         $this->resetValidation();
         $this->showModal = true;
     }
 
     public function save(): void
     {
-        $this->validate();
+        $this->form->validate();
 
-        $address = $this->persistAddress();
+        $address = $this->form->persistAddress();
 
         $payload = [
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => preg_replace('/\D/', '', $this->phone),
+            'name' => $this->form->name,
+            'email' => $this->form->email,
+            'phone' => preg_replace('/\D/', '', $this->form->phone),
             'address_id' => $address->id,
         ];
 
-        if (!$this->editingId) {
+        if (!$this->form->editingId) {
             $payload['status'] = Status::ACTIVE;
         }
 
-        $editing = (bool) $this->editingId;
+        $editing = (bool) $this->form->editingId;
 
         if ($editing) {
-            TransPeople::query()->whereKey($this->editingId)->update($payload);
+            TransPeople::query()->whereKey($this->form->editingId)->update($payload);
         } else {
             TransPeople::query()->create($payload);
         }
@@ -117,22 +115,13 @@ class Index extends Component
 
         return view('livewire.admin.trans-peoples.index', [
             'people' => $people,
-            'states' => $this->statesOptions(),
-            'cities' => $this->citiesOptions(),
+            'states' => $this->form->statesOptions(),
+            'cities' => $this->form->citiesOptions(),
         ]);
     }
 
     protected function sortableColumns(): array
     {
         return ['id', 'name', 'email', 'status', 'created_at'];
-    }
-
-    protected function rules(): array
-    {
-        return array_merge([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email'],
-            'phone' => ['required', 'string'],
-        ], $this->addressRules());
     }
 }
