@@ -54,7 +54,7 @@ class LogViewer
      * Lê as entradas de um arquivo de log (mais recentes primeiro), com filtro
      * opcional por nível e por texto.
      *
-     * @return array<int, array{level: string, datetime: string, env: string, message: string, context: string}>
+     * @return array<int, array<string, mixed>>
      */
     public function entries(string $file, string $level = '', string $search = ''): array
     {

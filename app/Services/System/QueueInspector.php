@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Services\System;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -31,17 +33,28 @@ class QueueInspector
     }
 
     /**
-     * Jobs pendentes, paginados e decodificados para exibição.
+     * Jobs pendentes: busca, ordenação e paginação.
      *
      * @return LengthAwarePaginator<int, object>
      */
-    public function pending(int $perPage = 15, string $pageName = 'pendingPage'): LengthAwarePaginator
+    public function pending(string $search = '', string $sortField = 'id', string $sortDir = 'desc', int|string $perPage = 10): LengthAwarePaginator
     {
         if (!$this->hasTable('jobs')) {
-            return $this->emptyPaginator($perPage);
+            return $this->emptyPaginator($this->perPageInt($perPage, 0));
         }
 
-        $paginator = DB::table('jobs')->orderByDesc('id')->paginate($perPage, ['*'], $pageName);
+        $query = DB::table('jobs');
+
+        if ($search !== '') {
+            $query->where(function (Builder $q) use ($search): void {
+                $q->where('queue', 'like', "%{$search}%")->orWhere('payload', 'like', "%{$search}%");
+            });
+        }
+
+        $field = in_array($sortField, ['id', 'queue', 'attempts', 'available_at'], true) ? $sortField : 'id';
+        $query->orderBy($field, $sortDir === 'asc' ? 'asc' : 'desc');
+
+        $paginator = $query->paginate($this->perPageInt($perPage, (clone $query)->count()));
 
         $paginator->through(function (object $job): object {
             $payload = json_decode((string) $job->payload, true);
@@ -57,17 +70,31 @@ class QueueInspector
     }
 
     /**
-     * Jobs que falharam, paginados e decodificados.
+     * Jobs que falharam: busca, ordenação e paginação.
      *
      * @return LengthAwarePaginator<int, object>
      */
-    public function failed(int $perPage = 15, string $pageName = 'failedPage'): LengthAwarePaginator
+    public function failed(string $search = '', string $sortField = 'failed_at', string $sortDir = 'desc', int|string $perPage = 10): LengthAwarePaginator
     {
         if (!$this->hasTable('failed_jobs')) {
-            return $this->emptyPaginator($perPage);
+            return $this->emptyPaginator($this->perPageInt($perPage, 0));
         }
 
-        $paginator = DB::table('failed_jobs')->orderByDesc('id')->paginate($perPage, ['*'], $pageName);
+        $query = DB::table('failed_jobs');
+
+        if ($search !== '') {
+            $query->where(function (Builder $q) use ($search): void {
+                $q->where('queue', 'like', "%{$search}%")
+                    ->orWhere('uuid', 'like', "%{$search}%")
+                    ->orWhere('exception', 'like', "%{$search}%")
+                    ->orWhere('payload', 'like', "%{$search}%");
+            });
+        }
+
+        $field = in_array($sortField, ['id', 'queue', 'failed_at'], true) ? $sortField : 'failed_at';
+        $query->orderBy($field, $sortDir === 'asc' ? 'asc' : 'desc');
+
+        $paginator = $query->paginate($this->perPageInt($perPage, (clone $query)->count()));
 
         $paginator->through(function (object $job): object {
             $payload = json_decode((string) $job->payload, true);
@@ -113,6 +140,14 @@ class QueueInspector
         Artisan::call('queue:flush');
     }
 
+    /**
+     * Converte o valor do seletor (int ou "all") no total por página.
+     */
+    private function perPageInt(int|string $perPage, int $total): int
+    {
+        return $perPage === 'all' ? max(1, $total) : max(1, (int) $perPage);
+    }
+
     private function hasTable(string $table): bool
     {
         try {
@@ -127,6 +162,6 @@ class QueueInspector
      */
     private function emptyPaginator(int $perPage): LengthAwarePaginator
     {
-        return new \Illuminate\Pagination\LengthAwarePaginator([], 0, $perPage);
+        return new Paginator([], 0, max(1, $perPage));
     }
 }

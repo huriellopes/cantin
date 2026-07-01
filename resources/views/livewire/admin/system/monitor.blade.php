@@ -12,6 +12,10 @@
             'schedules' => ['calendar-clock', __('crud_system.tab_schedules')],
             'jobs' => ['list-checks', __('crud_system.tab_jobs')],
         ];
+        $levelColor = [
+            'emergency' => 'danger', 'alert' => 'danger', 'critical' => 'danger', 'error' => 'danger',
+            'warning' => 'warning', 'notice' => 'primary', 'info' => 'primary', 'debug' => 'slate',
+        ];
     @endphp
     <div class="flex flex-wrap gap-1 border-b border-slate-200">
         @foreach ($tabs as $key => [$icon, $label])
@@ -56,7 +60,7 @@
 
             {{-- Entradas do arquivo selecionado --}}
             <x-admin.card class="lg:col-span-3">
-                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-4">
+                <div class="space-y-3 border-b border-slate-100 p-4">
                     <div class="flex flex-wrap items-center gap-2">
                         <select wire:model.live="logLevel"
                                 class="rounded-lg border border-slate-300 py-2 pl-3 pr-8 text-sm focus:border-violet-500 focus:ring-violet-500">
@@ -65,45 +69,51 @@
                                 <option value="{{ $level }}">{{ ucfirst($level) }}</option>
                             @endforeach
                         </select>
-                        <input type="search" wire:model.live.debounce.400ms="logSearch"
-                               placeholder="{{ __('common.search') }}"
-                               class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500">
+                        @if ($logFile !== '')
+                            <button type="button" wire:click="confirmClearLog('{{ $logFile }}')"
+                                    class="ml-auto inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-white px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50">
+                                @svg('lucide-eraser', 'h-4 w-4')
+                                {{ __('crud_system.clear_log') }}
+                            </button>
+                        @endif
                     </div>
-                    @if ($logFile !== '')
-                        <button type="button" wire:click="confirmClearLog('{{ $logFile }}')"
-                                class="inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-white px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50">
-                            @svg('lucide-eraser', 'h-4 w-4')
-                            {{ __('crud_system.clear_log') }}
-                        </button>
-                    @endif
+                    <x-admin.table-toolbar :options="$this->perPageOptions()" />
                 </div>
 
-                <div class="max-h-[70vh] divide-y divide-slate-100 overflow-y-auto">
-                    @php
-                        $levelColor = [
-                            'emergency' => 'danger', 'alert' => 'danger', 'critical' => 'danger', 'error' => 'danger',
-                            'warning' => 'warning', 'notice' => 'primary', 'info' => 'primary', 'debug' => 'slate',
-                        ];
-                    @endphp
-                    @forelse ($logEntries as $entry)
-                        <div class="px-4 py-3 text-sm" wire:key="entry-{{ $loop->index }}">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <x-admin.badge :color="$levelColor[$entry['level']] ?? 'slate'">{{ strtoupper($entry['level']) }}</x-admin.badge>
-                                <span class="text-xs text-slate-400">{{ $entry['datetime'] }}</span>
-                                <span class="text-xs text-slate-300">{{ $entry['env'] }}</span>
-                            </div>
-                            <p class="mt-1 break-words font-medium text-slate-700">{{ $entry['message'] }}</p>
-                            @if ($entry['context'] !== '')
-                                <details class="mt-1">
-                                    <summary class="cursor-pointer text-xs text-slate-400 hover:text-slate-600">{{ __('crud_system.details') }}</summary>
-                                    <pre class="mt-1 max-h-64 overflow-auto rounded-lg bg-slate-900 p-3 text-xs text-slate-200">{{ $entry['context'] }}</pre>
-                                </details>
-                            @endif
-                        </div>
-                    @empty
-                        <div class="px-4 py-10 text-center text-sm text-slate-400">{{ __('crud_system.no_entries') }}</div>
-                    @endforelse
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-100 text-sm">
+                        <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <tr>
+                                <x-admin.th column="level" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.level') }}</x-admin.th>
+                                <x-admin.th column="datetime" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.datetime') }}</x-admin.th>
+                                <th class="px-4 py-3">{{ __('crud_system.message') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @forelse ($logEntries as $entry)
+                                <tr class="align-top hover:bg-slate-50" wire:key="entry-{{ $loop->index }}">
+                                    <td class="px-4 py-3"><x-admin.badge :color="$levelColor[$entry['level']] ?? 'slate'">{{ strtoupper($entry['level']) }}</x-admin.badge></td>
+                                    <td class="whitespace-nowrap px-4 py-3 text-xs text-slate-500">{{ $entry['datetime'] }}</td>
+                                    <td class="px-4 py-3">
+                                        <p class="break-words font-medium text-slate-700">{{ $entry['message'] }}</p>
+                                        @if ($entry['context'] !== '')
+                                            <details class="mt-1">
+                                                <summary class="cursor-pointer text-xs text-slate-400 hover:text-slate-600">{{ __('crud_system.details') }}</summary>
+                                                <pre class="mt-1 max-h-64 overflow-auto rounded-lg bg-slate-900 p-3 text-xs text-slate-200">{{ $entry['context'] }}</pre>
+                                            </details>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="3" class="px-4 py-10 text-center text-slate-400">{{ __('crud_system.no_entries') }}</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
+
+                @if ($logEntries->hasPages())
+                    <div class="border-t border-slate-100 p-4">{{ $logEntries->links() }}</div>
+                @endif
             </x-admin.card>
         </div>
     @endif
@@ -112,7 +122,7 @@
     @if ($tab === 'debug')
         <x-admin.card>
             <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-4">
-                <h3 class="text-sm font-semibold text-slate-600">{{ __('crud_system.debug_captures') }}</h3>
+                <div class="flex-1"><x-admin.table-toolbar :options="$this->perPageOptions()" /></div>
                 <button type="button" wire:click="confirmClearDebug"
                         class="inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-white px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50">
                     @svg('lucide-trash-2', 'h-4 w-4')
@@ -123,29 +133,29 @@
                 <table class="min-w-full divide-y divide-slate-100 text-sm">
                     <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th class="px-4 py-3">{{ __('crud_system.method') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.uri') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.status') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.duration') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.date') }}</th>
+                            <x-admin.th column="method" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.method') }}</x-admin.th>
+                            <x-admin.th column="uri" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.uri') }}</x-admin.th>
+                            <x-admin.th column="status" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.status') }}</x-admin.th>
+                            <x-admin.th column="duration" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.duration') }}</x-admin.th>
+                            <x-admin.th column="time" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.date') }}</x-admin.th>
                             <th class="px-4 py-3 text-right">{{ __('common.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
-                        @forelse ($captures as $capture)
-                            <tr @class(['hover:bg-slate-50', 'bg-rose-50/50' => $capture['has_exceptions']]) wire:key="cap-{{ $capture['id'] }}">
-                                <td class="px-4 py-3"><x-admin.badge color="slate">{{ $capture['method'] }}</x-admin.badge></td>
+                        @forelse ($captures as $item)
+                            <tr @class(['hover:bg-slate-50', 'bg-rose-50/50' => $item['has_exceptions']]) wire:key="cap-{{ $item['id'] }}">
+                                <td class="px-4 py-3"><x-admin.badge color="slate">{{ $item['method'] }}</x-admin.badge></td>
                                 <td class="px-4 py-3 font-medium text-slate-700">
-                                    {{ $capture['uri'] }}
-                                    @if ($capture['has_exceptions'])
+                                    {{ $item['uri'] }}
+                                    @if ($item['has_exceptions'])
                                         <span class="ml-1 text-rose-500" title="{{ __('crud_system.has_exceptions') }}">@svg('lucide-alert-triangle', 'inline h-4 w-4')</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3 text-slate-500">{{ $capture['status'] ?? '—' }}</td>
-                                <td class="px-4 py-3 text-slate-500">{{ $capture['duration'] ? number_format($capture['duration'] * 1000, 0) . ' ms' : '—' }}</td>
-                                <td class="px-4 py-3 text-slate-500">{{ $capture['time'] ?? '—' }}</td>
+                                <td class="px-4 py-3 text-slate-500">{{ $item['status'] ?? '—' }}</td>
+                                <td class="px-4 py-3 text-slate-500">{{ $item['duration'] ? number_format($item['duration'] * 1000, 0) . ' ms' : '—' }}</td>
+                                <td class="px-4 py-3 text-slate-500">{{ $item['time'] ?? '—' }}</td>
                                 <td class="px-4 py-3 text-right">
-                                    <button type="button" wire:click="showCapture('{{ $capture['id'] }}')"
+                                    <button type="button" wire:click="showCapture('{{ $item['id'] }}')"
                                             class="inline-flex items-center gap-1 text-sm font-medium text-violet-600 hover:text-violet-800">
                                         @svg('lucide-eye', 'h-4 w-4') {{ __('crud_system.view') }}
                                     </button>
@@ -157,12 +167,14 @@
                     </tbody>
                 </table>
             </div>
+            @if ($captures->hasPages())
+                <div class="border-t border-slate-100 p-4">{{ $captures->links() }}</div>
+            @endif
         </x-admin.card>
 
-        {{-- Modal de detalhe da captura.
-             O fechamento é feito instantaneamente no cliente (Alpine: open=false)
-             e depois sincronizado no servidor ($wire.closeCapture()), então nunca
-             depende de um round-trip do Livewire para sumir da tela. --}}
+        {{-- Modal de detalhe da captura. Só abre ao clicar em "Ver" ($captureId
+             definido). Fecha instantaneamente no cliente (Alpine open=false) e
+             sincroniza no servidor ($wire.closeCapture()). --}}
         @if ($capture !== null)
             <div wire:key="capture-modal"
                  x-data="{ open: true, close() { this.open = false; $wire.closeCapture() } }"
@@ -185,14 +197,17 @@
     {{-- ========================= SCHEDULES ========================= --}}
     @if ($tab === 'schedules')
         <x-admin.card>
+            <div class="border-b border-slate-100 p-4">
+                <x-admin.table-toolbar :options="$this->perPageOptions()" />
+            </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-slate-100 text-sm">
                     <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th class="px-4 py-3">{{ __('crud_system.command') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.expression') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.frequency') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.next_run') }}</th>
+                            <x-admin.th column="command" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.command') }}</x-admin.th>
+                            <x-admin.th column="expression" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.expression') }}</x-admin.th>
+                            <x-admin.th column="human" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.frequency') }}</x-admin.th>
+                            <x-admin.th column="next_run" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.next_run') }}</x-admin.th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
@@ -214,6 +229,9 @@
                     </tbody>
                 </table>
             </div>
+            @if ($schedules->hasPages())
+                <div class="border-t border-slate-100 p-4">{{ $schedules->links() }}</div>
+            @endif
         </x-admin.card>
     @endif
 
@@ -234,47 +252,21 @@
             </div>
         </div>
 
-        {{-- Pendentes --}}
         <x-admin.card>
-            <div class="border-b border-slate-100 px-4 py-3">
-                <h3 class="text-sm font-semibold text-slate-600">{{ __('crud_system.pending_jobs') }}</h3>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-slate-100 text-sm">
-                    <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        <tr>
-                            <th class="px-4 py-3">#</th>
-                            <th class="px-4 py-3">{{ __('crud_system.job') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.queue') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.attempts') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.available_at') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @forelse ($pendingJobs ?? [] as $job)
-                            <tr class="hover:bg-slate-50" wire:key="pending-{{ $job->id }}">
-                                <td class="px-4 py-3 text-slate-400">{{ $job->id }}</td>
-                                <td class="px-4 py-3 font-medium text-slate-700">{{ $job->name }}</td>
-                                <td class="px-4 py-3 text-slate-500">{{ $job->queue }}</td>
-                                <td class="px-4 py-3 text-slate-500">{{ $job->attempts }}</td>
-                                <td class="px-4 py-3 text-slate-500">{{ $job->available_at_human ?? '—' }}</td>
-                            </tr>
-                        @empty
-                            <tr><td colspan="5" class="px-4 py-10 text-center text-slate-400">{{ __('crud_system.no_pending') }}</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-            @if ($pendingJobs && $pendingJobs->hasPages())
-                <div class="border-t border-slate-100 p-4">{{ $pendingJobs->links() }}</div>
-            @endif
-        </x-admin.card>
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-4">
+                {{-- Alternador pendentes / falhas --}}
+                <div class="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm" role="group">
+                    <button type="button" wire:click="setJobsView('pending')"
+                            class="rounded-md px-3 py-1.5 text-xs font-semibold transition {{ $jobsView === 'pending' ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100' }}">
+                        {{ __('crud_system.pending_jobs') }}
+                    </button>
+                    <button type="button" wire:click="setJobsView('failed')"
+                            class="rounded-md px-3 py-1.5 text-xs font-semibold transition {{ $jobsView === 'failed' ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100' }}">
+                        {{ __('crud_system.failed_jobs') }}
+                    </button>
+                </div>
 
-        {{-- Falhos --}}
-        <x-admin.card>
-            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
-                <h3 class="text-sm font-semibold text-slate-600">{{ __('crud_system.failed_jobs') }}</h3>
-                @if ($queueCounts['failed'] > 0)
+                @if ($jobsView === 'failed' && $queueCounts['failed'] > 0)
                     <div class="flex gap-2">
                         <button type="button" wire:click="retryAllFailed"
                                 class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
@@ -287,39 +279,73 @@
                     </div>
                 @endif
             </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-slate-100 text-sm">
-                    <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        <tr>
-                            <th class="px-4 py-3">{{ __('crud_system.job') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.queue') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.exception') }}</th>
-                            <th class="px-4 py-3">{{ __('crud_system.failed_at') }}</th>
-                            <th class="px-4 py-3 text-right">{{ __('common.actions') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @forelse ($failedJobs ?? [] as $job)
-                            <tr class="hover:bg-slate-50" wire:key="failed-{{ $job->id }}">
-                                <td class="px-4 py-3 font-medium text-slate-700">{{ $job->name }}</td>
-                                <td class="px-4 py-3 text-slate-500">{{ $job->queue }}</td>
-                                <td class="px-4 py-3 max-w-md truncate text-rose-600" title="{{ $job->exception_short }}">{{ $job->exception_short }}</td>
-                                <td class="px-4 py-3 text-slate-500">{{ \Illuminate\Support\Carbon::parse($job->failed_at)->format('d/m/Y H:i:s') }}</td>
-                                <td class="px-4 py-3 text-right">
-                                    <div class="flex items-center justify-end gap-3">
-                                        <button type="button" wire:click="retryJob('{{ $job->uuid }}')" class="text-sm font-medium text-violet-600 hover:text-violet-800" title="{{ __('crud_system.retry') }}">@svg('lucide-refresh-cw', 'h-4 w-4')</button>
-                                        <button type="button" wire:click="confirmForgetFailed('{{ $job->uuid }}')" class="text-sm font-medium text-rose-600 hover:text-rose-800" title="{{ __('crud_system.forget') }}">@svg('lucide-trash-2', 'h-4 w-4')</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr><td colspan="5" class="px-4 py-10 text-center text-slate-400">{{ __('crud_system.no_failed') }}</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+
+            <div class="border-b border-slate-100 p-4">
+                <x-admin.table-toolbar :options="$this->perPageOptions()" />
             </div>
-            @if ($failedJobs && $failedJobs->hasPages())
-                <div class="border-t border-slate-100 p-4">{{ $failedJobs->links() }}</div>
+
+            <div class="overflow-x-auto">
+                @if ($jobsView === 'pending')
+                    <table class="min-w-full divide-y divide-slate-100 text-sm">
+                        <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <tr>
+                                <x-admin.th column="id" :sort-field="$sortField" :sort-direction="$sortDirection">#</x-admin.th>
+                                <th class="px-4 py-3">{{ __('crud_system.job') }}</th>
+                                <x-admin.th column="queue" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.queue') }}</x-admin.th>
+                                <x-admin.th column="attempts" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.attempts') }}</x-admin.th>
+                                <x-admin.th column="available_at" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.available_at') }}</x-admin.th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @forelse ($jobs as $job)
+                                <tr class="hover:bg-slate-50" wire:key="pending-{{ $job->id }}">
+                                    <td class="px-4 py-3 text-slate-400">{{ $job->id }}</td>
+                                    <td class="px-4 py-3 font-medium text-slate-700">{{ $job->name }}</td>
+                                    <td class="px-4 py-3 text-slate-500">{{ $job->queue }}</td>
+                                    <td class="px-4 py-3 text-slate-500">{{ $job->attempts }}</td>
+                                    <td class="px-4 py-3 text-slate-500">{{ $job->available_at_human ?? '—' }}</td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="5" class="px-4 py-10 text-center text-slate-400">{{ __('crud_system.no_pending') }}</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                @else
+                    <table class="min-w-full divide-y divide-slate-100 text-sm">
+                        <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <tr>
+                                <x-admin.th column="id" :sort-field="$sortField" :sort-direction="$sortDirection">#</x-admin.th>
+                                <th class="px-4 py-3">{{ __('crud_system.job') }}</th>
+                                <x-admin.th column="queue" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.queue') }}</x-admin.th>
+                                <th class="px-4 py-3">{{ __('crud_system.exception') }}</th>
+                                <x-admin.th column="failed_at" :sort-field="$sortField" :sort-direction="$sortDirection">{{ __('crud_system.failed_at') }}</x-admin.th>
+                                <th class="px-4 py-3 text-right">{{ __('common.actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @forelse ($jobs as $job)
+                                <tr class="hover:bg-slate-50" wire:key="failed-{{ $job->id }}">
+                                    <td class="px-4 py-3 text-slate-400">{{ $job->id }}</td>
+                                    <td class="px-4 py-3 font-medium text-slate-700">{{ $job->name }}</td>
+                                    <td class="px-4 py-3 text-slate-500">{{ $job->queue }}</td>
+                                    <td class="max-w-md truncate px-4 py-3 text-rose-600" title="{{ $job->exception_short }}">{{ $job->exception_short }}</td>
+                                    <td class="px-4 py-3 text-slate-500">{{ \Illuminate\Support\Carbon::parse($job->failed_at)->format('d/m/Y H:i:s') }}</td>
+                                    <td class="px-4 py-3 text-right">
+                                        <div class="flex items-center justify-end gap-3">
+                                            <button type="button" wire:click="retryJob('{{ $job->uuid }}')" class="text-sm font-medium text-violet-600 hover:text-violet-800" title="{{ __('crud_system.retry') }}">@svg('lucide-refresh-cw', 'h-4 w-4')</button>
+                                            <button type="button" wire:click="confirmForgetFailed('{{ $job->uuid }}')" class="text-sm font-medium text-rose-600 hover:text-rose-800" title="{{ __('crud_system.forget') }}">@svg('lucide-trash-2', 'h-4 w-4')</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="6" class="px-4 py-10 text-center text-slate-400">{{ __('crud_system.no_failed') }}</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                @endif
+            </div>
+            @if ($jobs && $jobs->hasPages())
+                <div class="border-t border-slate-100 p-4">{{ $jobs->links() }}</div>
             @endif
         </x-admin.card>
     @endif
