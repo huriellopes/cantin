@@ -6,14 +6,16 @@
         </div>
         <div class="flex items-center gap-2">
             <button type="button" wire:click="export" wire:loading.attr="disabled" wire:target="export"
-                    class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-70">
+                    title="{{ __('exports.export') }}" aria-label="{{ __('exports.export') }}"
+                    class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-70 sm:px-4">
                 @svg('lucide-file-spreadsheet', 'h-4 w-4')
-                <span wire:loading.remove wire:target="export">{{ __('exports.export') }}</span>
-                <span wire:loading wire:target="export">{{ __('common.exporting') }}</span>
+                <span class="hidden sm:inline" wire:loading.remove wire:target="export">{{ __('exports.export') }}</span>
+                <span class="hidden sm:inline" wire:loading wire:target="export">{{ __('common.exporting') }}</span>
             </button>
-            <button wire:click="create" class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
+            <button wire:click="create" title="{{ __('crud_terreiros.new_terreiro') }}" aria-label="{{ __('crud_terreiros.new_terreiro') }}"
+                    class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700 sm:px-4">
                 @svg('lucide-plus', 'h-4 w-4')
-                {{ __('crud_terreiros.new_terreiro') }}
+                <span class="hidden sm:inline">{{ __('crud_terreiros.new_terreiro') }}</span>
             </button>
         </div>
     </div>

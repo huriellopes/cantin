@@ -9,9 +9,9 @@ enum StatusPost: int
     public function label(): string
     {
         return match ($this) {
-            self::PUBLISHED => __('Published'),
-            self::PENDING => __('Pending'),
-            self::INACTIVE => __('Inactive'),
+            self::PUBLISHED => (string) __('common.published'),
+            self::PENDING => (string) __('common.pending'),
+            self::INACTIVE => (string) __('common.inactive'),
         };
     }
 

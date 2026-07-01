@@ -46,7 +46,7 @@ it('validates external link fields', function (): void {
         ->call('create')
         ->set('title', '')
         ->set('type_external_link_id')
-        ->set('url', 'not-a-url')
+        ->set('url', 'not a url')
         ->set('description', '')
         ->call('save')
         ->assertHasErrors(['title', 'type_external_link_id', 'url', 'description']);

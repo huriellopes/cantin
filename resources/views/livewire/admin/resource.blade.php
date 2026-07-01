@@ -3,15 +3,18 @@
         <div>
             <h2 class="text-xl font-bold text-slate-800">{{ $heading }}</h2>
         </div>
+        @php $newLabel = __('crud_resource.new').' '.$singular; @endphp
         @if ($usesPageEditor && $createRoute)
-            <a href="{{ route($createRoute) }}" wire:navigate class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
+            <a href="{{ route($createRoute) }}" wire:navigate title="{{ $newLabel }}" aria-label="{{ $newLabel }}"
+               class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700 sm:px-4">
                 @svg('lucide-plus', 'h-4 w-4')
-                {{ __('crud_resource.new') }} {{ $singular }}
+                <span class="hidden sm:inline">{{ $newLabel }}</span>
             </a>
         @else
-            <button wire:click="create" class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
+            <button wire:click="create" title="{{ $newLabel }}" aria-label="{{ $newLabel }}"
+                    class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-700 sm:px-4">
                 @svg('lucide-plus', 'h-4 w-4')
-                {{ __('crud_resource.new') }} {{ $singular }}
+                <span class="hidden sm:inline">{{ $newLabel }}</span>
             </button>
         @endif
     </div>

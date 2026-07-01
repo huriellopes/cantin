@@ -29,6 +29,13 @@ return [
         'impersonation_logs' => 'Impersonation Logs',
         'system' => 'System',
     ],
+    'nav_group' => [
+        'general' => 'General',
+        'community' => 'Community',
+        'blog' => 'Blog',
+        'pages_links' => 'Pages & Links',
+        'system' => 'System',
+    ],
     'header' => [
         'view_site' => 'View site',
         'my_profile' => 'My profile',

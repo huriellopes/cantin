@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\TerreiroQuestionFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -12,7 +14,8 @@ use Spatie\DeletedModels\Models\Concerns\KeepsDeletedModels;
 
 class TerreiroQuestion extends Model
 {
-    use KeepsDeletedModels;
+    /** @use HasFactory<TerreiroQuestionFactory> */
+    use HasFactory, KeepsDeletedModels;
 
     protected $table = 'terreiros_questions';
 

@@ -38,27 +38,38 @@
     class="min-h-full"
 >
     @php
-        $nav = [
-            [__('admin.nav.dashboard'), route('admin.dashboard'), request()->routeIs('admin.dashboard'), 'layout-dashboard'],
-            [__('admin.nav.terreiros'), route('admin.terreiros.index'), request()->routeIs('admin.terreiros.*'), 'house'],
-            [__('admin.nav.nations'), route('admin.nations.index'), request()->routeIs('admin.nations.*'), 'globe'],
-            [__('admin.nav.type_terreiros'), route('admin.type-terreiros.index'), request()->routeIs('admin.type-terreiros.*'), 'layout-grid'],
-            [__('admin.nav.genders'), route('admin.type-peoples.index'), request()->routeIs('admin.type-peoples.*'), 'users'],
-            [__('admin.nav.trans_people'), route('admin.trans-peoples.index'), request()->routeIs('admin.trans-peoples.*'), 'user'],
-            [__('admin.nav.partners'), route('admin.partner-entities.index'), request()->routeIs('admin.partner-entities.*'), 'heart-handshake'],
-            [__('admin.nav.posts'), route('admin.posts.index'), request()->routeIs('admin.posts.*'), 'file-text'],
-            [__('admin.nav.categories'), route('admin.categories.index'), request()->routeIs('admin.categories.*'), 'tag'],
-            [__('admin.nav.comments'), route('admin.comments.index'), request()->routeIs('admin.comments.*'), 'message-square'],
-            [__('admin.nav.pages'), route('admin.pages.index'), request()->routeIs('admin.pages.*'), 'file'],
-            [__('admin.nav.static_pages'), route('admin.static-pages.index'), request()->routeIs('admin.static-pages.*'), 'file-text'],
-            [__('admin.nav.link_types'), route('admin.type-external-links.index'), request()->routeIs('admin.type-external-links.*'), 'link'],
-            [__('admin.nav.external_links'), route('admin.external-links.index'), request()->routeIs('admin.external-links.*'), 'external-link'],
+        // Menu agrupado por seções. Cada seção: título + itens [label, url, ativo, ícone].
+        $sections = [
+            [__('admin.nav_group.general'), [
+                [__('admin.nav.dashboard'), route('admin.dashboard'), request()->routeIs('admin.dashboard'), 'layout-dashboard'],
+            ]],
+            [__('admin.nav_group.community'), [
+                [__('admin.nav.terreiros'), route('admin.terreiros.index'), request()->routeIs('admin.terreiros.*'), 'house'],
+                [__('admin.nav.nations'), route('admin.nations.index'), request()->routeIs('admin.nations.*'), 'globe'],
+                [__('admin.nav.type_terreiros'), route('admin.type-terreiros.index'), request()->routeIs('admin.type-terreiros.*'), 'layout-grid'],
+                [__('admin.nav.genders'), route('admin.type-peoples.index'), request()->routeIs('admin.type-peoples.*'), 'venus-and-mars'],
+                [__('admin.nav.trans_people'), route('admin.trans-peoples.index'), request()->routeIs('admin.trans-peoples.*'), 'user'],
+                [__('admin.nav.partners'), route('admin.partner-entities.index'), request()->routeIs('admin.partner-entities.*'), 'heart-handshake'],
+            ]],
+            [__('admin.nav_group.blog'), [
+                [__('admin.nav.posts'), route('admin.posts.index'), request()->routeIs('admin.posts.*'), 'newspaper'],
+                [__('admin.nav.categories'), route('admin.categories.index'), request()->routeIs('admin.categories.*'), 'tag'],
+                [__('admin.nav.comments'), route('admin.comments.index'), request()->routeIs('admin.comments.*'), 'message-square'],
+            ]],
+            [__('admin.nav_group.pages_links'), [
+                [__('admin.nav.pages'), route('admin.pages.index'), request()->routeIs('admin.pages.*'), 'file'],
+                [__('admin.nav.static_pages'), route('admin.static-pages.index'), request()->routeIs('admin.static-pages.*'), 'file-text'],
+                [__('admin.nav.link_types'), route('admin.type-external-links.index'), request()->routeIs('admin.type-external-links.*'), 'link'],
+                [__('admin.nav.external_links'), route('admin.external-links.index'), request()->routeIs('admin.external-links.*'), 'external-link'],
+            ]],
         ];
         if (auth()->user()?->isSuperAdmin()) {
-            $nav[] = [__('admin.nav.users'), route('admin.users.index'), request()->routeIs('admin.users.*'), 'users'];
-            $nav[] = [__('admin.nav.deleted_models'), route('admin.deleted-models.index'), request()->routeIs('admin.deleted-models.*'), 'trash-2'];
-            $nav[] = [__('admin.nav.impersonation_logs'), route('admin.impersonation-logs.index'), request()->routeIs('admin.impersonation-logs.*'), 'venetian-mask'];
-            $nav[] = [__('admin.nav.system'), route('admin.system.index'), request()->routeIs('admin.system.*'), 'activity'];
+            $sections[] = [__('admin.nav_group.system'), [
+                [__('admin.nav.users'), route('admin.users.index'), request()->routeIs('admin.users.*'), 'users'],
+                [__('admin.nav.deleted_models'), route('admin.deleted-models.index'), request()->routeIs('admin.deleted-models.*'), 'trash-2'],
+                [__('admin.nav.impersonation_logs'), route('admin.impersonation-logs.index'), request()->routeIs('admin.impersonation-logs.*'), 'venetian-mask'],
+                [__('admin.nav.system'), route('admin.system.index'), request()->routeIs('admin.system.*'), 'activity'],
+            ]];
         }
     @endphp
 
@@ -82,18 +93,43 @@
         </div>
 
         <nav class="scrollbar-dark flex-1 space-y-1 overflow-y-auto overflow-x-hidden px-3 py-2 text-sm">
-            @foreach ($nav as [$label, $url, $active, $icon])
-                <a href="{{ $url }}" wire:navigate
-                   @mouseenter="showTip($el, @js($label))" @mouseleave="tip.show = false"
-                   @class([
-                        'admin-nav-item group flex items-center gap-3 rounded-lg px-3 py-2 transition',
-                        'bg-violet-600 text-white' => $active,
-                        'hover:bg-slate-800 hover:text-white' => ! $active,
-                    ])
-                >
-                    @svg('lucide-'.$icon, 'h-5 w-5 shrink-0')
-                    <span class="admin-label">{{ $label }}</span>
-                </a>
+            @foreach ($sections as [$sectionTitle, $items])
+                @php $groupActive = collect($items)->contains(fn ($it) => $it[2]); @endphp
+                {{-- Seção recolhível: o cabeçalho abre/fecha os itens (persistido em
+                     localStorage). No modo ícone (sidebar recolhida) o accordion é
+                     neutralizado — os itens ficam sempre visíveis (open || collapsed). --}}
+                <div class="admin-nav-group"
+                     x-data="{
+                        open: true,
+                        init() {
+                            const key = 'admin-nav-group-{{ $loop->index }}';
+                            const saved = localStorage.getItem(key);
+                            this.open = {{ $groupActive ? 'true' : "saved === null ? true : saved === '1'" }};
+                            this.$watch('open', v => localStorage.setItem(key, v ? '1' : '0'));
+                        }
+                     }">
+                    <button type="button" class="admin-group-label" @click="open = ! open" :aria-expanded="open">
+                        <span class="admin-label">{{ $sectionTitle }}</span>
+                        <span class="admin-label admin-group-chevron transition-transform" :class="{ '-rotate-90': ! open }">
+                            @svg('lucide-chevron-down', 'h-4 w-4')
+                        </span>
+                    </button>
+                    <div x-show="open || collapsed" x-collapse class="space-y-1">
+                        @foreach ($items as [$label, $url, $active, $icon])
+                            <a href="{{ $url }}" wire:navigate
+                               @mouseenter="showTip($el, @js($label))" @mouseleave="tip.show = false"
+                               @class([
+                                    'admin-nav-item group flex items-center gap-3 rounded-lg px-3 py-2 transition',
+                                    'bg-violet-600 text-white' => $active,
+                                    'hover:bg-slate-800 hover:text-white' => ! $active,
+                                ])
+                            >
+                                @svg('lucide-'.$icon, 'h-5 w-5 shrink-0')
+                                <span class="admin-label">{{ $label }}</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
             @endforeach
         </nav>
 
