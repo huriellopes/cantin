@@ -34,7 +34,7 @@
         @foreach ($comments as $comment)
             <div wire:key="c-{{ $comment->id }}">
                 <div class="flex gap-3">
-                    <img src="{{ asset('/assets/images/avatar.png') }}" alt="" class="h-11 w-11 rounded-full">
+                    <img src="{{ asset('/assets/images/avatar.png') }}" alt="" class="h-11 w-11 rounded-full" loading="lazy" decoding="async">
                     <div class="flex-1">
                         <h6 class="font-semibold text-slate-800">
                             {{ $comment->user?->name ?? $comment->name }}
@@ -73,7 +73,7 @@
                             <div class="mt-4 space-y-4 border-l-2 border-slate-100 pl-4">
                                 @foreach ($comment->replies as $reply)
                                     <div class="flex gap-3" wire:key="r-{{ $reply->id }}">
-                                        <img src="{{ asset('/assets/images/avatar.png') }}" alt="" class="h-9 w-9 rounded-full">
+                                        <img src="{{ asset('/assets/images/avatar.png') }}" alt="" class="h-9 w-9 rounded-full" loading="lazy" decoding="async">
                                         <div>
                                             <h6 class="text-sm font-semibold text-slate-800">
                                                 {{ $reply->user?->name ?? $reply->name }}

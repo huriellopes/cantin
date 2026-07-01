@@ -28,8 +28,8 @@
             </div>
         </div>
 
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/70">
-            @svg('lucide-chevron-down', 'h-6 w-6 animate-bounce')
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/70" aria-hidden="true">
+            @svg('lucide-chevron-down', 'h-6 w-6 animate-bounce motion-reduce:animate-none')
         </div>
     </section>
 

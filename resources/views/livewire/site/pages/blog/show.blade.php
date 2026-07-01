@@ -9,7 +9,7 @@
             <span class="inline-block rounded-full bg-violet-100 px-3 py-1 text-sm font-medium text-violet-700">{{ $post->category?->name }}</span>
             <h1 class="mt-4 text-3xl font-extrabold text-slate-800 sm:text-4xl">{{ $post->title }}</h1>
             <div class="mt-6 flex items-center justify-center gap-3">
-                <img src="{{ asset('/assets/images/avatar.png') }}" alt="{{ $post->user?->name }}" class="h-12 w-12 rounded-full">
+                <img src="{{ asset('/assets/images/avatar.png') }}" alt="{{ $post->user?->name }}" class="h-12 w-12 rounded-full" loading="lazy" decoding="async">
                 <div class="text-left">
                     <p class="font-medium text-slate-700">{{ $post->user?->name }}</p>
                     <p class="text-xs text-slate-500">{{ $post->published_at?->format('d/m/Y') }} · {{ readingTime($post->content) }}</p>

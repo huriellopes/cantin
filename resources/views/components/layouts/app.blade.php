@@ -10,6 +10,11 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/cantin.ico') }}" type="image/x-icon">
     <link rel="apple-touch-icon" href="{{ asset('assets/images/CANTIn.png') }}">
 
+    {{-- Preload da imagem de fundo do hero (LCP) — só na home, onde ela aparece. --}}
+    @if (request()->routeIs('site.home'))
+        <link rel="preload" as="image" href="{{ asset('assets/images/new/background-outro.png') }}" fetchpriority="high">
+    @endif
+
     {{-- Título, description, canonical, OpenGraph e Twitter (archtechx/laravel-seo).
          Os valores padrão vêm do AppServiceProvider; cada página os sobrescreve. --}}
     <x-seo::meta />
