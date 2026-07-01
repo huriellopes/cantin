@@ -6,6 +6,7 @@ use App\Livewire\Admin\Profile\Index as ProfileIndex;
 use App\Livewire\Site\Auth\TwoFactorChallenge;
 use App\Models\User;
 use App\Support\TwoFactor;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 use PragmaRX\Google2FA\Google2FA;
 
@@ -96,4 +97,23 @@ it('disables 2FA from the profile', function (): void {
     Livewire::actingAs($user)->test(ProfileIndex::class)->call('disableTwoFactor');
 
     expect($user->fresh()->hasTwoFactorEnabled())->toBeFalse();
+});
+
+it('does not lock out login when the 2FA secret cannot be decrypted', function (): void {
+    $user = userWithTwoFactor('senha-forte-123');
+
+    // Simula APP_KEY trocada: grava um valor "encriptado" ilegível direto no banco.
+    DB::table('users')->where('id', $user->id)->update([
+        'two_factor_secret' => 'valor-invalido-nao-decifravel',
+    ]);
+
+    // 2FA é tratado como inativo (falha aberta) — sem DecryptException/500.
+    expect($user->fresh()->hasTwoFactorEnabled())->toBeFalse();
+
+    $this->post(route('site.auth.login.post'), [
+        'email' => $user->email,
+        'password' => 'senha-forte-123',
+    ])->assertRedirect(route('admin.dashboard'));
+
+    $this->assertAuthenticatedAs($user->fresh());
 });

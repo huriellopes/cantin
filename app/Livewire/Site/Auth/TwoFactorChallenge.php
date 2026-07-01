@@ -64,7 +64,7 @@ class TwoFactorChallenge extends Component
 
         $valid = $this->useRecovery
             ? $user->useRecoveryCode(mb_trim($this->recovery_code))
-            : TwoFactor::verify((string) $user->two_factor_secret, $this->code);
+            : TwoFactor::verify((string) $user->twoFactorSecret(), $this->code);
 
         if (!$valid) {
             $this->addError($this->useRecovery ? 'recovery_code' : 'code', __('two_factor.invalid_code'));
