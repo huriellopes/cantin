@@ -23,7 +23,7 @@ class ScheduleInspector
     public function events(): Collection
     {
         /** @var Schedule $schedule */
-        $schedule = app(Schedule::class);
+        $schedule = resolve(Schedule::class);
 
         return collect($schedule->events())
             ->map(fn (Event $event): array => $this->describe($event))

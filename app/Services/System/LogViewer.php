@@ -115,8 +115,8 @@ class LogViewer
         $count = count($matches[0]);
 
         for ($i = 0; $i < $count; $i++) {
-            $start = (int) $matches[0][$i][1];
-            $end = $i + 1 < $count ? (int) $matches[0][$i + 1][1] : mb_strlen($content);
+            $start = $matches[0][$i][1];
+            $end = $i + 1 < $count ? $matches[0][$i + 1][1] : mb_strlen($content);
 
             $block = mb_substr($content, $start, $end - $start);
             $headerLen = mb_strlen($matches[0][$i][0]);
@@ -126,9 +126,9 @@ class LogViewer
             $lines = explode("\n", $body, 2);
 
             $entries[] = [
-                'level' => mb_strtolower((string) $matches['level'][$i][0]),
-                'datetime' => (string) $matches['datetime'][$i][0],
-                'env' => (string) $matches['env'][$i][0],
+                'level' => mb_strtolower($matches['level'][$i][0]),
+                'datetime' => $matches['datetime'][$i][0],
+                'env' => $matches['env'][$i][0],
                 'message' => mb_trim($lines[0]),
                 'context' => isset($lines[1]) ? mb_trim($lines[1]) : '',
             ];

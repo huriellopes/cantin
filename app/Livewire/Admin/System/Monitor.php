@@ -71,7 +71,7 @@ class Monitor extends Component
 
     public function clearLog(string $file): void
     {
-        app(LogViewer::class)->clear($file)
+        resolve(LogViewer::class)->clear($file)
             ? $this->notify(__('crud_system.log_cleared'))
             : $this->notify(__('crud_system.log_clear_failed'), 'error');
     }
@@ -100,7 +100,7 @@ class Monitor extends Component
 
     public function clearDebug(): void
     {
-        $count = app(DebugbarViewer::class)->clear();
+        $count = resolve(DebugbarViewer::class)->clear();
         $this->captureId = null;
         $this->notify(__('crud_system.debug_cleared', ['count' => $count]));
     }
@@ -109,13 +109,13 @@ class Monitor extends Component
 
     public function retryJob(string $uuid): void
     {
-        app(QueueInspector::class)->retry($uuid);
+        resolve(QueueInspector::class)->retry($uuid);
         $this->notify(__('crud_system.job_retried'));
     }
 
     public function retryAllFailed(): void
     {
-        app(QueueInspector::class)->retryAll();
+        resolve(QueueInspector::class)->retryAll();
         $this->notify(__('crud_system.jobs_retried_all'));
     }
 
@@ -131,7 +131,7 @@ class Monitor extends Component
 
     public function forgetFailed(string $uuid): void
     {
-        app(QueueInspector::class)->forget($uuid);
+        resolve(QueueInspector::class)->forget($uuid);
         $this->notify(__('crud_system.job_forgotten'));
     }
 
@@ -147,21 +147,21 @@ class Monitor extends Component
 
     public function flushFailed(): void
     {
-        app(QueueInspector::class)->flush();
+        resolve(QueueInspector::class)->flush();
         $this->notify(__('crud_system.jobs_flushed'));
     }
 
     public function render(): Factory|View
     {
-        $logs = app(LogViewer::class);
+        $logs = resolve(LogViewer::class);
         $files = $logs->files();
 
         // Seleção padrão: o log mais recente, se nenhum estiver escolhido.
         if ($this->logFile === '' && $files->isNotEmpty()) {
-            $this->logFile = (string) $files->first()['name'];
+            $this->logFile = $files->first()['name'];
         }
 
-        $queue = app(QueueInspector::class);
+        $queue = resolve(QueueInspector::class);
 
         return view('livewire.admin.system.monitor', [
             'logFiles' => $files,
@@ -169,9 +169,9 @@ class Monitor extends Component
             'logEntries' => $this->tab === 'logs' && $this->logFile !== ''
                 ? $logs->entries($this->logFile, $this->logLevel, $this->logSearch)
                 : [],
-            'captures' => $this->tab === 'debug' ? app(DebugbarViewer::class)->captures() : collect(),
-            'capture' => $this->captureId !== null ? app(DebugbarViewer::class)->show($this->captureId) : null,
-            'schedules' => $this->tab === 'schedules' ? app(ScheduleInspector::class)->events() : collect(),
+            'captures' => $this->tab === 'debug' ? resolve(DebugbarViewer::class)->captures() : collect(),
+            'capture' => $this->captureId !== null ? resolve(DebugbarViewer::class)->show($this->captureId) : null,
+            'schedules' => $this->tab === 'schedules' ? resolve(ScheduleInspector::class)->events() : collect(),
             'queueCounts' => $queue->counts(),
             'pendingJobs' => $this->tab === 'jobs' ? $queue->pending() : null,
             'failedJobs' => $this->tab === 'jobs' ? $queue->failed() : null,
