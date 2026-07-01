@@ -66,9 +66,9 @@
             </div>
             <div class="space-y-1">
                 <label for="body" class="block text-sm font-medium text-slate-700">{{ __('crud_comments.your_reply') }}</label>
-                <textarea id="body" wire:model="body" rows="4" maxlength="500"
+                <textarea id="body" wire:model="form.body" rows="4" maxlength="500"
                           class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-violet-500"></textarea>
-                @error('body') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
+                @error('form.body') <p class="text-xs text-rose-600">{{ $message }}</p> @enderror
             </div>
             <div class="flex justify-end gap-2 pt-2">
                 <button type="button" @click="$wire.showModal = false" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">{{ __('common.cancel') }}</button>
