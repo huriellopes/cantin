@@ -43,8 +43,8 @@ class LogViewer
         return collect(iterator_to_array($finder, false))
             ->map(fn (SplFileInfo $file): array => [
                 'name' => $file->getFilename(),
-                'size' => $file->getSize(),
-                'modified' => $file->getMTime(),
+                'size' => (int) $file->getSize(),
+                'modified' => (int) $file->getMTime(),
             ])
             ->sortByDesc('modified')
             ->values();

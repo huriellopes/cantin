@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -50,7 +49,6 @@ class PruneSystemLogs extends Command
             $removed = 0;
             $bytes = 0;
 
-            /** @var SplFileInfo $file */
             foreach ($finder as $file) {
                 $bytes += (int) $file->getSize();
 

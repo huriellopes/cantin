@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\System;
 
 use Cron\CronExpression;
+use DateTimeZone;
 use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Collection;
@@ -31,9 +32,23 @@ class ScheduleInspector
                 'human' => $this->humanize($event->expression),
                 'description' => $event->description,
                 'next_run' => $this->nextRun($event),
-                'timezone' => (string) ($event->timezone ?? config('app.timezone')),
+                'timezone' => $this->timezone($event),
             ])
             ->values();
+    }
+
+    /**
+     * Fuso do evento como string; recai no fuso da aplicação quando ausente.
+     */
+    private function timezone(Event $event): string
+    {
+        $tz = $event->timezone;
+
+        if ($tz instanceof DateTimeZone) {
+            return $tz->getName();
+        }
+
+        return is_string($tz) && $tz !== '' ? $tz : (string) config('app.timezone');
     }
 
     private function label(Event $event): string
@@ -78,7 +93,7 @@ class ScheduleInspector
     {
         try {
             return (new CronExpression($event->expression))
-                ->getNextRunDate('now', 0, false, (string) ($event->timezone ?? config('app.timezone')))
+                ->getNextRunDate('now', 0, false, $this->timezone($event))
                 ->format('Y-m-d H:i:s');
         } catch (Throwable) {
             return null;

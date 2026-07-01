@@ -33,7 +33,7 @@ class DebugbarViewer
         $finder = Finder::create()->files()->name('*.json')->in($this->dir())->depth(0);
 
         return collect(iterator_to_array($finder, false))
-            ->sortByDesc(fn (SplFileInfo $file): int => $file->getMTime())
+            ->sortByDesc(fn (SplFileInfo $file): int => (int) $file->getMTime())
             ->take(self::MAX_ITEMS)
             ->map(fn (SplFileInfo $file): array => $this->summary($file))
             ->values();
@@ -102,7 +102,7 @@ class DebugbarViewer
             'duration' => isset($data['time']['duration']) ? (float) $data['time']['duration'] : null,
             'status' => isset($request['status_code']) ? (int) $request['status_code'] : null,
             'has_exceptions' => (int) $exceptions > 0,
-            'modified' => $file->getMTime(),
+            'modified' => (int) $file->getMTime(),
         ];
     }
 
