@@ -25,7 +25,12 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
-    {!! ToastMagic::styles() !!}
+    {{-- CSS do toaster carregado de forma assíncrona (media=print + onload) para
+         não bloquear a renderização: o toast só aparece após interação/evento,
+         quando o estilo já foi aplicado. <noscript> mantém o fallback sem JS. --}}
+    @php $toasterStyles = ToastMagic::styles(); @endphp
+    {!! str_replace('rel="stylesheet"', 'rel="stylesheet" media="print" onload="this.media=\'all\'"', $toasterStyles) !!}
+    <noscript>{!! $toasterStyles !!}</noscript>
 </head>
 <body class="flex min-h-screen flex-col bg-white text-slate-800 antialiased">
     @php $transparentNav = request()->routeIs('site.home'); @endphp
