@@ -57,6 +57,10 @@
                     @if (auth()->user()->hasRole('admin', 'super-admin'))
                         <a href="{{ route('admin.dashboard') }}" class="text-sm font-medium text-violet-600 hover:opacity-70">{{ __('nav.panel') }}</a>
                     @endif
+                @else
+                    <a href="{{ route('site.auth.login') }}" wire:navigate
+                       class="text-sm font-medium transition hover:opacity-70"
+                       :class="solid ? 'text-slate-700' : 'text-white drop-shadow'">{{ __('nav.login') }}</a>
                 @endauth
                 <a href="{{ route('site.terreiros.create') }}" wire:navigate
                    class="rounded-full bg-gradient-to-r from-violet-600 to-pink-500 px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:shadow-lg hover:brightness-110">
@@ -80,6 +84,13 @@
                 @foreach ($links as [$route, $label])
                     <a href="{{ route($route) }}" wire:navigate class="rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs($route) ? 'bg-violet-50 text-violet-700' : 'text-slate-700 hover:bg-slate-50' }}">{{ $label }}</a>
                 @endforeach
+                @auth
+                    @if (auth()->user()->hasRole('admin', 'super-admin'))
+                        <a href="{{ route('admin.dashboard') }}" wire:navigate class="rounded-lg px-3 py-2 text-sm font-medium text-violet-700 hover:bg-violet-50">{{ __('nav.panel') }}</a>
+                    @endif
+                @else
+                    <a href="{{ route('site.auth.login') }}" wire:navigate class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">{{ __('nav.login') }}</a>
+                @endauth
                 <a href="{{ route('site.terreiros.create') }}" wire:navigate class="mt-2 rounded-full bg-gradient-to-r from-violet-600 to-pink-500 px-5 py-2 text-center text-sm font-semibold text-white">{{ __('nav.register_terreiro') }}</a>
                 <div class="mt-2 border-t border-slate-100 pt-2">
                     <x-lang-switcher align="left" />

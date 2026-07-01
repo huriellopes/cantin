@@ -211,6 +211,14 @@
     </div>
 </div>
 
+{{-- Botão flutuante "Ver o site" — fixo apenas no mobile (no desktop já existe
+     o link no header). Fica à esquerda para não colidir com o toaster. --}}
+<a href="{{ route('site.home') }}" target="_blank" rel="noopener"
+   aria-label="{{ __('admin.header.view_site') }}" title="{{ __('admin.header.view_site') }}"
+   class="fixed bottom-4 left-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-violet-600 text-white shadow-lg transition hover:bg-violet-700 sm:hidden">
+    @svg('lucide-external-link', 'h-5 w-5')
+</a>
+
 {{-- Toaster --}}
 <div
     x-data="{ toasts: [] }"

@@ -31,19 +31,30 @@ class Search extends Component
 
     public function render(): Factory|View
     {
+        $term = mb_trim($this->search);
+
         return view('livewire.site.pages.terreiros.search', [
             'terreiros' => Terreiro::query()
-                ->when($this->search, function ($query): void {
-                    $query->where('name', 'like', '%' . mb_trim($this->search) . '%')
-                        ->orWhereHas('address', function ($queryAddress): void {
-                            $queryAddress->whereHas('state', function ($queryState): void {
-                                $queryState->where('name', 'like', '%' . mb_trim($this->search) . '%')
-                                    ->orWhere('slug', '=', mb_trim($this->search));
-                            })->orWhereHas('city', function ($queryCity): void {
-                                $queryCity->where('name', 'like', '%' . mb_trim($this->search) . '%');
+                ->with(['nation:id,name', 'address.city:id,name', 'address.state:id,name,abbr'])
+                ->when($term !== '', function ($query) use ($term): void {
+                    // Busca por: nome do terreiro, nome da liderança e localização
+                    // (cidade, estado por nome ou UF). Agrupado para não vazar o OR.
+                    $query->where(function ($q) use ($term): void {
+                        $q->where('name', 'like', "%{$term}%")
+                            ->orWhere('leadership_orunko', 'like', "%{$term}%")
+                            ->orWhereHas('address', function ($queryAddress) use ($term): void {
+                                $queryAddress->whereHas('state', function ($queryState) use ($term): void {
+                                    $queryState->where('name', 'like', "%{$term}%")
+                                        ->orWhere('abbr', 'like', "%{$term}%")
+                                        ->orWhere('slug', 'like', "%{$term}%");
+                                })->orWhereHas('city', function ($queryCity) use ($term): void {
+                                    $queryCity->where('name', 'like', "%{$term}%");
+                                });
                             });
-                        });
-                })->paginate(10),
+                    });
+                })
+                ->latest()
+                ->paginate(10),
         ]);
     }
 }

@@ -17,10 +17,15 @@ class Privacy extends Component
 {
     public function render(): Factory|View
     {
-        // Conteúdo editável pelo admin (menu Páginas, slug "privacidade").
-        // Se não houver Página cadastrada, cai no conteúdo estático da view.
+        // Conteúdo editável pelo admin (menu Páginas, slug "privacidade"). A Page
+        // é pt-BR: só a usamos no locale pt_BR; em outros idiomas cai no conteúdo
+        // estático traduzido (i18n) da view.
+        $page = app()->getLocale() === 'pt_BR'
+            ? resolve(GetPageAction::class)->handle('privacidade')
+            : null;
+
         return view('livewire.site.pages.legal.privacy', [
-            'page' => resolve(GetPageAction::class)->handle('privacidade'),
+            'page' => $page,
         ]);
     }
 }
