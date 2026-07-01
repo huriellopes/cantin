@@ -27,7 +27,7 @@
     @livewireStyles
     {!! ToastMagic::styles() !!}
 </head>
-<body class="min-h-screen bg-white text-slate-800 antialiased">
+<body class="flex min-h-screen flex-col bg-white text-slate-800 antialiased">
     @php $transparentNav = request()->routeIs('site.home'); @endphp
     <nav x-data="{ open: false, scrolled: false, get solid() { return {{ $transparentNav ? 'false' : 'true' }} || this.scrolled || this.open } }"
          @scroll.window="scrolled = window.scrollY > 10"
@@ -104,7 +104,9 @@
         </div>
     </nav>
 
-    <main class="{{ request()->routeIs('site.home') ? '' : 'pt-16' }}">
+    {{-- flex-1 faz o conteúdo crescer e "empurra" o footer para o fim da página
+         mesmo quando há pouco conteúdo (ex.: terreiros sem registros). --}}
+    <main class="flex-1 {{ request()->routeIs('site.home') ? '' : 'pt-16' }}">
         {{ $slot }}
     </main>
 
