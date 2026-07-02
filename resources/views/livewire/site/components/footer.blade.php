@@ -55,7 +55,12 @@
                 <a href="{{ route('site.privacy') }}" wire:navigate class="transition hover:text-white">{{ __('footer.privacy') }}</a>
                 <a href="{{ route('site.guidelines') }}" wire:navigate class="transition hover:text-white">{{ __('footer.guidelines') }}</a>
             </div>
-            <p>{{ __('footer.developed_by') }}</p>
+            <a href="https://hurvionsystems.cantinbr.com.br" target="_blank" rel="noopener"
+               aria-label="{{ __('footer.developed_by') }}" class="inline-block transition hover:opacity-80">
+                <img src="{{ asset('assets/images/hurvion-systems-badge.svg') }}"
+                     alt="{{ __('footer.developed_by') }}" width="560" height="120"
+                     class="h-8 w-auto" loading="lazy" decoding="async" />
+            </a>
         </div>
     </footer>
 </div>
