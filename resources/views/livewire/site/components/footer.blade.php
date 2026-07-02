@@ -55,7 +55,7 @@
                 <a href="{{ route('site.privacy') }}" wire:navigate class="transition hover:text-white">{{ __('footer.privacy') }}</a>
                 <a href="{{ route('site.guidelines') }}" wire:navigate class="transition hover:text-white">{{ __('footer.guidelines') }}</a>
             </div>
-            <a href="https://hurvionsystems.cantinbr.com.br" target="_blank" rel="noopener"
+            <a href="https://hurvionsystems.vercel.app" target="_blank" rel="noopener"
                aria-label="{{ __('footer.developed_by') }}" class="inline-block transition hover:opacity-80">
                 <img src="{{ asset('assets/images/hurvion-systems-badge.svg') }}"
                      alt="{{ __('footer.developed_by') }}" width="560" height="120"
